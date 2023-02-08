@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import MetaTags from 'react-meta-tags';
-import React from "react"
+import React, { useState } from "react"
 
 import { Row, Col, CardBody, Card, Alert, Container } from "reactstrap"
 
@@ -21,6 +21,21 @@ const Login = props => {
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
     props.loginUser(values, props.history)
+  }
+
+  const [fields, setFields] = useState({
+    email: "admin@themesbrand.com", password: "123456"
+  })
+  const [available, setAvailable] = useState(true)
+  const valueChanged = (e, field) => {
+    const _fields = {
+      ...fields,
+      [field]: e.target.value
+    }
+    setFields(_fields)
+    console.log(_fields)
+    if (_fields.email && _fields.password) setAvailable(true)
+    else setAvailable(false)
   }
 
   return (
@@ -73,6 +88,7 @@ const Login = props => {
                           placeholder="Enter email"
                           type="email"
                           required
+                          onChange={(e) => valueChanged(e, "email")}
                         />
                       </div>
 
@@ -84,6 +100,7 @@ const Login = props => {
                           type="password"
                           required
                           placeholder="Enter Password"
+                          onChange={(e) => valueChanged(e, "password")}
                         />
                       </div>
 
@@ -98,9 +115,10 @@ const Login = props => {
                           <button
                             className="btn btn-primary w-md waves-effect waves-light"
                             type="submit"
+                            disabled={!available}
                           >
                             Log In
-                              </button>
+                          </button>
                         </Col>
                       </Row>
                       <Row className="mt-2 mb-0 row">

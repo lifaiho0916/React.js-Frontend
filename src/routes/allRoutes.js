@@ -112,11 +112,13 @@ import Pages500 from "../pages/Utility/pages-500"
 import PagesGallery from "../pages/Utility/PagesGallery";
 import PagesDirectory from "../pages/Utility/PagesDirectory";
 import Users from "pages/Users"
+import HRs from "pages/HRs"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
 
-  { path: "/users", component: Users, admin: true },
+  { path: "/users/:filter?", component: Users, admin: 1 },
+  { path: "/hrs", component: HRs, admin: 2 },
 
   // //calendar
   { path: "/calendar", component: Calendar },

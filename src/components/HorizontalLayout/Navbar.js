@@ -12,6 +12,7 @@ import { connect } from "react-redux"
 
 const Navbar = props => {
   const [ui, setui] = useState(false)
+  const [users, setUsers] = useState(false)
 
   const [email, setemail] = useState(false)
 
@@ -98,18 +99,16 @@ const Navbar = props => {
 
                 </li>
 
-                {
-                  user && user.role == "admin" ? <li className="nav-item">
-                    <Link
-                      className="nav-link"
-                      to="users"
-                    >
-                      <i className="ti-user me-2" />
-                      {props.t("Users")} {props.menuOpen}
-                    </Link>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    to="/users"
+                  >
+                    <i className="ti-user me-2" />
+                    {props.t("Users")}
+                  </Link>
 
-                  </li> : ""
-                }
+                </li>
 
                 <li className="nav-item dropdown mega-dropdown">
                   <Link

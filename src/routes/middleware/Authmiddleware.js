@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Route, Redirect } from "react-router-dom"
 import decode from "jwt-decode"
+import { roleToNumber } from "common/functions"
 
 const Authmiddleware = ({
   component: Component,
@@ -15,10 +16,11 @@ const Authmiddleware = ({
 
   try {
     const token = localStorage.getItem("token")
-    const user = decode(token)
+    user = decode(token)
   } catch (err) {}
 
-  if (admin && user && user.role != "admin") 
+  const level = roleToNumber(user && user.role)
+  if (level < admin) 
     return (
       <Redirect
         to={{ pathname: "/dashboard" }}

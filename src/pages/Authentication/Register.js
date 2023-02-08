@@ -23,48 +23,53 @@ const Register = props => {
       label: "Role",
       options: [
         {
-          value: 'admin',
-          label: 'admin'
+          value: 'Admin',
+          label: 'Admin'
         },
         {
-          value: 'cooperator',
-          label: 'cooperator'
+          value: 'Corporate',
+          label: 'Corporate'
         },
         {
-          value: 'income',
-          label: 'income'
+          value: 'Production',
+          label: 'Production'
+        },
+        {
+          value: 'Personnel',
+          label: 'Personnel'
         },
       ]
     }
   ]
-  const [role, setRole] = useState({ label: 'personnel', value: 'personnel' })
+  const [role, setRole] = useState(roles[0].options[1])
 
   const locationOptions = [
     {
       label: "Location",
       options: [
         {
-          value: "SEGUIN",
-          label: "SEGUIN"
+          value: "Seguin",
+          label: "Seguin"
         },
         {
-          value: "CONROE",
-          label: "CONROE"
+          value: "Conroe",
+          label: "Conroe"
         },
         {
-          value: "GUNTER",
-          label: "GUNTER"
+          value: "Gunter",
+          label: "Gunter"
         }
       ]
     }
   ]
-  const [location, setLocation] = useState(locationOptions[0])
+  const [location, setLocation] = useState(locationOptions[0].options[0])
 
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
     props.registerUser({
       ...values,
-      role: role.value
+      role: role.value,
+      location: location.value
     })
   }
 
@@ -72,13 +77,27 @@ const Register = props => {
     props.apiError("")
   }, []);
 
-  const [fields, setFields] = useState({})
+  const [fields, setFields] = useState({
+    email: "", name: "", password: "", newPassword: ""
+  })
   const valueChanged = (e, field) => {
-    setFields({
+    const _fields = {
       ...fields,
       [field]: e.target.value
-    })
+    }
+    setFields(_fields)
+
+    const keys = Object.keys(_fields)
+    let empty = 0
+    for (const key of keys) {
+      if (_fields[key] == "") empty++
+    }
+
+    if (!empty) setAvailable(true)
+    else setAvailable(false)
   }
+
+  const [available, setAvailable] = useState(false)
 
   return (
     <React.Fragment>
@@ -180,14 +199,14 @@ const Register = props => {
                         />
                       </div>
                       {
-                        role.value != "admin" ? <div className="mb-3">
-                          <Label>{role.value == "production" ? "Facotry " : ""}Location</Label>
+                        role.value != "Admin" ? <div className="mb-3">
+                          <Label>Location</Label>
                           <Select
-                            value={role.value == "production" ? factoryLocation : location}
+                            value={location}
                             onChange={(v) => {
                               role.value == "production" ? setFacotryLocation(v) : setLocation(v)
                             }}
-                            options={role.value == "production" ? factoryLocationOptions : locationOptions}
+                            options={locationOptions}
                             classNamePrefix="select2-selection"
                           />
                         </div> : ""
@@ -198,6 +217,7 @@ const Register = props => {
                           <button
                             className="btn btn-primary w-md waves-effect waves-light"
                             type="submit"
+                            disabled={!available}
                           >
                             Register
                           </button>

@@ -12,6 +12,7 @@ import {
   postSocialLogin,
 } from "../../../helpers/fakebackend_helper"
 import jwt from 'jwt-decode'
+import { setAxiosConfig } from "helpers/axiosConfig"
 
 const fireBaseBackend = getFirebaseBackend()
 
@@ -32,6 +33,7 @@ function* loginUser({ payload: { user, history } }) {
       if (response.status != 200 && response.status != 201) throw response.data.msg
 
       localStorage.setItem("token", response.data.accessToken)
+      setAxiosConfig()
       const authUser = jwt(response.data.accessToken)
       localStorage.setItem("authUser", JSON.stringify(authUser))
       yield put(loginSuccess(authUser))
