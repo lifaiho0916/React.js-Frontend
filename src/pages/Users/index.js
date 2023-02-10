@@ -178,7 +178,7 @@ const Users = props => {
                       {userTab()}
                     </div>
                     <div style={{width: 200}}>
-                      <input class="form-control" placeholder="Search Names..." value={searchName} onChange={e => setSearchName(e.target.value)}/>
+                      <input className="form-control" placeholder="Search Names..." value={searchName} onChange={e => setSearchName(e.target.value)}/>
                     </div>
                   </div>
                   <div className="table-responsive">
@@ -199,7 +199,7 @@ const Users = props => {
                       <tbody>
                         {
                           users.filter(user => user.name.toLocaleLowerCase().indexOf(searchName.toLocaleLowerCase()) != -1).map((user, index) => (
-                            <tr key={"user" + index} key={"user-"+index}>
+                            <tr key={"user" + index}>
                               <th scope="row">{index + 1}</th>
                               <td>
                                 <div>

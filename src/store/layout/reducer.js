@@ -11,7 +11,7 @@ import {
 } from "./actionTypes"
 
 const INIT_STATE = {
-  layoutType: "horizontal",
+  layoutType: "vertical",
   layoutWidth: "fluid",
   leftSideBarTheme: "dark",
   leftSideBarType: "default",

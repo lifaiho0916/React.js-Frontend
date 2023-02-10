@@ -22,7 +22,6 @@ import "./assets/scss/theme.scss"
 setAxiosConfig()
 
 const App = props => {
-
   function getLayout() {
     let layoutCls = VerticalLayout
     switch (props.layout.layoutType) {
