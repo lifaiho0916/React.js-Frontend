@@ -46,6 +46,7 @@ const App = props => {
               layout={NonAuthLayout}
               component={route.component}
               key={idx}
+              exact
               isAuthProtected={false}
               admin={route.admin}
             />

@@ -33,7 +33,6 @@ const Login = props => {
       [field]: e.target.value
     }
     setFields(_fields)
-    console.log(_fields)
     if (_fields.email && _fields.password) setAvailable(true)
     else setAvailable(false)
   }

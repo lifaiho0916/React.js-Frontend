@@ -113,6 +113,7 @@ import PagesGallery from "../pages/Utility/PagesGallery";
 import PagesDirectory from "../pages/Utility/PagesDirectory";
 import Users from "pages/Users"
 import HRs from "pages/HRs"
+import Home from "pages/Home"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -204,14 +205,13 @@ const userRoutes = [
   { path: "/pages-gallery", component: PagesGallery },
 
   // this route should be at the end of all other routes
-  { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
 ]
 
 const authRoutes = [
   { path: "/logout", component: Logout },
-  { path: "/login", component: Login },
-  { path: "/forgot-password", component: ForgetPwd },
-  { path: "/register", component: Register },
+  // { path: "/login", component: Login },
+  // { path: "/forgot-password", component: ForgetPwd },
+  // { path: "/register", component: Register },
 
   { path: "/pages-maintenance", component: PagesMaintenance },
   { path: "/pages-comingsoon", component: PagesComingsoon },
@@ -234,6 +234,8 @@ const authRoutes = [
   { path: "/auth-email-verification-2", component: EmailVerification2 },
   { path: "/auth-two-step-verification", component: TwostepVerification },
   { path: "/auth-two-step-verification-2", component: TwostepVerification2 },
+  { path: "/", component: Home },
+
 ]
 
 export { userRoutes, authRoutes }

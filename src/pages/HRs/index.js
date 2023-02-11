@@ -116,7 +116,7 @@ const Users = props => {
                       <tbody>
                         {
                           users.map((user, index) => (
-                            <tr key={"user" + index} key={"user-"+index}>
+                            <tr key={"user" + index} >
                               <th scope="row">{index + 1}</th>
                               <td>
                                 <div>

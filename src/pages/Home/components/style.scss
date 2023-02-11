@@ -1,0 +1,139 @@
+.slider-image-selector {
+  position: absolute;
+  bottom: 50px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.slider-dot {
+  width: 30px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 30px;
+}
+
+.slider-dot.active {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.timer-container {
+  display: flex;
+
+  .timer-number {
+    width: 160px;
+    height: 160px;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    font-weight: 700;
+    flex-direction: column;
+
+    .number {
+      font-size: 60px;
+    }
+
+    .unit {
+      font-size: 10px;
+      font-weight: 400;
+    }
+  }
+}
+
+.slider-image {
+  animation-name: fadeIn;
+  animation-duration: 2s;
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+  animation-duration: 2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+.header-title {
+  font-size: 70px;
+}
+
+.carousel-root {
+  height: 100%;
+  .carousel-slider {
+    height: 100%;
+      .slider-wrapper {
+        height: 100%;
+        .slider {
+          height: 100%;
+          .slide {
+            height: 100%;
+          }
+        }
+      }
+  }
+}
+
+.rain {
+  height: 150%;
+  width: 1px;
+  animation-name: rainDropDOwn;
+  animation-duration: 10s;
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rainDropDOwn {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(150%); }
+}
+
+.rain-container {
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .sm-vh-100 {
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+  .sm-vw-100 {
+    max-width: 100vw;
+  }
+
+  .timer-container {
+  
+    .timer-number {
+      width: 80px;
+      height: 80px;
+  
+      .number {
+        font-size: 30px;
+      }
+  
+      .unit {
+        font-size: 10px;
+        font-weight: 400;
+      }
+    }
+  }  
+
+  .header-title {
+    font-size: 30px;
+  }
+}
