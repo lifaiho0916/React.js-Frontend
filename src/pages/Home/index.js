@@ -10,10 +10,10 @@ const Home = (props) => {
       <MetaTags>
         <title>Welcome To AmeriTex</title>
       </MetaTags>
-      <div className="col-xl-3 p-0">
+      <div className="col-lg-3 p-0">
         <SignIn />
       </div>
-      <div className="col-xl-9 p-0">
+      <div className="col-lg-9 p-0">
         <Slider />
       </div>
     </div>

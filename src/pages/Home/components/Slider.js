@@ -8,7 +8,6 @@ import { Carousel } from 'react-responsive-carousel';
 import "./style.scss"
 import axios from "axios"
 
-const delays = [1, 2.3, 3.4, 1.2, 0.8, 0]
 
 const Slider = (props) => {
 
@@ -17,6 +16,8 @@ const Slider = (props) => {
   const [time, setTime] = useState(null)
   const units = ["DAYS", "HOURS", "MINUTES", "SECONDS"]
   const limit = [0, 24, 60, 60]
+  const [delays, setDelays] = useState([0.1, 5.5, 3.3, 4.5, 6.8, 5.3, 2.0])
+  const [height, setHeight] = useState([20, 24, 15, 20, 30, 26, 10])
 
   const formatNumber = (v) => {
     return v.toString().length < 2 ? "0"+v: v
@@ -49,8 +50,27 @@ const Slider = (props) => {
       clearInterval(id)
     })
   }, [time])
+
+  useEffect(() => {
+
+    const format = () => {
+      setAnimation(false)
+      setTimeout(() => {
+        const length = Math.floor(Math.random() * 5) + 7
+        setDelays([...Array(length)].map(v => Math.random() * 3))
+        setHeight([...Array(length)].map(v => Math.floor(Math.random() * 15) + 20))
+        setAnimation(true)
+      }, 100)
+    }
+
+    const id = setInterval(format, 13000)
+
+    return (() => {
+      clearInterval(id)
+    })
+  }, [delays])
   
-  const [animation, setAnimation] = useState(false)
+  const [animation, setAnimation] = useState(true)
   const [timerId, setTimerId] = useState(-1)
 
   const setCurrentImage = v => {
@@ -63,7 +83,7 @@ const Slider = (props) => {
     setCurrentImageIndex(v)
   }
 
-  return <div className="position-relative w-100 h-100 sm-vh-100 sm-vw-100">
+  return <div className="position-relative w-100 h-100 sm-vh-100 sm-vw-100 slider-container">
     <Carousel
       showThumbs={false}
       autoPlay
@@ -73,18 +93,18 @@ const Slider = (props) => {
         </li>
       }}>
       {
-        images.map((image, index) => <div className="h-100" id={`carousel-part-${index}`}><img src={image} className="h-100" /></div>)
+        images.map((image, index) => <div className="h-100" key={`carousel-part-${index}`}><img src={image} className="h-100" /></div>)
       }
     </Carousel>
     <div className="rain-container">
       {
-        [...Array(6)].map((_, idx) => <div className="rain" key={`rain-${idx}`} style={{animationDelay: `${delays[idx]}s`}}></div>)
+        animation && delays.map((v, idx) => <div className="rain" key={`rain-${idx}`} style={{ height: `${height[idx]}%`, animationDelay: `${v}s` }}></div>)
       }
     </div>
 
-    <div className="w-75 h-100 position-absolute text-white d-flex align-items-center justify-content-center flex-column" style={{left: '12.5%', top: 0}}>
+    <div className="h-100 w-100 position-absolute text-white d-flex align-items-center justify-content-center flex-column" style={{left: 0, top: 0}}>
       <h1 className="header-title">SUSTAINABILITY</h1>
-      <h5 className="text-center mt-5">We are cooking something really awesome stuff. Hold your breath and wait for the incoming flood launch!</h5>
+      <h5 className="text-center mt-5">We are cooking up some really awesome stuff. Hold your breath and wait for the incoming flood launch!</h5>
 
       <div className="timer-container">
         {

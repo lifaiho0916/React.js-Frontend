@@ -9,3 +9,20 @@ html, body {
 #root {
   height: 100%;
 }
+
+:root {
+  --bs-primary: #00bcc2;
+}
+
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
+  stroke: #00bcc2 !important;
+}

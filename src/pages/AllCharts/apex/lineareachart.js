@@ -11,7 +11,6 @@ class lineareachart extends Component {
         };
         var lineChartOptions = {
             low: 0,
-            showArea: true,
         }
         return (
             <React.Fragment>

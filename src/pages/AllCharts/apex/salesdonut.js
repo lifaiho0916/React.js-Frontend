@@ -20,7 +20,7 @@ class Salesdonut extends Component {
                         }
                     }
                 },
-                colors: ['#626ed4', '#02a499', '#f8b425'],
+                colors: ['#4aa2ee', '#02a499', '#f5f7fa'],
             },
             series: [54, 28, 17],
             labels: [1, 2, 3],

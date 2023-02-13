@@ -86,7 +86,7 @@ const Dashboard = props => {
           </div>
           <Row>
             <Col xl={3} md={6}>
-              <Card className="mini-stat bg-primary text-white">
+              <Card className="mini-stat text-dark">
                 <CardBody>
                   <div className="mb-4">
                     <div className="float-start mini-stat-img me-4">
@@ -95,11 +95,11 @@ const Dashboard = props => {
                     <h5 className="font-size-16 text-uppercase mt-0 text-white-50">
                       Orders
                     </h5>
-                    <h4 className="fw-medium font-size-24">
+                    <h4 className="fd-medium font-size-24">
                       1,685{" "}
                       <i className="mdi mdi-arrow-up text-success ms-2"></i>
                     </h4>
-                    <div className="mini-stat-label bg-success">
+                    <div className="mini-stat-label bg-dark text-white">
                       <p className="mb-0">+ 12%</p>
                     </div>
                   </div>
@@ -109,13 +109,13 @@ const Dashboard = props => {
                         <i className="mdi mdi-arrow-right h5"></i>
                       </Link>
                     </div>
-                    <p className="text-white-50 mb-0 mt-1">Since last month</p>
+                    <p className="text-black-50 mb-0 mt-1">Since last month</p>
                   </div>
                 </CardBody>
               </Card>
             </Col>
             <Col xl={3} md={6}>
-              <Card className="mini-stat bg-primary text-white">
+              <Card className="mini-stat text-dark">
                 <CardBody>
                   <div className="mb-4">
                     <div className="float-start mini-stat-img me-4">
@@ -128,7 +128,7 @@ const Dashboard = props => {
                       52,368{" "}
                       <i className="mdi mdi-arrow-down text-danger ms-2"></i>
                     </h4>
-                    <div className="mini-stat-label bg-danger">
+                    <div className="mini-stat-label bg-dark text-white">
                       <p className="mb-0">- 28%</p>
                     </div>
                   </div>
@@ -139,13 +139,13 @@ const Dashboard = props => {
                       </Link>
                     </div>
 
-                    <p className="text-white-50 mb-0 mt-1">Since last month</p>
+                    <p className="text-black-50 mb-0 mt-1">Since last month</p>
                   </div>
                 </CardBody>
               </Card>
             </Col>
             <Col xl={3} md={6}>
-              <Card className="mini-stat bg-primary text-white">
+              <Card className="mini-stat text-dark">
                 <CardBody>
                   <div className="mb-4">
                     <div className="float-start mini-stat-img me-4">
@@ -158,7 +158,7 @@ const Dashboard = props => {
                       15.8{" "}
                       <i className="mdi mdi-arrow-up text-success ms-2"></i>
                     </h4>
-                    <div className="mini-stat-label bg-info">
+                    <div className="mini-stat-label bg-dark text-white">
                       <p className="mb-0"> 00%</p>
                     </div>
                   </div>
@@ -169,13 +169,13 @@ const Dashboard = props => {
                       </Link>
                     </div>
 
-                    <p className="text-white-50 mb-0 mt-1">Since last month</p>
+                    <p className="text-black-50 mb-0 mt-1">Since last month</p>
                   </div>
                 </CardBody>
               </Card>
             </Col>
             <Col xl={3} md={6}>
-              <Card className="mini-stat bg-primary text-white">
+              <Card className="mini-stat text-black">
                 <CardBody>
                   <div className="mb-4">
                     <div className="float-start mini-stat-img me-4">
@@ -188,7 +188,7 @@ const Dashboard = props => {
                       2436{" "}
                       <i className="mdi mdi-arrow-up text-success ms-2"></i>
                     </h4>
-                    <div className="mini-stat-label bg-warning">
+                    <div className="mini-stat-label bg-dark text-white">
                       <p className="mb-0">+ 84%</p>
                     </div>
                   </div>
@@ -198,7 +198,7 @@ const Dashboard = props => {
                         <i className="mdi mdi-arrow-right h5"></i>
                       </Link>
                     </div>
-                    <p className="text-white-50 mb-0 mt-1">Since last month</p>
+                    <p className="text-black-50 mb-0 mt-1">Since last month</p>
                   </div>
                 </CardBody>
               </Card>
@@ -430,17 +430,17 @@ const Dashboard = props => {
                   </Card>
                 </Col>
                 <Col md={6}>
-                  <Card className="bg-primary">
+                  <Card>
                     <CardBody>
-                      <div className="text-center text-white py-4">
-                        <h5 className="mt-0 mb-4 text-white-50 font-size-16">
+                      <div className="text-center text-dark py-4">
+                        <h5 className="mt-0 mb-4 text-dark-50 font-size-16">
                           Top Product Sale
                         </h5>
                         <h1>1452</h1>
                         <p className="font-size-14 pt-1">Computer</p>
-                        <p className="text-white-50 mb-0">
+                        <p className="text-dark-50 mb-0">
                           At solmen va esser necessi far uniform myth...{" "}
-                          <Link to="#" className="text-white">
+                          <Link to="#" className="text-dark">
                             View more
                           </Link>
                         </p>
@@ -514,7 +514,7 @@ const Dashboard = props => {
                           <td>15/1/2018</td>
                           <td>$94</td>
                           <td>
-                            <span className="badge bg-success">
+                            <span className="badge bg-dark text-white">
                               Delivered
                             </span>
                           </td>
@@ -541,7 +541,7 @@ const Dashboard = props => {
                           <td>16/1/2019</td>
                           <td>$112</td>
                           <td>
-                            <span className="badge bg-warning">Pending</span>
+                            <span className="badge bg-dark text-white">Pending</span>
                           </td>
                           <td>
                             <div>
@@ -566,7 +566,7 @@ const Dashboard = props => {
                           <td>17/1/2019</td>
                           <td>$116</td>
                           <td>
-                            <span className="badge bg-success">
+                            <span className="badge bg-dark text-white">
                               Delivered
                             </span>
                           </td>
@@ -593,7 +593,7 @@ const Dashboard = props => {
                           <td>18/1/2019</td>
                           <td>$109</td>
                           <td>
-                            <span className="badge bg-danger">Cancel</span>
+                            <span className="badge bg-dark text-white">Cancel</span>
                           </td>
                           <td>
                             <div>
@@ -618,7 +618,7 @@ const Dashboard = props => {
                           <td>19/1/2019</td>
                           <td>$120</td>
                           <td>
-                            <span className="badge bg-success">
+                            <span className="badge bg-dark text-white">
                               Delivered
                             </span>
                           </td>
@@ -645,7 +645,7 @@ const Dashboard = props => {
                           <td>15/1/2018</td>
                           <td>$94</td>
                           <td>
-                            <span className="badge bg-warning">Pending</span>
+                            <span className="badge bg-dark text-white">Pending</span>
                           </td>
                           <td>
                             <div>

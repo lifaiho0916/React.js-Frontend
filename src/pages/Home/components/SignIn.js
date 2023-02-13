@@ -28,14 +28,14 @@ const SignIn = (props) => {
     props.loginUser(data, history)
   }
 
-  return <div className="py-3 px-5 h-100 d-flex flex-column bg-white sm-vh-100 sm-vw-100">
-    <div className="d-flex justify-content-center align-items-center mt-5 flex-column" style={{height : 200}}>
+  return <div className="h-100 d-flex flex-column bg-white sm-vw-100 signin-container">
+    <div className="d-flex justify-content-center align-items-center mt-5 flex-column logo-container" style={{height : 200}}>
       <img src={Logo} className="w-75"/>
       <h5 className="mt-3">Welcome</h5>
       <h6>Sign in to APMS</h6>
     </div>
 
-    <div className="d-flex flex-column justify-content-center h-100" style={{marginTop: -200}}>
+    <div className="d-flex flex-column justify-content-center h-100 signin-form" style={{marginTop: -200}}>
       <div>
         <label>Username</label>
         <input className="form-control" type="email" placeholder="Enter Username" onChange={(e) => onChangeField(e, "email")}/>
@@ -60,10 +60,15 @@ const SignIn = (props) => {
       </div>
 
       <div className="text-center mt-5">
-        @2023 AmeriTex - crafted with <i className="bi bi-heart-fill text-danger"></i> by leko Media
+          <div className="position-relative d-inline-flex flex-column">
+            <div className="me-3">@2023 AmeriTex - crafted with <i className="bi bi-heart-fill text-danger"></i></div>
+            <div className="text-end">
+              by leko Media
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 }
 
 const mapStateToProps = state => {

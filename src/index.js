@@ -6,6 +6,8 @@ import { BrowserRouter } from "react-router-dom"
 import "./i18n"
 import { Provider } from "react-redux"
 
+import "./assets/scss/custom/app.scss"
+
 import store from "./store"
 
 const app = (

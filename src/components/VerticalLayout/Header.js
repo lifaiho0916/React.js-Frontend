@@ -76,21 +76,21 @@ const Header = props => {
           <div className="d-flex">
             <div className="navbar-brand-box">
               <Link to="/" className="logo logo-dark">
-                <span className="logo-sm">
+                <div className="logo-sm w-100">
                   <img src={logosmImg} alt="" height="22" />
-                </span>
-                <span className="logo-lg">
-                  <img src={logodarkImg} alt="" height="17" />
-                </span>
+                </div>
+                <div className="logo-xl w-100">
+                  <img src={logodarkImg} alt="" height="30" />
+                </div>
               </Link>
 
               <Link to="/" className="logo logo-light">
-                <span className="logo-sm">
+                <div className="logo-sm w-100">
                   <img src={logosmImg} alt="" height="22" />
-                </span>
-                <span className="logo-lg">
+                </div>
+                <div className="logo-lg w-100">
                   <img src={logolightImg} alt="" height="18" />
-                </span>
+                </div>
               </Link>
             </div>
             <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect"

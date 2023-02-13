@@ -26,6 +26,10 @@ import avatar from "../../assets/images/users/user-1.jpg"
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions"
 
+import ReactImagePickerEditor, { ImagePickerConf } from 'react-image-picker-editor';
+import 'react-image-picker-editor/dist/index.css'
+import axios from 'axios';
+
 const UserProfile = props => {
   const [email, setemail] = useState("")
   const [name, setname] = useState("")
@@ -56,6 +60,28 @@ const UserProfile = props => {
     props.editProfile(values)
   }
 
+  const config2 = {
+    borderRadius: '50px',
+    language: 'en',
+    width: '100px',
+    height: '100px',
+    objectFit: 'contain',
+    compressInitial: null,
+  };
+  const [imageSrc, setImageSrc] = useState(null)
+  const avatarChanged = async (src) => {
+    console.log(src)
+    setImageSrc(src)
+    const formData = new FormData();
+    formData.append("avatar", src);
+    const response = await axios({
+      method: "post",
+      url: "/auth/upload-avatar",
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -79,11 +105,10 @@ const UserProfile = props => {
                 <CardBody>
                   <div className="d-flex">
                     <div className="ms-3">
-                      <img
-                        src={avatar}
-                        alt=""
-                        className="avatar-md rounded-circle img-thumbnail"
-                      />
+                      <ReactImagePickerEditor
+                        config={config2}
+                        imageSrcProp={avatar}
+                        imageChanged={(newDataUri) => avatarChanged(newDataUri)} />
                     </div>
                     <div className="align-self-center flex-1">
                       <div className="text-muted">
