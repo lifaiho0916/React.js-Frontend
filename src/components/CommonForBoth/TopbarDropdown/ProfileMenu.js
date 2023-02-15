@@ -20,6 +20,7 @@ const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false)
 
+  const user = JSON.parse(localStorage.getItem("authUser"))
   const [username, setusername] = useState("Admin")
 
   useEffect(() => {
@@ -49,11 +50,20 @@ const ProfileMenu = props => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <img
-            className="rounded-circle header-profile-user"
-            src={user1}
-            alt="Header Avatar"
-          />
+          <div className="d-flex align-items-center">
+            <img
+              className="rounded-circle header-profile-user"
+              src={user1}
+              alt="Header Avatar"
+            />
+            <div className="ms-2">
+              <div>{user.name}</div>
+              <div>{user.role}</div>
+            </div>
+            <div className="ms-4 me-3">
+              <span className="mdi mdi-menu-down" style={{fontSize: 20}}></span>
+            </div>
+          </div>
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
           <DropdownItem tag="a" href="/profile">

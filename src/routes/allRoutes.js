@@ -114,9 +114,44 @@ import PagesDirectory from "../pages/Utility/PagesDirectory";
 import Users from "pages/Users"
 import HRs from "pages/HRs"
 import Home from "pages/Home"
+import TimerPage from "pages/Production/Timer"
+import ProductList from "pages/Production/ProductList"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
+
+  { path: "/profile-home", component: Dashboard },
+
+  { path: "/orderflow/dashboard", component: TimerPage },
+  { path: "/orderflow/projects", component: ProductList },
+  { path: "/orderflow/drafting", component: ProductList },
+  { path: "/orderflow/inventory", component: ProductList },
+  { path: "/orderflow/production-taker", component: ProductList },
+  { path: "/orderflow/load-out", component: ProductList },
+  { path: "/orderflow/project-close", component: ProductList },
+
+  { path: "/production/dashboard", component: TimerPage },
+  { path: "/production/timer", component: TimerPage },
+  { path: "/production/list", component: ProductList },
+  { path: "/production/system-check", component: ProductList },
+
+  { path: "/operations/dashboard", component: ProductList },
+  { path: "/operations/quality-control", component: ProductList },
+  { path: "/operations/maintenance", component: ProductList },
+  { path: "/operations/safety101", component: ProductList },
+  { path: "/operations/forms", component: ProductList },
+  { path: "/operations/line-data", component: ProductList },
+  { path: "/operations/fixx", component: ProductList },
+
+  { path: "/human-resources/dashboard", component: ProductList },
+  { path: "/human-resources/adt", component: ProductList },
+  { path: "/human-resources/down-time", component: ProductList },
+  { path: "/human-resources/community", component: ProductList },
+  { path: "/human-resources/msg-discussions", component: ProductList },
+
+  { path: "/accounting", component: ProductList },
+
+  { path: "/sales", component: ProductList },
 
   { path: "/users/:filter?", component: Users, admin: 1 },
   { path: "/hrs", component: HRs, admin: 2 },

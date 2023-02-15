@@ -22,7 +22,6 @@ import { withRouter } from "react-router-dom"
 //Import Breadcrumb
 import Breadcrumb from "../../components/Common/Breadcrumb"
 
-import avatar from "../../assets/images/users/user-1.jpg"
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions"
 
@@ -70,17 +69,27 @@ const UserProfile = props => {
   };
   const [imageSrc, setImageSrc] = useState(null)
   const avatarChanged = async (src) => {
-    console.log(src)
     setImageSrc(src)
-    const formData = new FormData();
-    formData.append("avatar", src);
-    const response = await axios({
-      method: "post",
-      url: "/auth/upload-avatar",
-      data: formData,
+    let formData = new FormData();
+    var arr = src.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), 
+    n = bstr.length, 
+    u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    const file = new File([u8arr], "avatar.png", {type:mime});
+    formData.append('avatar', file)
+    const response = await axios.post("/auth/upload-avatar", formData, {
       headers: { "Content-Type": "multipart/form-data" },
-    });
+    })
   }
+
+  const user = JSON.parse(localStorage.getItem("authUser"))
+  const avatarUrl = "https://apms.global/uploads/"+user.name+".png"
 
   return (
     <React.Fragment>
@@ -107,7 +116,7 @@ const UserProfile = props => {
                     <div className="ms-3">
                       <ReactImagePickerEditor
                         config={config2}
-                        imageSrcProp={avatar}
+                        imageSrcProp={avatarUrl}
                         imageChanged={(newDataUri) => avatarChanged(newDataUri)} />
                     </div>
                     <div className="align-self-center flex-1">

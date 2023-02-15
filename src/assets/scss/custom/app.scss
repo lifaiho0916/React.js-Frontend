@@ -26,3 +26,45 @@ html, body {
 .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
   stroke: #00bcc2 !important;
 }
+
+.navbar-search {
+  background-color: rgb(237, 240, 242) !important;
+  border-radius: 5px !important;
+}
+
+.custom-switch .form-check-input {
+  height: 24px;
+  width: 48px;
+}
+.custom-switch .form-check-input:focus {
+  border-color: rgba(0, 0, 0, 0.25);
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(0,0,0,0.25)'/></svg>");
+}
+.custom-switch .form-check-input:checked {
+  background-color: rgb(204, 215, 236);
+  border-color: rgb(204, 215, 236);
+  color: rgb(204, 215, 236);
+  border: none;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,1.0)'/></svg>");
+}
+
+.email-icon-container {
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-right: 1px solid rgb(204, 215, 236);
+  padding-right: 20px;
+  margin-left: 10px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+@media screen and (min-width: 1024px) {
+  .w-xl-75 {
+    width: 75%;
+  }  
+}

@@ -16,8 +16,28 @@ const Slider = (props) => {
   const [time, setTime] = useState(null)
   const units = ["DAYS", "HOURS", "MINUTES", "SECONDS"]
   const limit = [0, 24, 60, 60]
-  const [delays, setDelays] = useState([0.1, 5.5, 3.3, 4.5, 6.8, 5.3, 2.0])
-  const [height, setHeight] = useState([20, 24, 15, 20, 30, 26, 10])
+  const [rainOptions, setRainOptions] = useState([
+    {
+      delay: 0.1,
+      height: 20,
+      time: 8
+    },
+    {
+      delay: 0.1,
+      height: 20,
+      time: 9
+    },
+    {
+      delay: 0.1,
+      height: 20,
+      time: 10
+    },
+    {
+      delay: 0.1,
+      height: 20,
+      time: 9.2
+    },
+  ])
 
   const formatNumber = (v) => {
     return v.toString().length < 2 ? "0"+v: v
@@ -51,24 +71,24 @@ const Slider = (props) => {
     })
   }, [time])
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const format = () => {
-      setAnimation(false)
-      setTimeout(() => {
-        const length = Math.floor(Math.random() * 5) + 7
-        setDelays([...Array(length)].map(v => Math.random() * 3))
-        setHeight([...Array(length)].map(v => Math.floor(Math.random() * 15) + 20))
-        setAnimation(true)
-      }, 100)
-    }
+  //   const format = () => {
+  //     setAnimation(false)
+  //     setTimeout(() => {
+  //       const length = Math.floor(Math.random() * 5) + 7
+  //       setDelays([...Array(length)].map(v => Math.random() * 3))
+  //       setHeight([...Array(length)].map(v => Math.floor(Math.random() * 15) + 20))
+  //       setAnimation(true)
+  //     }, 100)
+  //   }
 
-    const id = setInterval(format, 13000)
+  //   const id = setInterval(format, 13000)
 
-    return (() => {
-      clearInterval(id)
-    })
-  }, [delays])
+  //   return (() => {
+  //     clearInterval(id)
+  //   })
+  // }, [delays])
   
   const [animation, setAnimation] = useState(true)
   const [timerId, setTimerId] = useState(-1)
@@ -97,9 +117,10 @@ const Slider = (props) => {
       }
     </Carousel>
     <div className="rain-container">
-      {
-        animation && delays.map((v, idx) => <div className="rain" key={`rain-${idx}`} style={{ height: `${height[idx]}%`, animationDelay: `${v}s` }}></div>)
-      }
+      <div className="rain" style={{ animationDelay: '2s' }}></div>
+      <div className="rain" style={{ animationDelay: '0.5s' }}></div>
+      <div className="rain" style={{ animationDelay: '4s' }}></div>
+      <div className="rain" style={{ animationDelay: '3s' }}></div>
     </div>
 
     <div className="h-100 w-100 position-absolute text-white d-flex align-items-center justify-content-center flex-column" style={{left: 0, top: 0}}>

@@ -1,0 +1,33 @@
+$broder-gray: #dfe2e6;
+$gray-color: rgb(221, 222, 226);
+
+.type-selector-container {
+  display: flex;
+  .type {
+    width: 30%;
+    margin-left: 20px;
+
+    .type-selector {
+      border: 2px solid $gray-color;
+      background-color: white;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .percent {
+        font-size: 16px;
+        span {
+          font-size: 20px;
+        }
+        color: green;
+      }
+
+      &.active {
+        border: 2px solid green !important;
+      }
+    }
+  }
+}

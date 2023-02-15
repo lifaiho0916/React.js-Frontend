@@ -87,15 +87,16 @@
 .rain {
   width: 1px;
   animation-name: rainDropDOwn;
-  animation-duration: 10s;
-  background-color: rgba(255, 255, 255, 0.3);
+  animation-duration: 2s;
+  background-color: rgba(255, 255, 255, 0.2);
   position: relative;
   animation-timing-function: ease-in;
-  top: -30%;
+  top: -100%;
+  animation-iteration-count: infinite;
 }
 
 @keyframes rainDropDOwn {
-  from { top: -30%; }
+  from { top: -100%; }
   to { top: 150%; }
 }
 

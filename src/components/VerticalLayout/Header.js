@@ -14,7 +14,7 @@ import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 import logodarkImg from "../../assets/images/logo-dark.png";
 import logosmImg from "../../assets/images/logo-sm.png";
 import logolightImg from "../../assets/images/logo-light.png";
-
+import Switch from "react-switch"
 
 //i18n
 import { withTranslation } from "react-i18next"
@@ -26,9 +26,48 @@ import {
   changeSidebarType,
 } from "../../store/actions"
 
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingRight: 2
+      }}
+    >
+      {" "}
+      No
+    </div>
+  )
+}
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingRight: 2
+      }}
+    >
+      {" "}
+      Yes
+    </div>
+  )
+}
+
 const Header = props => {
   const [search, setsearch] = useState(false)
   const [singlebtn, setSinglebtn] = useState(false)
+  const [switch1, setswitch1] = useState(false)
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
@@ -89,111 +128,88 @@ const Header = props => {
                   <img src={logosmImg} alt="" height="22" />
                 </div>
                 <div className="logo-lg w-100">
-                  <img src={logolightImg} alt="" height="18" />
+                  <img src={logodarkImg} alt="" height="18" />
                 </div>
               </Link>
             </div>
-            <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect"
-              id="vertical-menu-btn"
-              onClick={() => {
-                tToggle()
-              }}
-              data-target="#topnav-menu-content"
-            >
-              <i className="mdi mdi-menu"></i>
-            </button>
-
-            <div className="d-none d-sm-block">
-
-              <Dropdown
-                isOpen={singlebtn}
-                toggle={() => setSinglebtn(!singlebtn)}
-                className="pt-3 d-inline-block"
-              >
-                <DropdownToggle className="btn btn-secondary" caret>
-                  Create <i className="mdi mdi-chevron-down"></i>
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>Action</DropdownItem>
-                  <DropdownItem>Another action</DropdownItem>
-                  <DropdownItem>Something else here</DropdownItem>
-                  <div className="dropdown-divider"></div>
-                  <DropdownItem>Separated link</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-
-            </div>
           </div>
 
-          <div className="d-flex">
-            <form className="app-search d-none d-lg-block">
-              <div className="position-relative">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={props.t("Search") + "..."}
-                />
-                <span className="fa fa-search"></span>
-              </div>
-            </form>
+          <div className='d-flex flex-1 row m-0'>
+            <div className="col-xl-9 d-flex">
+              <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect"
+                  id="vertical-menu-btn"
+                  onClick={() => {
+                    tToggle()
+                  }}
+                  data-target="#topnav-menu-content"
+                >
+                <i className="mdi mdi-menu"></i>
+              </button>
 
-            <Dropdown
-              className="d-inline-block d-lg-none ms-2"
-              onClick={() => {
-                setsearch(!search)
-              }}
-              type="button"
-            >
-              <DropdownToggle
-                className="btn header-item noti-icon waves-effect"
-                id="page-header-search-dropdown"
-                tag="button"
-              > <i className="mdi mdi-magnify"></i>
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-lg dropdown-menu-end p-0">
-                <Form className="p-3">
-                  <div className="form-group m-0">
-                    <div className="input-group">
-                      <Input type="text" className="form-control" placeholder="Search ..." aria-label="Recipient's username" />
-                      <div className="input-group-append">
-                        <Button className="btn btn-primary" type="submit"><i className="mdi mdi-magnify"></i></Button>
-                      </div>
-                    </div>
+              <div className="d-flex flex-1">
+                <form className="app-search d-none d-lg-block">
+                  <div className="position-relative">
+                    <input
+                      type="text"
+                      className="form-control navbar-search"
+                      placeholder={props.t("Search") + "..."}
+                    />
+                    <span className="fa fa-search"></span>
                   </div>
-                </Form>
-              </DropdownMenu>
-            </Dropdown>
+                </form>
 
-            <LanguageDropdown />
+                <div class="form-check form-switch custom-switch d-flex align-items-center mx-5">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                  <label class="form-check-label mb-0 ms-3" for="flexSwitchCheckDefault"><b>LIGHT MODE</b></label>
+                </div>
 
-            <div className="dropdown d-none d-lg-inline-block">
-              <button
-                type="button"
-                onClick={() => {
-                  toggleFullscreen()
-                }}
-                className="btn header-item noti-icon waves-effect"
-                data-toggle="fullscreen"
-              >
-                <i className="mdi mdi-fullscreen"></i>
-              </button>
-            </div>
+                <Dropdown
+                  className="d-inline-block d-lg-none ms-2"
+                  onClick={() => {
+                    setsearch(!search)
+                  }}
+                  type="button"
+                >
+                  <DropdownToggle
+                    className="btn header-item noti-icon waves-effect"
+                    id="page-header-search-dropdown"
+                    tag="button"
+                  > <i className="mdi mdi-magnify"></i>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-lg dropdown-menu-end p-0">
+                    <Form className="p-3">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <Input type="text" className="form-control navbar-search-box" placeholder="Search ..." aria-label="Recipient's username" />
+                          <div className="input-group-append">
+                            <Button className="btn btn-primary" type="submit"><i className="mdi mdi-magnify"></i></Button>
+                          </div>
+                        </div>
+                      </div>
+                    </Form>
+                  </DropdownMenu>
+                </Dropdown>
 
-            <NotificationDropdown />
-            <ProfileMenu />
+                <div className='d-flex flex-1 justify-content-end'>
 
-            <div
-              onClick={() => {
-                props.showRightSidebarAction(!props.showRightSidebar)
-              }}
-              className="dropdown d-inline-block"
-            >
-              <button
-                type="button"
-                className="btn header-item noti-icon right-bar-toggle waves-effect"
-              >
-                <i className="mdi mdi-cog-outline"></i>
-              </button>
+                  <ProfileMenu />
+                  <NotificationDropdown />
+                  <div className="email-icon-container">
+                    <i className="mdi mdi-email-outline"></i>
+                  </div>
+
+                  <div
+                    className="dropdown d-inline-block"
+                  >
+                    <button
+                      type="button"
+                      className="btn header-item noti-icon right-bar-toggle waves-effect"
+                    >
+                      <i className="mdi mdi-gift"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
