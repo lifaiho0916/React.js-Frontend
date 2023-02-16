@@ -63,6 +63,11 @@ html, body {
   flex: 1;
 }
 
+.disabled-input {
+  color: rgb(233, 233, 233);
+  border: 1px solid rgb(233, 233, 233);
+}
+
 @media screen and (min-width: 1024px) {
   .w-xl-75 {
     width: 75%;

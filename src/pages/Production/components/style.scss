@@ -32,12 +32,18 @@ $broder-gray: #dfe2e6;
     background-color: black;
     margin: 10px 0;
     position: relative;
+    border: 2px solid black;
+
+    img {
+      object-fit: cover;
+    }
 
     .time {
       position: absolute;
       bottom: 10px;
       left: 20px;
       color: white;
+      background-color: rgba(0, 0, 0, 0.6);
     }
 
     .action {
@@ -52,6 +58,7 @@ $broder-gray: #dfe2e6;
       display: flex;
       justify-content: center;
       align-items: center;
+      border: none;
       &.play {
         background-color: green;
       }

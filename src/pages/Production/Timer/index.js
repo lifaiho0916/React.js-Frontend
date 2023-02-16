@@ -1,4 +1,5 @@
-import { factories } from 'helpers/globals';
+import { useEffect } from 'react';
+import { cities, factories } from 'helpers/globals';
 import { useState } from 'react';
 import MetaTags from 'react-meta-tags';
 import {
@@ -6,20 +7,10 @@ import {
 } from "reactstrap"
 import Timer from '../components/Timer';
 import "./style.scss"
+import { createTimerAction, getProducts } from 'actions/timer';
 
 const TimerPage = (props) => {
 
-  const products = [
-    {
-      part: '1111',
-      name: "RDP-1",
-      time: 90,
-      dailyUnits: 2,
-      dailyTons: 53,
-      averageUnit: 2,
-      averageTon: 53
-    }
-  ]
   const [machineModal, setMachineModal] = useState(false)
 
   const toggleModal = () => {
@@ -27,6 +18,67 @@ const TimerPage = (props) => {
   }
 
   const [city, setCity] = useState("Seguin")
+
+  const [parts, setParts] = useState([])
+  const [machines, setMachines] = useState([])
+  const [timers, setTimers] = useState([])
+  useEffect(() => {
+    (async() => {
+      const _parts = await getProducts("Part")
+      const _machines = await getProducts("Machine")
+      const _timers = await getProducts("Timer")
+
+      setMachines(_machines.products)
+      setParts(_parts.products)
+      setTimers(_timers.products)
+      setInputs({
+        factory: _machines.products[0].factory,
+        weight: _parts.products[0].weight,
+        productionTime: _parts.products[0].productionTime
+      })
+    })()
+  }, [])
+
+  const createTimer = async() => {
+    const timerForm = document.getElementById("timer-form")
+    const formData = new FormData(timerForm)
+    formData.append("city", city)
+    toggleModal()
+    const res = await createTimerAction(formData)
+    setTimers([res.data.timer, ...timers])
+  }  
+
+  const [inputs, setInputs] = useState({
+    factory: "",
+    weight: 0,
+    productionTime: 0
+  })
+
+  const updateField = (f, e) => {
+    setInputs({
+      ...inputs,
+      [f]: e.target.value
+    })
+  }
+
+  const machineChanged = (e) => {
+    const id = e.target.value
+    const idx = machines.findIndex(m => m._id == id)
+    setInputs({
+      ...inputs,
+      factory: machines[idx].factory
+    })
+  }
+
+  const partChanged = (e) => {
+    const id = e.target.value
+    const idx = parts.findIndex(p => p._id == id)
+    setInputs({
+      ...inputs,
+      weight: parts[idx].pounds,
+      productionTime: parts[idx].avgTime,
+    })
+  }
 
   return <div className="page-content">
     <MetaTags>
@@ -57,7 +109,7 @@ const TimerPage = (props) => {
             <div className="mt-3">
               <div className="d-flex city-selector-container">
                 {
-                  ["Parts", "Machine"].map(_city => <div key={_city} className="city text-uppercase" onClick={() => setCity(_city)}>
+                  cities.map(_city => <div key={_city} className="city text-uppercase" onClick={() => setCity(_city)}>
                     <div className={`city-selector ${_city == city ? 'active' : ''}`}>
                       <span>{_city}</span>
                       <span className="percent">31.3%<span class="mdi mdi-menu-up"></span></span>
@@ -116,50 +168,72 @@ const TimerPage = (props) => {
             }
           </div>
         </div>
-
         <div className="products-container row m-0 p-0 mt-5">
           {
-            products.map(product => <Timer { ...product } />)
+            timers.filter(t => t.city == city).map(timer => <Timer { ...timer } key={`timer-${timer._id}`} />)
           }
         </div>
       </div>
     </Container>
 
     <Modal isOpen={machineModal} toggle={toggleModal} >
-      <ModalHeader toggle={toggleModal}>Create New Machine</ModalHeader>
+      <ModalHeader toggle={toggleModal}>Create New Timer</ModalHeader>
       <ModalBody>
-        <div className="row">
-          <div className="col-3">City:</div>
-          <div className="col-9"><b>{ city }</b></div>
-        </div>
-        <div className="row mt-3 d-flex align-items-center">
-          <div className="col-3">Machine:</div>
-          <div className="col-9">
-            <select className='form-select'>
-              {
-                factories.map(factory => <option className="" key={"factory-option-"+factory} value={factory}>{factory}</option>)
-              }
-            </select>
+        <form id="timer-form">
+          <div className="row">
+            <div className="col-3">City:</div>
+            <div className="col-9"><b>{ city }</b></div>
           </div>
-        </div>
-
-        <div className="row mt-3 d-flex align-items-center">
-          <div className="col-3">Weight:</div>
-          <div className="col-9">
-            <input className="form-control" type="number" />
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Factory:</div>
+            <div className="col-9">
+              <select className='form-select disabled-input' onChange={(e) => updateField("factory", e)} value={inputs.factory}>
+                {
+                  factories.map(factory => <option className="" key={"factory-option-"+factory} value={factory}>{factory}</option>)
+                }
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div className="row mt-3 d-flex align-items-center">
-          <div className="col-3">Production Time:</div>
-          <div className="col-9">
-            <input className="form-control" />
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Machine:</div>
+            <div className="col-9">
+              <select className="form-select" name="machine" onChange={e => machineChanged(e)}>
+                {
+                  machines.filter(m=>m.city == city).map(m => <option value={m._id} key={"machine-"+m._id} >{m.name}</option>)
+                }
+              </select>
+            </div>
           </div>
-        </div>
 
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Part:</div>
+            <div className="col-9">
+              <select className="form-select" name="part" onChange={e => partChanged(e)}>
+                {
+                  parts.map(m => <option value={m._id} key={"part-"+m._id}>{m.name}</option>)
+                }
+              </select>
+            </div>
+          </div>
+
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Weight:</div>
+            <div className="col-9">
+              <input className="form-control disabled-input" type="number" name="weight" value={inputs.weight} onChange={e => updateField("weight", e)} />
+            </div>
+          </div>
+
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Production Time:</div>
+            <div className="col-9">
+              <input className="form-control disabled-input" name="productionTime" type="number" value={inputs.productionTime} onChange={e => updateField("productionTime", e)} />
+            </div>
+          </div>
+        </form>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={toggleModal}>Create</Button>{' '}
+        <Button color="primary" onClick={createTimer}>Create</Button>{' '}
         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
       </ModalFooter>
     </Modal>
