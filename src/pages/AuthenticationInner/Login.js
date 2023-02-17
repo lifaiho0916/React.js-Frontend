@@ -109,7 +109,7 @@ const Login = () => {
                 </p>
                 <p className="mb-0">
                   © {new Date().getFullYear()} Veltrix. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by Themesbrand
+                  <i className="mdi mdi-heart text-danger"></i> by Ieoko Media
                   </p>
               </div>
             </Col>

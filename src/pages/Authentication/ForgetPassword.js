@@ -88,7 +88,7 @@ const ForgetPasswordPage = props => {
                 <p>Remember It ? <Link to="login" className="fw-medium text-primary"> Sign In here </Link> </p>
                 <p>
                   © {new Date().getFullYear()} Veltrix. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  <i className="mdi mdi-heart text-danger" /> by Ieoko Media
                 </p>
               </div>
             </Col>

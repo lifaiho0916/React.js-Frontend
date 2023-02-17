@@ -8,6 +8,9 @@ import {
 import Timer from '../components/Timer';
 import "./style.scss"
 import { createTimerAction, getProducts } from 'actions/timer';
+import { useMemo } from 'react';
+
+import AutoCompleteSelect from 'components/Common/AutoCompleteSelect';
 
 const TimerPage = (props) => {
 
@@ -53,6 +56,7 @@ const TimerPage = (props) => {
     weight: 0,
     productionTime: 0
   })
+  const [timerPart, setTimerPart] = useState("")
 
   const updateField = (f, e) => {
     setInputs({
@@ -70,15 +74,17 @@ const TimerPage = (props) => {
     })
   }
 
-  const partChanged = (e) => {
-    const id = e.target.value
-    const idx = parts.findIndex(p => p._id == id)
-    setInputs({
-      ...inputs,
-      weight: parts[idx].pounds,
-      productionTime: parts[idx].avgTime,
-    })
-  }
+  const filteredTimers = useMemo(() => {
+    return timers.filter(timer => timer.city == city)
+  }, [timers, city])
+
+  const filteredMachines = useMemo(() => {
+    return machines.filter(machine => machine.city == city)
+  }, [timers, city])
+
+  const filteredParts = useMemo(() => {
+    return parts.filter(part => part.city == city)
+  }, [parts, city])
 
   return <div className="page-content">
     <MetaTags>
@@ -107,9 +113,9 @@ const TimerPage = (props) => {
             </div>
 
             <div className="mt-3">
-              <div className="d-flex city-selector-container">
+              <div className="d-flex city-selector-container row p-0 m-0">
                 {
-                  cities.map(_city => <div key={_city} className="city text-uppercase" onClick={() => setCity(_city)}>
+                  cities.map(_city => <div key={_city} className="city text-uppercase p-2 col-lg-4 col-md-6 " onClick={() => setCity(_city)}>
                     <div className={`city-selector ${_city == city ? 'active' : ''}`}>
                       <span>{_city}</span>
                       <span className="percent">31.3%<span class="mdi mdi-menu-up"></span></span>
@@ -169,9 +175,11 @@ const TimerPage = (props) => {
           </div>
         </div>
         <div className="products-container row m-0 p-0 mt-5">
-          {
-            timers.filter(t => t.city == city).map(timer => <Timer { ...timer } key={`timer-${timer._id}`} />)
-          }
+          <div className="col-xl-9 row p-0 m-0">
+            {
+              filteredTimers.map(timer => <Timer { ...timer } key={`timer-${timer._id}`} />)
+            }
+          </div>
         </div>
       </div>
     </Container>
@@ -200,7 +208,7 @@ const TimerPage = (props) => {
             <div className="col-9">
               <select className="form-select" name="machine" onChange={e => machineChanged(e)}>
                 {
-                  machines.filter(m=>m.city == city).map(m => <option value={m._id} key={"machine-"+m._id} >{m.name}</option>)
+                  filteredMachines.map(m => <option value={m._id} key={"machine-"+m._id} >{m.name}</option>)
                 }
               </select>
             </div>
@@ -209,11 +217,8 @@ const TimerPage = (props) => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Part:</div>
             <div className="col-9">
-              <select className="form-select" name="part" onChange={e => partChanged(e)}>
-                {
-                  parts.map(m => <option value={m._id} key={"part-"+m._id}>{m.name}</option>)
-                }
-              </select>
+              <AutoCompleteSelect options = {filteredParts} onChange={v => setTimerPart(v)} />
+              <input type="hidden" name="part" value={timerPart} />
             </div>
           </div>
 

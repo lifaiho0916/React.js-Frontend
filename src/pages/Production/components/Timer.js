@@ -43,7 +43,7 @@ const Timer = (props) => {
     return (() => { clearInterval(timerId) })
   }, [time])
 
-  return <div className="col-xl-3 col-lg-4 col-md-6 p-2">
+  return <div className="col-lg-4 col-md-6 p-2">
     <div className="product p-2">
       <div className="product-header">
         <select className="form-select">
