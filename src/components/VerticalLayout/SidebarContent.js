@@ -146,7 +146,7 @@ const SidebarContent = props => {
                   <Link to="/#">{props.t("Inventory")}</Link>
                 </li>
                 <li>
-                  <Link to="/#">{props.t("Production Taker")}</Link>
+                  <Link to="/orderflow/production-tracker">{props.t("Production Taker")}</Link>
                 </li>
                 <li>
                   <Link to="/#">{props.t("Load out")}</Link>
@@ -162,9 +162,6 @@ const SidebarContent = props => {
                 <span>{props.t("Production")}</span>
               </Link>
               <ul className="sub-menu" aria-expanded="true">
-                <li>
-                  <Link to="/production/timer">{props.t("Dashboard")}</Link>
-                </li>
                 <li>
                   <Link to="/production/timer">{props.t("Timer")}</Link>
                 </li>

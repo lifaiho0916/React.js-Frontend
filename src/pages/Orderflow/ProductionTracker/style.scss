@@ -1,0 +1,96 @@
+$background-gray: rgb(246, 247, 251);
+$gray-font: rgb(141, 144, 150);
+$gray-color: rgb(221, 222, 226);
+
+.jobs-table-container {
+  border: 1px solid $gray-color;
+  border-radius: 10px;
+
+  .jobs-table-header {
+    .jobs-tab {
+      background-color: $background-gray;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      width: 200px;
+      .number {
+        font-size: 30px;
+        margin-right: 20px;
+        font-weight: 700;
+      }
+    }
+
+    .past-job-tab {
+      border-left: 2px solid $gray-color;
+      border-right: 2px solid $gray-color;
+    }
+
+    .ongoing-job-tab {
+      border-top: 5px solid rgb(72, 131, 268);
+      border-top-left-radius: 10px;
+    }
+    border-bottom: 1px solid $gray-color;
+  }
+
+  .jobs-table {
+    .job-factory {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      background-color: rgb(74, 161, 238);
+    }
+
+    .job-user {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: gray;
+      color: white;
+      border-radius: 20px;
+      margin-right: 20px;
+    }
+
+    thead {
+      border-bottom: 1px solid $gray-color;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $gray-color;
+        td {
+          padding: 10px;
+        }
+      }
+    }
+
+    .job-status {
+      border-bottom: 3px solid blue;
+    }
+  }
+
+  .text-secondary {
+    color: $gray-font !important;
+  }
+}
+.bold {
+  font-weight: 700;
+}
+
+.bg-pipe {
+  background-color: rgb(74, 161, 238) !important;
+}
+
+.bg-precast {
+  background-color: rgb(227, 169, 61) !important;
+}
+
+.bg-steel {
+  background-color: rgb(1, 188, 195) !important;
+}

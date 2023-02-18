@@ -122,7 +122,7 @@ const ProductList = (props) => {
           <div className="col-xl-9 p-0">
             <div className="d-flex justify-content-between timer-page-header">
               <div>
-                <h1>Timer and Analytics</h1>
+                <h1>Product List</h1>
                 <div>
                   <span className="text-black-50">PRODUCTION</span>
                   <span className="mx-3"> &gt; </span>
@@ -130,11 +130,17 @@ const ProductList = (props) => {
                 </div>
               </div>
               <div className="d-flex align-items-center">
-                <div className="d-flex flex-column align-items-center border-left-right px-2">
-                  <h2>8</h2>
-                  <div>Machines </div>
+                <div className="d-flex border-left-right px-2 align-self-stretch">
+                  <div className='d-flex justify-content-center flex-column align-items-center ms-3'>
+                    <h2>{ (type=="Parts"?parts:machines).length }</h2>
+                    <div className="d-flex align-items-center text-uppercase">{ type == "Machine" ? "Machines" : type }
+                    </div>
+                  </div>
+                  <div className='ms-2 me-3 d-flex align-items-end h-100'>
+                    <span className='mdi mdi-chevron-up' style={{fontSize: 20, color: "rgb(2, 186, 197)"}}></span>
+                  </div>
                 </div>
-                <button className='btn btn-primary ms-3 h-75' onClick={showCreateModal}>NEW MACHINE</button>
+                <button className='btn btn-primary ms-3 h-75 text-uppercase' onClick={showCreateModal}>NEW {type}</button>
               </div>
             </div>
 
@@ -157,13 +163,18 @@ const ProductList = (props) => {
 
             <div className="search-container">
               <div className="search-box row">
-                <div>
-                  <b>General Search</b>
+                <div className="col-6">
+                  <div>
+                    <b>General Search</b>
+                  </div>
+                  <div className='mt-2'>
+                    <select className='form-select'>
+                      <option>RP2225-1</option>
+                    </select>
+                  </div>
                 </div>
-                <div className='mt-2'>
-                  <select className='form-select w-50'>
-                    <option>RP2225-1</option>
-                  </select>
+                <div className="col-6 d-flex align-items-end">
+                  <CitySelect />
                 </div>
               </div>
               <div className="search-action">

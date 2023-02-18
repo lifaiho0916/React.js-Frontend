@@ -111,16 +111,19 @@ import Pages404 from "../pages/Utility/pages-404"
 import Pages500 from "../pages/Utility/pages-500"
 import PagesGallery from "../pages/Utility/PagesGallery";
 import PagesDirectory from "../pages/Utility/PagesDirectory";
-import Users from "pages/Users"
-import HRs from "pages/HRs"
-import Home from "pages/Home"
-import TimerPage from "pages/Production/Timer"
-import ProductList from "pages/Production/ProductList"
+import Users from "../pages/Users"
+import HRs from "../pages/HRs"
+import Home from "../pages/Home"
+import TimerPage from "../pages/Production/Timer"
+import ProductList from "../pages/Production/ProductList"
+import ProductionTracker from "../pages/Orderflow/ProductionTracker"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
 
   { path: "/profile-home", component: Dashboard },
+
+  { path: "/orderflow/production-tracker", component: ProductionTracker },
 
   { path: "/orderflow/dashboard", component: TimerPage },
   { path: "/orderflow/projects", component: ProductList },

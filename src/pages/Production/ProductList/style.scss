@@ -27,6 +27,11 @@ $gray-color: rgb(221, 222, 226);
 
       &.active {
         border: 2px solid green !important;
+        background-color: rgb(131, 188, 199);
+        color: white;
+        .percent {
+          color: white;
+        }
       }
     }
   }

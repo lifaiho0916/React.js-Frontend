@@ -17,7 +17,7 @@ const AutoCompleteSelect = (props) => {
       props.onChange(e.value)
     }}
     options={optionsGroup}
-    classNamePrefix="select2-selection"
+    classNamePrefix="select2-selection w-100"
   />
 }
 

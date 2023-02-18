@@ -48,3 +48,8 @@ export const endTimerAction = async (id) => {
   const res = await axios.post("/timer/end-timer", { id })
   return res
 }
+
+export const stopTimerAction = async (id) => {
+  const res = await axios.post("/timer/stop-timer", { id })
+  return res
+}

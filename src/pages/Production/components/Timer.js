@@ -2,7 +2,7 @@ import "./style.scss"
 import { formatSeconds } from "../../../helpers/functions"
 import { useState } from "react"
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { endTimerAction, startTimerAction } from "actions/timer";
+import { endTimerAction, startTimerAction, stopTimerAction } from "actions/timer";
 import { useEffect } from "react";
 
 const Timer = (props) => {
@@ -21,6 +21,10 @@ const Timer = (props) => {
       setTimeout(() => {
         setTime(time + 1)
       }, 1000)
+    } else if (status == "Started") {
+      await stopTimerAction(props._id)
+      setStatus("Pending")
+      clearInterval(currentTimerId)
     }
   }
 
@@ -32,6 +36,7 @@ const Timer = (props) => {
 
   const [time, setTime] = useState(props.time)
   const [totalTime, setTotalTime] = useState(props.totalTime)
+  const [currentTimerId, setCurrentTimerId] = useState(-1)
 
   useEffect(() => {
     if (status != "Started") return
@@ -39,6 +44,7 @@ const Timer = (props) => {
     const timerId = setInterval(() => {
       setTime(time + 1);
     }, 1000)
+    setCurrentTimerId(timerId)
 
     return (() => { clearInterval(timerId) })
   }, [time])
@@ -65,13 +71,17 @@ const Timer = (props) => {
         {
           status == "Pending" ? <button className="action play" onClick={toggleTimer}>
             <span className="mdi mdi-play"></span>
-          </button> : ""
+          </button> : (status == "Started" ? <button className="action stop" onClick={toggleTimer}>
+            <span className="mdi mdi-stop"></span>
+          </button> : "")
         }
       </div>
       <div className="product-info">
         <div className="product-name w-100">
           <span>{ props.machine.name }</span>
-          <span className={`${status == "Ended" && totalTime <= props.productionTime ? "text-success" : "text-danger"}`}>{ formatSeconds(totalTime) }</span>
+          <span className={`${status == "Ended" && totalTime <= props.productionTime ? "text-success" : "text-danger"}`}>
+            { formatSeconds(totalTime) }
+          </span>
         </div>
 
         <div className="product-details">

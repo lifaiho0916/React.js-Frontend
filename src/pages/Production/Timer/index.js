@@ -74,6 +74,16 @@ const TimerPage = (props) => {
     })
   }
 
+  const partChanged = (v) => {
+    const idx = parts.findIndex(m => m._id == v)
+    setInputs({
+      ...inputs,
+      weight: parts[idx].pounds,
+      productionTime: parts[idx].avgTime,
+    })
+    setTimerPart(v)
+  }
+
   const filteredTimers = useMemo(() => {
     return timers.filter(timer => timer.city == city)
   }, [timers, city])
@@ -86,6 +96,15 @@ const TimerPage = (props) => {
     return parts.filter(part => part.city == city)
   }, [parts, city])
 
+  const [factoryFilter, setFactoryFilter] = useState([])
+  const toggleFilter = (filter) => {
+    const index = factoryFilter.findIndex(v => v==filter)
+    const _filter = [...factoryFilter]
+    if (index != -1) _filter.splice(index, 1)
+    else _filter.push(filter)
+    setFactoryFilter(_filter)
+  }
+
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
@@ -96,7 +115,7 @@ const TimerPage = (props) => {
           <div className="col-xl-9 p-0">
             <div className="d-flex justify-content-between timer-page-header">
               <div>
-                <h1>Prodct Lists</h1>
+                <h1>Timer and Analytics</h1>
                 <div>
                   <span className="text-black-50">PRODUCTION</span>
                   <span className="mx-3"> &gt; </span>
@@ -169,7 +188,7 @@ const TimerPage = (props) => {
             {
               factories.map((factory, index) => <div key={`factory-${factory}`} className="sort-factory-category">
                 {factory}
-                <input type="checkbox" className="form-checkbox" />
+                <input type="checkbox" className="form-checkbox" onClick={() => toggleFilter(factory)} />
               </div>)
             }
           </div>
@@ -217,7 +236,7 @@ const TimerPage = (props) => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Part:</div>
             <div className="col-9">
-              <AutoCompleteSelect options = {filteredParts} onChange={v => setTimerPart(v)} />
+              <AutoCompleteSelect options = {filteredParts} onChange={v => partChanged(v)} />
               <input type="hidden" name="part" value={timerPart} />
             </div>
           </div>
