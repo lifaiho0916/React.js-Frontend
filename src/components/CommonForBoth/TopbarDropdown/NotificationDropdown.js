@@ -18,13 +18,14 @@ const NotificationDropdown = props => {
         toggle={() => setMenu(!menu)}
         className="dropdown d-inline-block"
         tag="li"
+        // style={{ left: "10%" }}
       >
         <DropdownToggle
           className="btn header-item noti-icon waves-effect"
           tag="button"
           id="page-header-notifications-dropdown"
         >
-          <i className="mdi mdi-bell-outline"></i>
+          <i className="mdi mdi-bell-outline" style={{ fontSize: "40px" }}></i>
           <span className="badge bg-danger rounded-pill">3</span>
         </DropdownToggle>
 

@@ -50,7 +50,7 @@ const Recoverpw = () => {
 
                     <Form className="mt-4" action="dashboard">
                       <div className="mb-3">
-                        <Label for="useremail">Email</Label>
+                        <Label htmlFor="useremail">Email</Label>
                         <Input
                           type="email"
                           className="form-control"

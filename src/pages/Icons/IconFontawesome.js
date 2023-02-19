@@ -22,8 +22,8 @@ const IconFontawesome = props => {
           switch (value) {
             case "brands":
               brand +=
-                '<div class="col-xl-3 col-lg-4 col-sm-6">\
-                          <i class="fab fa-' +
+                '<div className="col-xl-3 col-lg-4 col-sm-6">\
+                          <i className="fab fa-' +
                 entry.id +
                 '"></i> fab fa-' +
                 entry.id +
@@ -32,8 +32,8 @@ const IconFontawesome = props => {
               break;
             case "solid":
               solid +=
-                '<div class="col-xl-3 col-lg-4 col-sm-6">\
-                    <i class="fas fa-' +
+                '<div className="col-xl-3 col-lg-4 col-sm-6">\
+                    <i className="fas fa-' +
                 entry.id +
                 '"></i> fas fa-' +
                 entry.id +
@@ -42,8 +42,8 @@ const IconFontawesome = props => {
               break;
             default:
               regular +=
-                '<div class="col-xl-3 col-lg-4 col-sm-6">\
-                          <i class="far fa-' +
+                '<div className="col-xl-3 col-lg-4 col-sm-6">\
+                          <i className="far fa-' +
                 entry.id +
                 '"></i> far fa-' +
                 entry.id +

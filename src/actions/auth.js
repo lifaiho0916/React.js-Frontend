@@ -17,3 +17,11 @@ export const updateUser = async (fields) => {
     return false
   }
 }
+
+export const getUsers = async () => {
+  try {
+    const res = await axios.get("/auth/all-users")
+    return res.data.users
+  } catch (err) {
+  }
+}

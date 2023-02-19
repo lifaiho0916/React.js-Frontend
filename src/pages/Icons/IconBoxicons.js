@@ -21,7 +21,7 @@ const IconBoxicons = props => {
       switch (val.type_of_icon) {
         case "SOLID":
           logos +=
-            '<div class="col-xl-3 col-lg-4 col-sm-6"><i class="bx bxs-' +
+            '<div className="col-xl-3 col-lg-4 col-sm-6"><i className="bx bxs-' +
             val.name +
             '"></i> bx bxs-' +
             val.name +
@@ -29,7 +29,7 @@ const IconBoxicons = props => {
           break
         case "LOGO":
           solid +=
-            '<div class="col-xl-3 col-lg-4 col-sm-6"><i class="bx bxl-' +
+            '<div className="col-xl-3 col-lg-4 col-sm-6"><i className="bx bxl-' +
             val.name +
             '"></i> bx bxl-' +
             val.name +
@@ -37,7 +37,7 @@ const IconBoxicons = props => {
           break
         case "REGULAR":
           regularIcon +=
-            '<div class="col-xl-3 col-lg-4 col-sm-6"><i class="bx bx-' +
+            '<div className="col-xl-3 col-lg-4 col-sm-6"><i className="bx bx-' +
             val.name +
             '"></i> bx bx-' +
             val.name +
@@ -68,7 +68,7 @@ const IconBoxicons = props => {
                 <CardBody>
                   <CardTitle className="h4">Examples</CardTitle>
                   <p className="card-subtitle mb-4">
-                    Use class <code>&lt;i class="bx bx-**">&lt;/i></code>
+                    Use class <code>&lt;i className="bx bx-**">&lt;/i></code>
                   </p>
 
                   <h5>Regular</h5>

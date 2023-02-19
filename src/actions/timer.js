@@ -1,5 +1,5 @@
 import axios from "axios"
-import { extractFormData } from "helpers/functions"
+import { extractFormData, getCurrentTime } from "helpers/functions"
 
 export const createMachineAction = async (form) => {
   const res = await axios.post("/timer/create-machine", form, { 
@@ -40,16 +40,24 @@ export const createTimerAction = async (data) => {
 }
 
 export const startTimerAction = async (id) => {
-  const res = await axios.post("/timer/start-timer", { id })
+  const time = new Date()
+  const res = await axios.post("/timer/start-timer", { id, time: time.toISOString() })
   return res
 }
 
 export const endTimerAction = async (id) => {
-  const res = await axios.post("/timer/end-timer", { id })
+  const time = new Date()
+  const res = await axios.post("/timer/end-timer", { id, time })
   return res
 }
 
 export const stopTimerAction = async (id) => {
-  const res = await axios.post("/timer/stop-timer", { id })
+  const time = new Date()
+  const res = await axios.post("/timer/stop-timer", { id, time })
+  return res
+}
+
+export const updateTimerAction = async (id, updates) => {
+  const res = await axios.post("/timer/update-timer", { id, updates })
   return res
 }

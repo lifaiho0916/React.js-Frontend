@@ -6,7 +6,7 @@ const AutoCompleteSelect = (props) => {
     {
       label: "Parts",
       options: props.options.map(v => ({
-        label: v.name,
+        label: v.name||v.machine.name,
         value: v._id
       }))
     }
@@ -17,6 +17,7 @@ const AutoCompleteSelect = (props) => {
       props.onChange(e.value)
     }}
     options={optionsGroup}
+    placeholder={props.placeholder || ""}
     classNamePrefix="select2-selection w-100"
   />
 }

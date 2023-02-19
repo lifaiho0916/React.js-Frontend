@@ -10,8 +10,8 @@ import SidebarContent from "./SidebarContent"
 const Sidebar = props => {
   return (
     <React.Fragment>
-      <div className="vertical-menu">
-        <div data-simplebar className="h-100">
+      <div className="vertical-menu" style={{ top: "86px", width: "330px" }}>
+        <div data-simplebar className="h-90">
           {props.type !== "condensed" ? <SidebarContent /> : <SidebarContent />}
         </div>
       </div>

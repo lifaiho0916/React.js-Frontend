@@ -1,20 +1,32 @@
-import { CitySelect, FactoryList } from 'components/Common/Select';
-import { factories } from 'helpers/globals';
-import { useState } from 'react';
-import MetaTags from 'react-meta-tags';
+import { CitySelect, FactoryList } from "components/Common/Select"
+import { factories } from "helpers/globals"
+import { useState } from "react"
+import MetaTags from "react-meta-tags"
 import {
-  Container, Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Col, Card,
+  Container,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Row,
+  Col,
+  Card,
 } from "reactstrap"
 import Dropzone from "react-dropzone"
-import Machine from '../components/Machine';
-import Part from '../components/Part';
-import { Link } from 'react-router-dom';
+import Machine from "../components/Machine"
+import Part from "../components/Part"
+import { Link } from "react-router-dom"
 import "./style.scss"
-import { createMachineAction, createPartAction, editProductAction, getProducts } from 'actions/timer';
-import { useEffect } from 'react';
+import {
+  createMachineAction,
+  createPartAction,
+  editProductAction,
+  getProducts,
+} from "actions/timer"
+import { useEffect } from "react"
 
-const ProductList = (props) => {
-
+const ProductList = props => {
   const [machineModal, setMachineModal] = useState(false)
 
   const [type, setType] = useState("Parts")
@@ -56,9 +68,9 @@ const ProductList = (props) => {
     setPartsModal(!partsModal)
   }
 
-  const createPart = async() => {
+  const createPart = async () => {
     const form = new FormData(document.getElementById("part-form"))
-    const {part} = await createPartAction(form)
+    const { part } = await createPartAction(form)
     setParts([part, ...parts])
     togglePartsModal()
   }
@@ -70,7 +82,7 @@ const ProductList = (props) => {
     toggleModal()
   }
 
-  const deleteProduct = async(type, id) => {
+  const deleteProduct = async (type, id) => {
     if (type == "Machine") {
       setMachines(machines.filter(m => m._id != id))
     } else {
@@ -78,7 +90,7 @@ const ProductList = (props) => {
     }
   }
 
-  const editMachine = async (idx) => {
+  const editMachine = async idx => {
     setEdit(true)
     setMachineModal(true)
   }
@@ -92,19 +104,19 @@ const ProductList = (props) => {
   const updateMachine = (f, e) => {
     setMachine({
       ...machine,
-      [f]: e.target.value
+      [f]: e.target.value,
     })
   }
 
   const updatePart = (f, e) => {
     setPart({
       ...part,
-      [f]: e.target.value
+      [f]: e.target.value,
     })
   }
 
   useEffect(() => {
-    (async() => {
+    ;(async () => {
       const _parts = await getProducts("Part")
       const _machines = await getProducts("Machine")
       setMachines(_machines.products)
@@ -112,52 +124,104 @@ const ProductList = (props) => {
     })()
   }, [])
 
-  return <div className="page-content">
-    <MetaTags>
-      <title>Timer Page</title>
-    </MetaTags>
-    <Container fluid>
-      <div className="timer-page-container mt-5">
-        <div className="row p-0 m-0">
-          <div className="col-xl-9 p-0">
+  return (
+    <div
+      className="page-content"
+      // style={{ padding: "86px calc(0.5rem / 2) 60px calc(11.5rem / 2)" }}
+    >
+      <MetaTags>
+        <title>Timer Page</title>
+      </MetaTags>
+      <Container fluid>
+        <div className="timer-page-container mt-5 mx-auto">
+          <div className="row p-0 m-0">
+            {/* <div className="col-xl-9 p-0"> */}
             <div className="d-flex justify-content-between timer-page-header">
               <div>
-                <h1>Product List</h1>
-                <div>
+                <h1 style={{ fontSize: "44px" }}>Product List</h1>
+                <div style={{ fontSize: "18px" }}>
                   <span className="text-black-50">PRODUCTION</span>
                   <span className="mx-3"> &gt; </span>
                   <span className="text-danger">TEXAS</span>
                 </div>
               </div>
-              <div className="d-flex align-items-center">
-                <div className="d-flex border-left-right px-2 align-self-stretch">
-                  <div className='d-flex justify-content-center flex-column align-items-center ms-3'>
-                    <h2>{ (type=="Parts"?parts:machines).length }</h2>
-                    <div className="d-flex align-items-center text-uppercase">{ type == "Machine" ? "Machines" : type }
+              <div
+                className="d-flex align-items-center"
+                style={{ height: "60px" }}
+              >
+                <div
+                  className="d-flex border-left-right px-2 align-self-stretch"
+                  style={{ height: "45px", marginTop: "8px" }}
+                >
+                  <div className="d-flex justify-content-center flex-column align-items-center ms-3">
+                    <h3 style={{ marginBottom: "-1px" }}>
+                      {(type == "Parts" ? parts : machines).length}
+                    </h3>
+                    <div
+                      className="d-flex align-items-center text-uppercase"
+                      style={{ fontSize: "11px" }}
+                    >
+                      {type == "Machine" ? "Machines" : type}
                     </div>
                   </div>
-                  <div className='ms-2 me-3 d-flex align-items-end h-100'>
-                    <span className='mdi mdi-chevron-up' style={{fontSize: 20, color: "rgb(2, 186, 197)"}}></span>
+                  <div className="ms-2 me-3 d-flex align-items-end h-100">
+                    <span
+                      className="mdi mdi-chevron-up"
+                      style={{ fontSize: 20, color: "rgb(2, 186, 197)" }}
+                    ></span>
                   </div>
                 </div>
-                <button className='btn btn-primary ms-3 h-75 text-uppercase' onClick={showCreateModal}>NEW {type}</button>
+                <button
+                  className="btn btn-primary ms-3 h-75 text-uppercase"
+                  onClick={showCreateModal}
+                  style={{ width: "145px" }}
+                >
+                  NEW {type}
+                </button>
               </div>
             </div>
 
-            <div className="mt-3">
+            <div
+              className="mt-3"
+              style={{
+                paddingLeft: "0px",
+                borderBottom: "2px solid rgba(221, 222, 226, 0.5)",
+                paddingBottom: "1rem",
+              }}
+            >
               <div className="d-flex type-selector-container">
-                {
-                  types.map(_type => <div key={_type} className="type text-uppercase cursor-pointer" onClick={() => setType(_type)}>
-                    <div className={`type-selector ${_type == type ? 'active' : ''}`}>
+                {types.map(_type => (
+                  <div
+                    key={_type}
+                    className="type text-uppercase cursor-pointer"
+                    style={{ marginLeft: "0px" }}
+                    onClick={() => setType(_type)}
+                  >
+                    <div
+                      className={`type-selector ${
+                        _type == type ? "active" : ""
+                      }`}
+                      style={{
+                        padding: "20px",
+                      }}
+                    >
                       <span>{_type}</span>
-                      <span className="percent">31.3%<span class="mdi mdi-menu-up"></span></span>
-                      <span><i class="mdi mdi-poll"></i></span>
+                      <span className="percent">
+                        <span className="mdi mdi-menu-up"></span>
+                      </span>
+                      <span>
+                        <i className="mdi mdi-poll"></i>
+                      </span>
                     </div>
-                    <div className='mt-1 d-flex justify-content-end'>
-                      COMPARE <input type="checkbox" className="form-checkbox ms-2" />
-                    </div>
-                  </div>)
-                }
+                    {/* <div
+                      className="mt-1 d-flex justify-content-end"
+                      style={{ marginRight: "45px" }}
+                    >
+                      COMPARE{" "}
+                      <input type="checkbox" className="form-checkbox ms-2" />
+                    </div> */}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -167,216 +231,300 @@ const ProductList = (props) => {
                   <div>
                     <b>General Search</b>
                   </div>
-                  <div className='mt-2'>
-                    <select className='form-select'>
+                  <div className="mt-2">
+                    <select
+                      className="form-select"
+                      style={{
+                        paddingLeft: "24px",
+                        paddingBottom: "10px",
+                        paddingTop: "10px",
+                      }}
+                    >
                       <option>RP2225-1</option>
                     </select>
                   </div>
                 </div>
-                <div className="col-6 d-flex align-items-end">
-                  <CitySelect />
-                </div>
+                {/* <div className="col-6 d-flex align-items-end">
+                    <CitySelect />
+                  </div> */}
               </div>
               <div className="search-action">
-                <span class="mdi mdi-refresh"></span>
+                <span className="mdi mdi-refresh"></span>
               </div>
             </div>
+            {/* </div> */}
           </div>
+
+          {/* <div className="products-container row m-0 p-0 mt-5"> */}
+          <div className="row mt-5 p-0">
+            {type == "Parts"
+              ? parts.map(product => (
+                  <Part
+                    {...product}
+                    key={`part-${product._id}`}
+                    deleteProduct={deleteProduct}
+                  />
+                ))
+              : machines.map(product => (
+                  <Machine
+                    key={`machine-${product._id}`}
+                    {...product}
+                    deleteProduct={deleteProduct}
+                  />
+                ))}
+          </div>
+          {/* </div> */}
         </div>
+      </Container>
 
-        <div className="products-container row m-0 p-0 mt-5">
-          <div className='col-xl-9 row'>
-            {
-              type=="Parts" ?
-                parts.map(product => <Part { ...product } key={`part-${product._id}`} deleteProduct={deleteProduct} />) : 
-                machines.map(product => <Machine key={`machine-${product._id}`} { ...product } deleteProduct={deleteProduct} />)
-            }
-          </div>
-        </div>
-      </div>
-    </Container>
+      <Modal isOpen={partsModal} toggle={togglePartsModal}>
+        <ModalHeader toggle={togglePartsModal}>Create A New Part</ModalHeader>
+        <ModalBody>
+          <form className="p-2" onSubmit={e => createPart(e)} id="part-form">
+            <div>
+              <CitySelect />
+            </div>
 
-    <Modal isOpen={partsModal} toggle={togglePartsModal} >
-      <ModalHeader toggle={togglePartsModal}>Create A New Part</ModalHeader>
-      <ModalBody>
-        <form className="p-2" onSubmit={e => createPart(e)}  id="part-form">
-          <div><CitySelect /></div>
-        
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="text" placeholder='Part' name="name" onChange={(e) => updatePart("name", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Part"
+                name="name"
+                onChange={e => updatePart("name", e)}
+              />
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Pounds' name="pounds" onChange={(e) => updatePart("pounds", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Pounds"
+                name="pounds"
+                onChange={e => updatePart("pounds", e)}
+              />
+            </div>
 
-          <div className="mt-3 d-flex align-items-center mb-3">
-            <input className="form-control" type="number" placeholder='Avg Time' name="avgTime" onChange={(e) => updatePart("avgTime", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center mb-3">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Avg Time"
+                name="avgTime"
+                onChange={e => updatePart("avgTime", e)}
+              />
+            </div>
 
-          <Dropzone
-            onDrop={acceptedFiles => {
-              handleAcceptedFiles(acceptedFiles)
-            }}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div className="dropzone">
-                <div
-                  className="dz-message needsclick"
-                  {...getRootProps()}
-                >
-                  <input {...getInputProps()} name="preview" />
-                  <div className="mb-3">
-                    <i className="mdi mdi-cloud-upload display-4 text-muted"></i>
+            <Dropzone
+              onDrop={acceptedFiles => {
+                handleAcceptedFiles(acceptedFiles)
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div className="dropzone">
+                  <div className="dz-message needsclick" {...getRootProps()}>
+                    <input {...getInputProps()} name="preview" />
+                    <div className="mb-3">
+                      <i className="mdi mdi-cloud-upload display-4 text-muted"></i>
+                    </div>
+                    <h4>Drop files here or click to upload.</h4>
                   </div>
-                  <h4>Drop files here or click to upload.</h4>
                 </div>
-              </div>
-            )}
-          </Dropzone>
+              )}
+            </Dropzone>
 
-          <div className="dropzone-previews mt-3" id="file-previews">
-            {selectedFiles.map((f, i) => {
-              return (
-                <Card
-                  className="mt-1 mb-0 shadow-none border dz-processing dz-image-preview dz-success dz-complete"
-                  key={i + "-file"}
-                >
-                  <div className="p-2">
-                    <Row className="align-items-center">
-                      <Col className="col-auto">
-                        <img
-                          data-dz-thumbnail=""
-                          height="80"
-                          className="avatar-sm rounded bg-light"
-                          alt={f.name}
-                          src={f.preview}
-                        />
-                      </Col>
-                      <Col>
-                        <Link
-                          to="#"
-                          className="text-muted font-weight-bold"
-                        >
-                          {f.name}
-                        </Link>
-                        <p className="mb-0">
-                          <strong>{f.formattedSize}</strong>
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                </Card>
-              )
-            })}
-          </div>
+            <div className="dropzone-previews mt-3" id="file-previews">
+              {selectedFiles.map((f, i) => {
+                return (
+                  <Card
+                    className="mt-1 mb-0 shadow-none border dz-processing dz-image-preview dz-success dz-complete"
+                    key={i + "-file"}
+                  >
+                    <div className="p-2">
+                      <Row className="align-items-center">
+                        <Col className="col-auto">
+                          <img
+                            data-dz-thumbnail=""
+                            height="80"
+                            className="avatar-sm rounded bg-light"
+                            alt={f.name}
+                            src={f.preview}
+                          />
+                        </Col>
+                        <Col>
+                          <Link to="#" className="text-muted font-weight-bold">
+                            {f.name}
+                          </Link>
+                          <p className="mb-0">
+                            <strong>{f.formattedSize}</strong>
+                          </p>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Card>
+                )
+              })}
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Finish Good Weight (lbs)' name="finishGoodWeight" onChange={(e) => updatePart("finishGoodWeight", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Finish Good Weight (lbs)"
+                name="finishGoodWeight"
+                onChange={e => updatePart("finishGoodWeight", e)}
+              />
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Cage Weight Scrap (lbs)' name="cageWeightScrap" onChange={(e) => updatePart("cageWeightScrap", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Cage Weight Scrap (lbs)"
+                name="cageWeightScrap"
+                onChange={e => updatePart("cageWeightScrap", e)}
+              />
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Case Weight Actuals (lbs)' name="caseWeightActuals" onChange={(e) => updatePart("caseWeightActuals", e)}/>
-          </div>
-        </form>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="primary" onClick={createPart}>Save</Button>{' '}
-        <Button color="secondary" onClick={togglePartsModal}>Cancel</Button>
-      </ModalFooter>
-    </Modal>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Case Weight Actuals (lbs)"
+                name="caseWeightActuals"
+                onChange={e => updatePart("caseWeightActuals", e)}
+              />
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={createPart}>
+            Save
+          </Button>{" "}
+          <Button color="secondary" onClick={togglePartsModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
 
-    <Modal isOpen={machineModal} toggle={toggleModal} >
-      <ModalHeader toggle={toggleModal}>Create New Machine</ModalHeader>
-      <ModalBody>
-        <form className="p-2" onSubmit={e => createMachine(e)} id="machine-form">
-          <div><CitySelect /></div>
-          <div className="mt-3"><FactoryList /></div>
-        
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="text" placeholder='Machine' name="name" onChange={(e) => updateMachine("name", e)}/>
-          </div>
-
-          <div className="my-3 d-flex align-items-center">
-            <input className="form-control" type="text" placeholder='Details' name="details" onChange={(e) => updateMachine("details", e)}/>
-          </div>
-
-          <Dropzone
-            onDrop={acceptedFiles => {
-              handleAcceptedFiles(acceptedFiles)
-            }}
+      <Modal isOpen={machineModal} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>Create New Machine</ModalHeader>
+        <ModalBody>
+          <form
+            className="p-2"
+            onSubmit={e => createMachine(e)}
+            id="machine-form"
           >
-            {({ getRootProps, getInputProps }) => (
-              <div className="dropzone">
-                <div
-                  className="dz-message needsclick"
-                  {...getRootProps()}
-                >
-                  <input {...getInputProps()} name="preview" />
-                  <div className="mb-3">
-                    <i className="mdi mdi-cloud-upload display-4 text-muted"></i>
+            <div>
+              <CitySelect />
+            </div>
+            <div className="mt-3">
+              <FactoryList />
+            </div>
+
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Machine"
+                name="name"
+                onChange={e => updateMachine("name", e)}
+              />
+            </div>
+
+            <div className="my-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Details"
+                name="details"
+                onChange={e => updateMachine("details", e)}
+              />
+            </div>
+
+            <Dropzone
+              onDrop={acceptedFiles => {
+                handleAcceptedFiles(acceptedFiles)
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div className="dropzone">
+                  <div className="dz-message needsclick" {...getRootProps()}>
+                    <input {...getInputProps()} name="preview" />
+                    <div className="mb-3">
+                      <i className="mdi mdi-cloud-upload display-4 text-muted"></i>
+                    </div>
+                    <h4>Drop files here or click to upload.</h4>
                   </div>
-                  <h4>Drop files here or click to upload.</h4>
                 </div>
-              </div>
-            )}
-          </Dropzone>
+              )}
+            </Dropzone>
 
-          <div className="dropzone-previews mt-3" id="file-previews">
-            {selectedFiles.map((f, i) => {
-              return (
-                <Card
-                  className="mt-1 mb-0 shadow-none border dz-processing dz-image-preview dz-success dz-complete"
-                  key={i + "-file"}
-                >
-                  <div className="p-2">
-                    <Row className="align-items-center">
-                      <Col className="col-auto">
-                        <img
-                          data-dz-thumbnail=""
-                          height="80"
-                          className="avatar-sm rounded bg-light"
-                          alt={f.name}
-                          src={f.preview}
-                        />
-                      </Col>
-                      <Col>
-                        <Link
-                          to="#"
-                          className="text-muted font-weight-bold"
-                        >
-                          {f.name}
-                        </Link>
-                        <p className="mb-0">
-                          <strong>{f.formattedSize}</strong>
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                </Card>
-              )
-            })}
-          </div>
+            <div className="dropzone-previews mt-3" id="file-previews">
+              {selectedFiles.map((f, i) => {
+                return (
+                  <Card
+                    className="mt-1 mb-0 shadow-none border dz-processing dz-image-preview dz-success dz-complete"
+                    key={i + "-file"}
+                  >
+                    <div className="p-2">
+                      <Row className="align-items-center">
+                        <Col className="col-auto">
+                          <img
+                            data-dz-thumbnail=""
+                            height="80"
+                            className="avatar-sm rounded bg-light"
+                            alt={f.name}
+                            src={f.preview}
+                          />
+                        </Col>
+                        <Col>
+                          <Link to="#" className="text-muted font-weight-bold">
+                            {f.name}
+                          </Link>
+                          <p className="mb-0">
+                            <strong>{f.formattedSize}</strong>
+                          </p>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Card>
+                )
+              })}
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Optional' name="weight" onChange={(e) => updateMachine("weight", e)}/>
-          </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Optional"
+                name="weight"
+                onChange={e => updateMachine("weight", e)}
+              />
+            </div>
 
-          <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="text" placeholder='Optional' name="productionTime" onChange={(e) => updateMachine("productionTime", e)}/>
-          </div>
-        </form>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="primary" onClick={createMachine}>Save</Button>{' '}
-        <Button color="secondary" onClick={toggleModal}>Cancel</Button>
-      </ModalFooter>
-    </Modal>
-  </div>
+            <div className="mt-3 d-flex align-items-center">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Optional"
+                name="productionTime"
+                onChange={e => updateMachine("productionTime", e)}
+              />
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={createMachine}>
+            Save
+          </Button>{" "}
+          <Button color="secondary" onClick={toggleModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </div>
+  )
 }
 
 export default ProductList

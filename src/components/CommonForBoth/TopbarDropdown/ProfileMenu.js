@@ -12,6 +12,7 @@ import { withTranslation } from "react-i18next"
 // Redux
 import { connect } from "react-redux"
 import { withRouter, Link } from "react-router-dom"
+import sampleAvatar from "../../../assets/images/users/user-1.jpg"
 
 // users
 import user1 from "../../../assets/images/users/user-4.jpg"
@@ -53,12 +54,12 @@ const ProfileMenu = props => {
           <div className="d-flex align-items-center">
             <img
               className="rounded-circle header-profile-user"
-              src={user1}
+              src={sampleAvatar}
               alt="Header Avatar"
             />
             <div className="ms-2">
-              <div>{user.name}</div>
-              <div>{user.role}</div>
+              <div style={{ fontSize: "22px" }}>{user.name}</div>
+              <div style={{ marginTop: "-10px", marginLeft: "-20px" }}>{user.role}</div>
             </div>
             <div className="ms-4 me-3">
               <span className="mdi mdi-menu-down" style={{fontSize: 20}}></span>

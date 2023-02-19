@@ -62,8 +62,15 @@
         >.has-arrow {
             &:after {
                 transform: rotate(-180deg);
+                font-size: 25px;
             }
         }
+        
+    // background-color: black;
+    // border-radius: 20px;
+    // position: relative;
+    // left: -20px;
+
     }
 
     .has-arrow {
@@ -74,6 +81,7 @@
             float: right;
             transition: transform .2s;
             font-size: 1rem;
+            font-size: 25px;
         }
     }
 
@@ -81,11 +89,12 @@
         li {
             a {
                 display: block;
-                padding: 12px 20px;
+                padding: 10px 8px 10px 0px;
+                margin-right: 25px;
                 font-family: $font-family-secondary;
                 color: $sidebar-menu-item-color;
                 position: relative;
-                font-size: 15.7px;
+                font-size: 22px;
                 transition: all .4s;
 
                 i {
@@ -119,7 +128,7 @@
 
                     a {
                         padding: .4rem 1.5rem .4rem 3.3rem;
-                        font-size: 15px;
+                        font-size: 19px;
                         color: $sidebar-menu-sub-item-color;
                     }
 
@@ -129,7 +138,7 @@
                         li {
                             a {
                                 padding: .4rem 1.5rem .4rem 4.5rem;
-                                font-size: 13.5px;
+                                font-size: 19px;
                             }
                         }
                     }
@@ -150,13 +159,32 @@
     color: $sidebar-menu-item-icon-color !important;
     font-weight: $fw-medium;
 }
+.mm-show .mm-show .mm-active {
+    background-color: rgb(39,44,50);
+    border-radius: 20px;
+    position: relative;
+    left: -20px;
+    a {
+        left: 20px;
+    }
+    ul {
+        left: 20px;
+        .mm-active {
+            left: 0px;
+            background: none;
+        }
+    }
 
+}
+.mm-collapsed {
+    background: none !important;
+    left: 0px !important;
+}
 .mm-active {
     color: $sidebar-menu-item-active-color !important;
-
     >a {
         color: $sidebar-menu-item-active-color !important;
-        background-color: $sidebar-menu-item-active-bg;
+        // background-color: $sidebar-menu-item-active-bg;
 
         i {
             color: $sidebar-menu-item-active-color !important;
@@ -378,6 +406,7 @@ body[data-sidebar="dark"] {
                
                 a {
                     color: $sidebar-dark-menu-item-color;
+                    margin-left: 75px;
 
                     i {
                         color: $sidebar-dark-menu-item-icon-color;
@@ -392,9 +421,9 @@ body[data-sidebar="dark"] {
                     }
                 }
                 
-                >.mm-active{
-                    background-color: $sidebar-dark-menu-item-active-bg;
-                }
+                // >.mm-active{
+                //     background-color: $sidebar-dark-menu-item-active-bg;
+                // }
 
                 ul.sub-menu {
                     li {
@@ -479,7 +508,7 @@ body[data-sidebar="dark"] {
         color: $sidebar-dark-menu-item-active-color !important;
         > a{
             color: $sidebar-dark-menu-item-active-color !important;
-            background-color: $sidebar-dark-menu-item-active-bg;
+            // background-color: $sidebar-dark-menu-item-active-bg;
             i {
                 color: $sidebar-dark-menu-item-active-color !important;
             }
@@ -748,7 +777,8 @@ body[data-sidebar="colored"] {
                         a {
                             color: $sidebar-colored-menu-sub-item-color;
                             background: transparent;
-
+                            margin-top: 0px;
+                            margin-bottom: 20px;
                             &:hover {
                                 color: $sidebar-colored-menu-item-hover-color;
                             }

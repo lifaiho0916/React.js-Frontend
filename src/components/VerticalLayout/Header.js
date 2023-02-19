@@ -1,8 +1,16 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import React, { useState } from "react"
 
 import { connect } from "react-redux"
-import { Form, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Input, Button } from "reactstrap"
+import {
+  Form,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+  Input,
+  Button,
+} from "reactstrap"
 
 import { Link } from "react-router-dom"
 
@@ -11,9 +19,9 @@ import LanguageDropdown from "../CommonForBoth/TopbarDropdown/LanguageDropdown"
 import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDropdown"
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 
-import logodarkImg from "../../assets/images/logo-dark.png";
-import logosmImg from "../../assets/images/logo-sm.png";
-import logolightImg from "../../assets/images/logo-light.png";
+import logodarkImg from "../../assets/images/logo-dark.png"
+import logosmImg from "../../assets/images/logo-sm.png"
+import logolightImg from "../../assets/images/logo-light.png"
 import Switch from "react-switch"
 
 //i18n
@@ -36,7 +44,7 @@ const Offsymbol = () => {
         height: "100%",
         fontSize: 12,
         color: "#fff",
-        paddingRight: 2
+        paddingRight: 2,
       }}
     >
       {" "}
@@ -55,7 +63,7 @@ const OnSymbol = () => {
         height: "100%",
         fontSize: 12,
         color: "#fff",
-        paddingRight: 2
+        paddingRight: 2,
       }}
     >
       {" "}
@@ -99,21 +107,21 @@ const Header = props => {
   }
 
   function tToggle() {
-    var body = document.body;
+    var body = document.body
     if (window.screen.width <= 992) {
-      body.classList.toggle("sidebar-enable");
+      body.classList.toggle("sidebar-enable")
     } else {
-      body.classList.toggle("vertical-collpsed");
-      body.classList.toggle("sidebar-enable");
+      body.classList.toggle("vertical-collpsed")
+      body.classList.toggle("sidebar-enable")
     }
-}
+  }
 
   return (
     <React.Fragment>
       <header id="page-topbar">
-        <div className="navbar-header">
+        <div className="navbar-header" style={{ height: "86px" }}>
           <div className="d-flex">
-            <div className="navbar-brand-box">
+            <div className="navbar-brand-box" style={{ width: "315px" }}>
               <Link to="/" className="logo logo-dark">
                 <div className="logo-sm w-100">
                   <img src={logosmImg} alt="" height="22" />
@@ -123,7 +131,11 @@ const Header = props => {
                 </div>
               </Link>
 
-              <Link to="/" className="logo logo-light">
+              <Link
+                to="/"
+                className="logo logo-light"
+                style={{ width: "277px" }}
+              >
                 <div className="logo-sm w-100">
                   <img src={logosmImg} alt="" height="22" />
                 </div>
@@ -134,9 +146,9 @@ const Header = props => {
             </div>
           </div>
 
-          <div className='d-flex flex-1 row m-0'>
-            <div className="col-xl-9 d-flex">
-              <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect"
+          <div className="d-flex flex-1 row m-0">
+            <div className="col-xl-12 d-flex">
+              {/* <button type="button" className="btn btn-sm px-3 font-size-24 header-item waves-effect"
                   id="vertical-menu-btn"
                   onClick={() => {
                     tToggle()
@@ -144,23 +156,48 @@ const Header = props => {
                   data-target="#topnav-menu-content"
                 >
                 <i className="mdi mdi-menu"></i>
-              </button>
+              </button> */}
 
               <div className="d-flex flex-1">
                 <form className="app-search d-none d-lg-block">
-                  <div className="position-relative">
+                  <div className="position-relative" style={{ left: "39%", top: "-8px" }}>
+                    <span
+                      className="fa fa-search"
+                      style={{
+                        fontSize: "14px",
+                        left: "18px",
+                        position: "relative",
+                        left: "15px",
+                        top: "38px",
+                      }}
+                    ></span>
                     <input
                       type="text"
                       className="form-control navbar-search"
                       placeholder={props.t("Search") + "..."}
+                      style={{
+                        height: "55px",
+                        paddingLeft: "57px",
+                        fontSize: "16px",
+                        backgroundColor: "white !important",
+                      }}
                     />
-                    <span className="fa fa-search"></span>
                   </div>
                 </form>
 
-                <div class="form-check form-switch custom-switch d-flex align-items-center mx-5">
-                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                  <label class="form-check-label mb-0 ms-3" for="flexSwitchCheckDefault"><b>LIGHT MODE</b></label>
+                <div className="form-check form-switch custom-switch d-flex align-items-center mx-5" style={{ position: "relative", left: "5%"}}>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckDefault"
+                  />
+                  <label
+                    className="form-check-label mb-0 ms-3"
+                    htmlFor="flexSwitchCheckDefault"
+                  >
+                    <b>LIGHT MODE</b>
+                  </label>
                 </div>
 
                 <Dropdown
@@ -174,15 +211,24 @@ const Header = props => {
                     className="btn header-item noti-icon waves-effect"
                     id="page-header-search-dropdown"
                     tag="button"
-                  > <i className="mdi mdi-magnify"></i>
+                  >
+                    {" "}
+                    <i className="mdi mdi-magnify"></i>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu-lg dropdown-menu-end p-0">
                     <Form className="p-3">
                       <div className="form-group m-0">
                         <div className="input-group">
-                          <Input type="text" className="form-control navbar-search-box" placeholder="Search ..." aria-label="Recipient's username" />
+                          <Input
+                            type="text"
+                            className="form-control navbar-search-box"
+                            placeholder="Search ..."
+                            aria-label="Recipient's username"
+                          />
                           <div className="input-group-append">
-                            <Button className="btn btn-primary" type="submit"><i className="mdi mdi-magnify"></i></Button>
+                            <Button className="btn btn-primary" type="submit">
+                              <i className="mdi mdi-magnify"></i>
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -190,22 +236,20 @@ const Header = props => {
                   </DropdownMenu>
                 </Dropdown>
 
-                <div className='d-flex flex-1 justify-content-end'>
-
+                <div className="d-flex flex-1 justify-content-end" style={{ marginTop: "8px", position: "relative",
+    right: "2%", }}>
                   <ProfileMenu />
                   <NotificationDropdown />
-                  <div className="email-icon-container">
-                    <i className="mdi mdi-email-outline"></i>
+                  <div className="email-icon-container" >
+                    <i className="mdi mdi-email-outline" style={{ fontSize: "30px" }}></i>
                   </div>
 
-                  <div
-                    className="dropdown d-inline-block"
-                  >
+                  <div className="dropdown d-inline-block" >
                     <button
                       type="button"
                       className="btn header-item noti-icon right-bar-toggle waves-effect"
                     >
-                      <i className="mdi mdi-gift"></i>
+                      <i className="mdi mdi-gift" style={{ fontSize: "27px" }}></i>
                     </button>
                   </div>
                 </div>
@@ -225,16 +269,12 @@ Header.propTypes = {
   showRightSidebar: PropTypes.any,
   showRightSidebarAction: PropTypes.func,
   t: PropTypes.any,
-  toggleLeftmenu: PropTypes.func
+  toggleLeftmenu: PropTypes.func,
 }
 
 const mapStatetoProps = state => {
-  const {
-    layoutType,
-    showRightSidebar,
-    leftMenu,
-    leftSideBarType,
-  } = state.Layout
+  const { layoutType, showRightSidebar, leftMenu, leftSideBarType } =
+    state.Layout
   return { layoutType, showRightSidebar, leftMenu, leftSideBarType }
 }
 

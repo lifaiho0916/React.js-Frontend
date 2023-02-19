@@ -2,20 +2,42 @@ $background-gray: rgb(246, 247, 251);
 $gray-font: rgb(141, 144, 150);
 $gray-color: rgb(221, 222, 226);
 
+.divide-line {
+  font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+  color: black;
+
+  .line {
+    width: 100%;
+    height: 1.5px;
+    background-color: $gray-color;
+
+  }
+}
+
 .jobs-table-container {
-  border: 1px solid $gray-color;
   border-radius: 10px;
+  border: 1px solid $gray-color;
 
   .jobs-table-header {
+
     .jobs-tab {
       background-color: $background-gray;
-      padding: 20px;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
+      font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+
       width: 200px;
+      border-top: 5px solid rgba(72, 131, 268, 0);
+
       .number {
-        font-size: 30px;
+        font-size: 1.999rem;
         margin-right: 20px;
+        font-weight: 700;
+      }
+
+      h4 {
+        font-size: 1rem;
         font-weight: 700;
       }
     }
@@ -23,13 +45,35 @@ $gray-color: rgb(221, 222, 226);
     .past-job-tab {
       border-left: 2px solid $gray-color;
       border-right: 2px solid $gray-color;
+
     }
 
     .ongoing-job-tab {
-      border-top: 5px solid rgb(72, 131, 268);
       border-top-left-radius: 10px;
     }
+
+    .active {
+      border-top: 5px solid #4aa2ee;
+      background-color: white;
+
+      .number,
+      h4 {
+        color: black;
+      }
+
+    }
+
     border-bottom: 1px solid $gray-color;
+
+    .btn-newjob {
+      background-color: rgb(155, 0, 4);
+      color: white;
+      font-size: 1rem;
+      border: .5rem;
+      font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+      padding: .5rem 1rem;
+      margin-right: calc(48px + 2vw);
+    }
   }
 
   .jobs-table {
@@ -59,19 +103,77 @@ $gray-color: rgb(221, 222, 226);
 
     thead {
       border-bottom: 1px solid $gray-color;
+
+      th {
+        padding: 12px;
+        font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+        color: black;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      th:after {
+        padding-left: .5rem;
+        content: url("data:image/svg+xml;utf8,<svg width='6' height='10' viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M3 0L6 4H0L3 0ZM3 10L0 6H6L3 10Z' fill='rgba(39, 44, 51, 0.54)'/></svg>")
+      }
     }
 
     tbody {
       tr {
+
         border-bottom: 1px solid $gray-color;
+
         td {
-          padding: 10px;
+          padding: 12px;
+          border: none;
+          background-color: white !important;
+          vertical-align: middle;
+
+          b {
+            color: black;
+          }
+
+          i {
+            font-family: Material Icons;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 24px;
+            color: grey;
+          }
+
+          i:hover {
+            color: black;
+          }
+
+          .dropdown-menu {
+            min-width: 100px;
+            transform: none !important;
+            inset: unset !important;
+            right: 0 !important;
+            top: 100% !important;
+            animation-name: DropDownSlide !important;
+            animation-duration: .3s !important;
+            animation-fill-mode: both !important;
+          }
+        }
+      }
+
+      .pagination {
+        font-weight: 500;
+        font-size: .8125rem;
+        line-height: 24px !important;
+
+        .mdi {
+          font-size: 1rem;
+          line-height: 1rem;
         }
       }
     }
 
     .job-status {
-      border-bottom: 3px solid blue;
+      padding-bottom: .25rem;
+      border-bottom: 3px solid #e4a93c !important;
     }
   }
 
@@ -79,6 +181,7 @@ $gray-color: rgb(221, 222, 226);
     color: $gray-font !important;
   }
 }
+
 .bold {
   font-weight: 700;
 }

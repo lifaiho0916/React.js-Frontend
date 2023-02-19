@@ -4,7 +4,7 @@ import { Container, Row, Col } from "reactstrap"
 const Footer = () => {
   return (
     <React.Fragment>
-      <footer className="footer">
+      {/* <footer className="footer" style={{ position: "fixed" }}>
         <Container fluid={true}>
           <Row>
             <div className="col-12">
@@ -13,7 +13,7 @@ const Footer = () => {
             </div>
           </Row>
         </Container>
-      </footer>
+      </footer> */}
     </React.Fragment>
   )
 }

@@ -22,12 +22,12 @@ const Machine = (props) => {
     setMoreMenu(!moreMenu)
   }
 
-  return <div className="col-xl-3 col-lg-4 col-md-6 p-2">
-    <div className="product p-2">
+  return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3">
+    <div className="product p-2 px-4">
       <div className="product-header justify-content-end">
         <Dropdown isOpen={moreMenu} toggle={toggle}>
           <DropdownToggle caret>
-            <span className="mdi mdi-dots-horizontal"></span>
+            <span className="mdi mdi-dots-horizontal" style={{ color: "rgba(0,0,0,0.5)", fontSize: "36px" }}></span>
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem onClick={removeMachine}>Remove</DropdownItem>
@@ -36,13 +36,13 @@ const Machine = (props) => {
         </Dropdown>
       </div>
       <div className="product-preview">
-        <img src={ "http://localhost:8000"+props.preview } className="w-100 h-100" />
+        <img src={ props.preview } className="w-100 h-100" />
         <div className="time">{formatSeconds(props.time)}</div>
       </div>
       <div className="product-info">
         <div className="product-name w-100">
           <span>{ props.name }</span>
-          <span className="text-success text-uppercase">{ props.city }</span>
+          <span className="text-uppercase" style={{ color: "rgb(77 191 91) !important" }}>{ props.city }</span>
         </div>
 
         <div className="product-details text-center">

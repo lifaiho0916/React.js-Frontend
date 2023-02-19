@@ -16,38 +16,59 @@ const Timer = (props) => {
 
   const toggleTimer = async () => {
     if (status == "Pending") {
-      await startTimerAction(props._id)
       setStatus("Started")
       setTimeout(() => {
-        setTime(time + 1)
-      }, 1000)
+        setTime(time + .1)
+      }, 100)
+      props.startTimer()
+      await startTimerAction(props._id)
     } else if (status == "Started") {
-      await stopTimerAction(props._id)
       setStatus("Pending")
       clearInterval(currentTimerId)
+      props.stopTimer()
+      await stopTimerAction(props._id)
     }
   }
 
   const stopTimer = async () => {
-    await endTimerAction(props._id)
-    setStatus("Ended")
+    setStatus("Pending")
     setTotalTime(time)
+    setTime(0)
+    props.endTimer()
+    await endTimerAction(props._id)
   }
 
-  const [time, setTime] = useState(props.time)
+  const [time, setTime] = useState(-1)
   const [totalTime, setTotalTime] = useState(props.totalTime)
   const [currentTimerId, setCurrentTimerId] = useState(-1)
 
   useEffect(() => {
-    if (status != "Started") return
+    let total = 0
+    props.times.forEach(t => {
+      console.log(t)
+      if (t.endTime) {
+        total += ((new Date(t.endTime).getTime() - new Date(t.startTime).getTime()) / 1000)
+      } else {
+        total += ((new Date().getTime() - new Date(t.startTime).getTime()) / 1000)
+      }
+    })
+    setTime(total)
+  }, [])
+
+  useEffect(() => {
+    if (status != "Started" || time == -1) return
 
     const timerId = setInterval(() => {
-      setTime(time + 1);
-    }, 1000)
+      setTime(time + .1);
+    }, 100)
     setCurrentTimerId(timerId)
 
     return (() => { clearInterval(timerId) })
   }, [time])
+
+  const editTimer = () => {
+    props.editTimer(props.idx)
+  }
 
   return <div className="col-lg-4 col-md-6 p-2">
     <div className="product p-2">
@@ -62,11 +83,12 @@ const Timer = (props) => {
           <DropdownMenu>
             <DropdownItem>Remove</DropdownItem>
             <DropdownItem onClick={stopTimer}>Stop</DropdownItem>
+            <DropdownItem onClick={editTimer}>Edit</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
       <div className="product-preview">
-        <img src={ "http://localhost:8000"+props.machine.preview } className="w-100 h-100" />
+        <img src={ props.machine.preview } className="w-100 h-100" />
         <div className="time">{formatSeconds(time)}</div>
         {
           status == "Pending" ? <button className="action play" onClick={toggleTimer}>

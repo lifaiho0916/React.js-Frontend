@@ -7,10 +7,12 @@ import {
 } from "reactstrap"
 import Timer from '../components/Timer';
 import "./style.scss"
-import { createTimerAction, getProducts } from 'actions/timer';
+import { createTimerAction, getProducts, updateTimerAction } from 'actions/timer';
 import { useMemo } from 'react';
 
 import AutoCompleteSelect from 'components/Common/AutoCompleteSelect';
+import { getCurrentTime } from 'helpers/functions';
+import { CitySelect, FactoryList } from 'components/Common/Select';
 
 const TimerPage = (props) => {
 
@@ -105,6 +107,92 @@ const TimerPage = (props) => {
     setFactoryFilter(_filter)
   }
 
+  const startTimer = (idx, now) => {
+    setTimers(timers.map((t, index) => {
+      return idx != index ? t : {
+        ...t,
+        times: [
+          ...t.time,
+          {
+            startTime: now,
+            endTime: undefined
+          },
+        ],
+        status: "Started"
+      }
+    }))
+  }
+
+  const stopTimer = (idx, now) => {
+    setTimers(timers.map((t, index) => {
+      let times = [...t.times]
+      if (times.length)
+        times[times.length - 1].endTime = now
+      return idx != index ? t : {
+        ...t,
+        times,
+        status: "Pending"
+      }
+    }))
+  }
+
+  const endTimer = (idx) => {
+    setTimers(timers.map((t, index) => {
+      return idx != index ? t : {
+        ...t,
+        times: [],
+        status: "Pending"
+      }
+    }))
+  }
+
+  const [editModal, setEditModal] = useState(false)
+  const [editingTimer, setEditingTimer] = useState({wegith: 0, productionTime: 0})
+  const [editingTimerIndex, setEditingTimerIndex] = useState(0)
+  const toggleEditModal = () => {
+    setEditModal(!editModal)
+  }
+  const editTimer = (idx) => {
+    setEditingTimer({
+      ...timers[idx]
+    })
+    setEditingTimerIndex(idx)
+    setEditModal(true)
+  }
+  const saveTimer = () => {
+    let _timers = [...timers]
+    _timers[editingTimerIndex] = {
+      ...editingTimer
+    }
+    setTimers(_timers)
+    updateTimerAction(timers[editingTimerIndex]._id, {
+      productionTime: editingTimer.productionTime,
+      weight: editingTimer.weight
+    })
+    setEditModal(false)
+  }
+  const updateTimerFields = (f, e) => {
+    setEditingTimer({
+      ...editingTimer,
+      [f]: parseInt(e.target.value)
+    })
+  }
+
+  const [controlFilter, setControlFilter] = useState({
+    city: "Seguin",
+    factory: "Pipe And Box"
+  })
+  const filterChanged = (field, e) => {
+    setControlFilter({
+      ...controlFilter,
+      [field]: e.target.value
+    })
+  }
+  const [controlTimer, setControlTimer] = useState(0)
+  const filteredControllerTimers = useMemo(() => {
+    return timers.filter(timer => timer.city==controlFilter.city&&timer.factory==controlFilter.factory)
+  }, [controlFilter, timers])
+
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
@@ -131,14 +219,26 @@ const TimerPage = (props) => {
               </div>
             </div>
 
+            <div className="mt-3 shadow-sm p-3">
+              <CitySelect onChange={(e) => filterChanged("city", e) }/>
+              <FactoryList className="mt-3" onChange={(e) => filterChanged("facotry", e)} />
+              <div className='mt-3'>
+                <AutoCompleteSelect options={filteredControllerTimers} onChange={(v) => setControlTimer(v)} className="mt-3" />
+              </div>
+              <div className='mt-3 d-flex justify-content-end'>
+                <Button className="btn btn-success">Start</Button>
+                <Button className="btn btn-danger ms-2">Stop</Button>
+              </div>
+            </div>
+
             <div className="mt-3">
               <div className="d-flex city-selector-container row p-0 m-0">
                 {
                   cities.map(_city => <div key={_city} className="city text-uppercase p-2 col-lg-4 col-md-6 " onClick={() => setCity(_city)}>
                     <div className={`city-selector ${_city == city ? 'active' : ''}`}>
                       <span>{_city}</span>
-                      <span className="percent">31.3%<span class="mdi mdi-menu-up"></span></span>
-                      <span><i class="mdi mdi-poll"></i></span>
+                      <span className="percent">31.3%<span className="mdi mdi-menu-up"></span></span>
+                      <span><i className="mdi mdi-poll"></i></span>
                     </div>
                     <div className='mt-1 d-flex justify-content-end'>
                       COMPARE <input type="checkbox" className="form-checkbox ms-2" />
@@ -174,7 +274,7 @@ const TimerPage = (props) => {
                 </div>
               </div>
               <div className="search-action">
-                <span class="mdi mdi-refresh"></span>
+                <span className="mdi mdi-refresh"></span>
               </div>
             </div>
           </div>
@@ -196,7 +296,16 @@ const TimerPage = (props) => {
         <div className="products-container row m-0 p-0 mt-5">
           <div className="col-xl-9 row p-0 m-0">
             {
-              filteredTimers.map(timer => <Timer { ...timer } key={`timer-${timer._id}`} />)
+              filteredTimers.map((timer, idx) => (
+                <Timer 
+                  { ...timer }
+                  key={`timer-${timer._id}`}
+                  idx={idx}
+                  startTimer={startTimer}
+                  stopTimer={stopTimer}
+                  endTimer={endTimer}
+                  editTimer={editTimer} />)
+              )
             }
           </div>
         </div>
@@ -214,11 +323,7 @@ const TimerPage = (props) => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Factory:</div>
             <div className="col-9">
-              <select className='form-select disabled-input' onChange={(e) => updateField("factory", e)} value={inputs.factory}>
-                {
-                  factories.map(factory => <option className="" key={"factory-option-"+factory} value={factory}>{factory}</option>)
-                }
-              </select>
+              <FactoryList />
             </div>
           </div>
 
@@ -259,6 +364,31 @@ const TimerPage = (props) => {
       <ModalFooter>
         <Button color="primary" onClick={createTimer}>Create</Button>{' '}
         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+      </ModalFooter>
+    </Modal>
+
+    <Modal isOpen={editModal} toggle={toggleEditModal} >
+      <ModalHeader toggle={toggleModal}>Edit Timer</ModalHeader>
+      <ModalBody>
+        <form id="timer-form">
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Weight:</div>
+            <div className="col-9">
+              <input value={editingTimer.weight} type="number" onChange={e => updateTimerFields("weight", e)} className="form-control" />
+            </div>
+          </div>
+
+          <div className="row mt-3 d-flex align-items-center">
+            <div className="col-3">Production Time:</div>
+            <div className="col-9">
+              <input value={editingTimer.productionTime} type="number" onChange={e => updateTimerFields("productionTime", e)} className="form-control" />
+            </div>
+          </div>
+        </form>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="primary" onClick={saveTimer}>Save</Button>{' '}
+        <Button color="secondary" onClick={toggleEditModal}>Cancel</Button>
       </ModalFooter>
     </Modal>
   </div>

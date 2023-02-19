@@ -6,8 +6,12 @@ $gray-color: rgb(221, 222, 226);
   .type {
     width: 30%;
     margin-left: 20px;
-
     .type-selector {
+      box-shadow: 0px 1px 6px 1px rgba(0,0,0,0.1);
+      height: 100px;
+      margin-right: 28px;
+      padding: 26px;
+
       border: 2px solid $gray-color;
       background-color: white;
       border-radius: 10px;
@@ -26,7 +30,7 @@ $gray-color: rgb(221, 222, 226);
       }
 
       &.active {
-        border: 2px solid green !important;
+        border: 2px solid rgba(75, 75, 75, 0.5) !important;
         background-color: rgb(131, 188, 199);
         color: white;
         .percent {
