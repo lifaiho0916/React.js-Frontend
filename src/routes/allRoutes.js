@@ -117,6 +117,7 @@ import Home from "../pages/Home"
 import TimerPage from "../pages/Production/Timer"
 import ProductList from "../pages/Production/ProductList"
 import ProductionTracker from "../pages/Orderflow/ProductionTracker"
+import ControlTimer from "pages/Production/ControlTimers"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -137,6 +138,7 @@ const userRoutes = [
   { path: "/production/timer", component: TimerPage },
   { path: "/production/list", component: ProductList },
   { path: "/production/system-check", component: ProductList },
+  { path: "/production/control-timers", component: ControlTimer },
 
   { path: "/operations/dashboard", component: ProductList },
   { path: "/operations/quality-control", component: ProductList },

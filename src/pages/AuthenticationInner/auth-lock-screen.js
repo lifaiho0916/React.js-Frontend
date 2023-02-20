@@ -86,7 +86,7 @@ const LockScreen = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © 2021 Veltrix. Crafted with{" "}
+                  © 2023 Ameritex. Crafted with{" "}
                   <i className="mdi mdi-heart text-danger" /> by Ieoko Media
                   </p>
               </div>

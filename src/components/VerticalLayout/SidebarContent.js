@@ -151,7 +151,7 @@ const SidebarContent = props => {
                   </li>
                   <li>
                     <Link to="/orderflow/production-tracker">
-                      {props.t("Production Taker")}
+                      {props.t("Production Tracker")}
                     </Link>
                   </li>
                   <li>
@@ -171,6 +171,9 @@ const SidebarContent = props => {
                 <ul className="sub-menu" aria-expanded="true">
                   <li>
                     <Link to="/production/timer">{props.t("Timer")}</Link>
+                  </li>
+                  <li>
+                    <Link to="/production/control-timers">{props.t("Control Timers")}</Link>
                   </li>
                   <li>
                     <Link to="/#">{props.t("System Check")}</Link>

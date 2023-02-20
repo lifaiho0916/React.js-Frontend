@@ -11,7 +11,7 @@ import AutoCompleteSelect from 'components/Common/AutoCompleteSelect';
 import { array } from 'prop-types';
 import { arraySplice } from 'redux-form';
 import { getUsers } from 'actions/auth';
-import { createJobAction, getJobsAction } from 'actions/job';
+import { createJobAction, deleteJobAction, editJobAction, getJobsAction } from 'actions/job';
 import sampleAvatar from "../../../assets/images/users/user-1.jpg"
 
 import { useMemo } from 'react';
@@ -23,8 +23,13 @@ const ProductionTracker = (props) => {
   const toggleDeleteModal = () => setJobDeleteModal(!jobDeleteModal)
 
   const [editID, setEditID] = useState(-1)
+  const [removeID, setRemoveID] = useState(-1)
+
+
   const [sortKey, setSortKey] = useState('')
   const [jobs, setJobs] = useState([])
+  const [job, setJob] = useState({})
+
   const [orderBy, setOrderby] = useState(1)
   const compare = (a, b) => {
     if (a[sortKey] < b[sortKey]) {
@@ -35,7 +40,6 @@ const ProductionTracker = (props) => {
     }
     return 0;
   }
-
   const sortTable = (key, array) => {
     let _tmp = [...array]
     setSortKey(key)
@@ -49,6 +53,14 @@ const ProductionTracker = (props) => {
   const [timerPart, setTimerPart] = useState("")
   const [tab, setTab] = useState(1)
   const [users, setUsers] = useState([])
+
+
+  const subStractDate = (date1, date2) => {
+    const diffTime = date1 - date2;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays
+  }
+
 
   useEffect(() => {
     sortTable(sortKey, jobs)
@@ -72,12 +84,38 @@ const ProductionTracker = (props) => {
     factory: "Pipe And Box",
     city: "Seguin"
   })
-  const createJob = async () => {
+  const updateTempJobField = (e, field) => {
+    const _v = { ...job, [field]: e.target ? e.target.value : e }
+    setJob(_v)
+  }
+  const manageJob = async () => {
     const form = document.getElementById("job-form")
     const data = new FormData(form)
-    const newJob = await createJobAction(data)
-    setJobModal(false)
-    setJobs([newJob, ...jobs])
+    if (editID === -1) {
+      const newJob = await createJobAction(data)
+      setJobModal(false)
+      setJobs([newJob, ...jobs])
+    }
+    else {
+      const editedJob = await editJobAction(data, jobs[editID]._id)
+      setJobModal(false)
+      let _jobs = [...jobs]
+
+      _jobs[editID] = editedJob
+      setJobs(_jobs)
+    }
+  }
+  const factoryStyle = {
+    stee: 'bg-light text-dark',
+    Stee: 'bg-light text-dark',
+    prec: 'bg-warning',
+    Prec: 'bg-warning',
+    pipe: 'bg-primary',
+    Pipe: 'bg-primary',
+    box: 'bg-info',
+    Box: 'bg-info',
+    cage: 'bg-dark',
+    Cage: 'bg-dark'
   }
   const filteredJobModalParts = useMemo(() => {
     return parts.filter(part => part.city == jobParams.city)
@@ -87,9 +125,16 @@ const ProductionTracker = (props) => {
   }, [jobParams, machines])
 
   const deleteJob = async () => {
-
+    const res = await deleteJobAction(jobs[removeID]._id)
+    let _jobs = [...jobs]
+    _jobs = _jobs.filter((job, index) =>
+      index !== removeID
+    )
+    
+    setJobs(_jobs)
+    setJobDeleteModal(false)
   }
-
+  console.log(jobs)
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
@@ -97,7 +142,7 @@ const ProductionTracker = (props) => {
     <Container fluid>
       <div className="jobslist-page-container mt-5 w-100 p-2">
         <div className="row p-0 m-0">
-          <div className="col-xl-9 p-0">
+          <div className="col-xxl-10 p-0">
             <div className="d-flex justify-content-between timer-page-header">
               <div>
                 <h1>Production Tracker</h1>
@@ -132,6 +177,7 @@ const ProductionTracker = (props) => {
                   <button className='btn btn-newjob ms-3 '
                     onClick={() => {
                       setEditID(-1)
+                      setJob({})
                       toggleModal()
                     }
                     } >
@@ -158,43 +204,59 @@ const ProductionTracker = (props) => {
                       <tr key={index}>
                         <td style={{ paddingLeft: '24px' }}>
                           <div className='d-flex align-items-center'>
-                            <img className='job-user' src={sampleAvatar}></img>
-                            <div className="job-factory">
-                              {job.factory.substring(0, 4)}
+                            { job.user? <img className='job-user' src={sampleAvatar}></img> : <div className='job-user'> UA</div>}
+                            <div className={`job-factory ${job.factory? factoryStyle[job.factory.substring(0,4)] : ''}`}>
+                              {job.factory.substring(0, 4).toUpperCase()}
                             </div>
-                            <div className='ms-2'>
-                              <b className='name'>{job.name}</b>
+                            <div className='ms-2' style={{ maxWidth: '200px' }}>
+                              <div><b className='name'>{job.name}</b></div>
                               <div className="text-secondary">{job.city}</div>
                             </div>
                           </div>
                         </td>
                         <td className=''>
-                          <b className='name'>{job.part.name}</b>
-                          <div className="text-secondary">{job.machine.name}</div>
+                          <div style={{ maxWidth: '200px' }}>
+                            <div><b className='name'>{job.part && job.part.name}</b></div>
+                            <div className="text-secondary">{job.machine && job.machine.name}</div>
+                          </div>
                         </td>
                         <td className='name'>
                           {job.producedCount} / {job.count}
                         </td>
                         <td>
-                          <span className="job-status name ">QA</span>
+                          <span className="job-status name">{job.active === true ? "Active" : "Finished"}</span>
+                          <span className={`${job.active === true ? 'bg-info' : 'bg-primary'} rounded indicator-line`}> </span>
                         </td>
                         <td>
                           <b className='name'>{new Date(job.dueDate).toLocaleDateString("en-US")}</b>
-                          <div className="text-secondary ">7 Days</div>
+                          <div className="text-secondary ">{
+                            subStractDate(new Date(job.dueDate), new Date()) < 0 ?
+                              (<span className='text-danger'>Overdue</span>) : subStractDate(new Date(job.dueDate), new Date()) + " Days"
+                          }
+                          </div>
                         </td>
                         <td>
                           <b className='position-relative'>
                             <i className='mdi mdi-dots-vertical cursor-pointer' data-bs-toggle="dropdown" aria-expanded="false" id={"expEdit" + index}></i>
                             <div className='dropdown-menu dropdown-menu-end' aria-labelledby={"expEdit" + index} >
-                              <div className='dropdown-item p-4 py-3 pb-0 cursor-pointer'
+                              <div className='dropdown-item p-4 py-2 cursor-pointer'
                                 onClick={() => {
+                                  setJob(job)
                                   setEditID(index)
                                   toggleModal()
                                 }
                                 } >
                                 Edit
                               </div>
-                              <div className='dropdown-item p-4 py-3 cursor-pointer' onClick={toggleDeleteModal} > Delete </div>
+                              <div className='dropdown-item p-4 py-2 cursor-pointer'
+                                onClick={() => {
+                                  setRemoveID(index)
+                                  toggleDeleteModal()
+                                }
+                                }
+                              >
+                                Delete
+                              </div>
                             </div>
                           </b>
                         </td>
@@ -218,7 +280,6 @@ const ProductionTracker = (props) => {
 
                       <td className='px-2'>
                         <div className='d-flex align-items-center'>
-
                           <span>NEXT</span>
                           <span className='mdi mdi-chevron-right'></span>
                         </div>
@@ -239,15 +300,23 @@ const ProductionTracker = (props) => {
       <ModalBody>
         <form id="job-form">
           <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="text" placeholder='Job Name' name="name" />
+            <input className="form-control" type="text" value={job.name || ''} placeholder='Job Name' name="name" onChange={(e) => updateTempJobField(e, "name")} />
           </div>
 
           <div className="mt-3 d-flex align-items-center">
-            <CitySelect onChange={(e) => setJobParams({...jobParams, city: e.target.value})}/>
+            <CitySelect
+              value={job.city || ''}
+              placeholder="Select City"
+              onChange={(e) => {
+                setJobParams({ ...jobParams, city: e.target.value })
+                updateTempJobField(e, "city")
+              }
+              }
+            />
           </div>
 
           <div className="mt-3 d-flex align-items-center">
-            <select className="form-control" name="user">
+            <select className="form-control" name="user" value={job.user ? job.user._id : ''} onChange={(e) => updateTempJobField(e, "user")}>
               {
                 users.map(user => <option value={user._id} key={user._id}>{user.name}</option>)
               }
@@ -255,11 +324,15 @@ const ProductionTracker = (props) => {
           </div>
 
           <div className="mt-3 d-flex align-items-center">
-            <FactoryList onChange={(e) => setJobParams({...jobParams, factory: e.target.value})} />
+            <FactoryList placeholder="Select Factory" value={job.factory || ''} onChange={(e) => {
+              setJobParams({ ...jobParams, factory: e.target.value })
+              updateTempJobField(e, "factory")
+            }} />
           </div>
 
           <div className="mt-3 d-flex align-items-center">
-            <select className="form-select" name="machine">
+            <select className="form-select" name="machine" value={job.machine ? job.machine._id : ''} onChange={(e) => updateTempJobField(e, "machine")}>
+              <option value="" disabled >Select Machine</option>
               {
                 filteredJobModalMachine.map(m => <option value={m._id} key={"machine-" + m._id} >{m.name}</option>)
               }
@@ -268,36 +341,41 @@ const ProductionTracker = (props) => {
 
           <div className="mt-3 d-flex align-items-center">
             <div className='w-100'>
-              <AutoCompleteSelect placeholder="Select Parts" options={filteredJobModalParts} onChange={v => setTimerPart(v)} />
+              <AutoCompleteSelect
+                name="part"
+                placeholder="Select Parts"
+                option={job.part ? { value: job.part._id, label: job.part.name } : ''}
+                options={filteredJobModalParts}
+              />
             </div>
-            <input type="hidden" name="part" value={timerPart} />
           </div>
 
           <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" placeholder='Count' name="count" />
+            <input className="form-control" type="number" value={job.count || ''} placeholder='Count' name="count" onChange={(e) => updateTempJobField(e, "count")} />
           </div>
-
           <div className="mt-3 d-flex align-items-center">
             <input
               placeholder="Due Date"
               className="form-control"
               name="dueDate"
-              type="text"
+              type={editID === -1 ? 'text' : 'date'}
+              value={editID === -1 ? 'Due Date' : job.dueDate.split('T')[0]}
               onFocus={(e) => (e.target.type = 'date')}
-              id="date" />
+              id="date"
+              onChange={(e) => {
+                updateTempJobField(e, "dueDate")
+              }} />
           </div>
         </form>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={createJob}>{editID == -1 ? 'Create' : 'Edit'}</Button>{' '}
+        <Button color="primary" onClick={manageJob}>{editID == -1 ? 'Create' : 'Edit'}</Button>{' '}
         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
       </ModalFooter>
     </Modal>
 
     <Modal isOpen={jobDeleteModal} toggle={toggleDeleteModal} >
       <ModalHeader toggle={toggleDeleteModal}>Are you going to delete this job?</ModalHeader>
-
-
       <ModalFooter>
         <Button color="primary" onClick={deleteJob}>Delete</Button>{' '}
         <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>

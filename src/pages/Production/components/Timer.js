@@ -4,59 +4,85 @@ import { useState } from "react"
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { endTimerAction, startTimerAction, stopTimerAction } from "actions/timer";
 import { useEffect } from "react";
+import { useRef } from "react";
 
 const Timer = (props) => {
 
-  const [status, setStatus] = useState(props.status)
   const [moreMenu, setMoreMenu] = useState(false)
 
   const toggle = () => {
     setMoreMenu(!moreMenu)
   }
 
-  const toggleTimer = async () => {
-    if (status == "Pending") {
-      setStatus("Started")
-      setTimeout(() => {
-        setTime(time + .1)
-      }, 100)
-      props.startTimer()
-      await startTimerAction(props._id)
-    } else if (status == "Started") {
-      setStatus("Pending")
-      clearInterval(currentTimerId)
-      props.stopTimer()
-      await stopTimerAction(props._id)
-    }
-  }
+  const prevRef = useRef(props.status)
+  useEffect(() => {
+    (async () => {
+      if (props.status == "Started" && prevRef.current == null) {
+        setTimeout(() => {
+          setTime(time + .1)
+        }, 100)
+        props.startTimer()
+        await startTimerAction(props._id)
+      }
+
+      if (props.status == "Started" && prevRef.current == "Pending") {
+        console.log('here')
+        setTimeout(() => {
+          setTime(0.1)
+        }, 100)
+        props.startTimer()
+        await startTimerAction(props._id)
+      }
+
+      if (props.status == "Pending" && prevRef.current == "Started") {
+        stopTimer()
+      }
+
+      prevRef.current = props.status
+
+    })()
+  }, [props.status])
+
+  // const toggleTimer = async () => {
+  //   if (status == "Pending") {
+  //     setStatus("Started")
+  //     setTimeout(() => {
+  //       setTime(time + .1)
+  //     }, 100)
+  //     props.startTimer()
+  //     await startTimerAction(props._id)
+  //   } else if (status == "Started") {
+  //     setStatus("Pending")
+  //     clearInterval(currentTimerId)
+  //     props.stopTimer()
+  //     await stopTimerAction(props._id)
+  //   }
+  // }
 
   const stopTimer = async () => {
-    setStatus("Pending")
     setTotalTime(time)
-    setTime(0)
-    props.endTimer()
+    props.endTimer(props.idx, time)
     await endTimerAction(props._id)
   }
 
-  const [time, setTime] = useState(-1)
-  const [totalTime, setTotalTime] = useState(props.totalTime)
-  const [currentTimerId, setCurrentTimerId] = useState(-1)
-
-  useEffect(() => {
-    let total = 0
-    props.times.forEach(t => {
-      console.log(t)
+  const calculateInitialTime = () => {
+    const _times = props.status=="Pending" ? props.latest : props.times
+    return _times.reduce((total, t) => {
       if (t.endTime) {
         total += ((new Date(t.endTime).getTime() - new Date(t.startTime).getTime()) / 1000)
       } else {
         total += ((new Date().getTime() - new Date(t.startTime).getTime()) / 1000)
       }
-    })
-    setTime(total)
-  }, [])
+      return total
+    }, 0)
+  }
+
+  const [time, setTime] = useState(calculateInitialTime())
+  const [totalTime, setTotalTime] = useState(props.totalTime)
+  const [currentTimerId, setCurrentTimerId] = useState(-1)
 
   useEffect(() => {
-    if (status != "Started" || time == -1) return
+    if (props.status != "Started" || time == -1) return
 
     const timerId = setInterval(() => {
       setTime(time + .1);
@@ -69,6 +95,7 @@ const Timer = (props) => {
   const editTimer = () => {
     props.editTimer(props.idx)
   }
+  const productTime = Math.round(props.totalTime / 3600) || 1
 
   return <div className="col-lg-4 col-md-6 p-2">
     <div className="product p-2">
@@ -89,42 +116,34 @@ const Timer = (props) => {
       </div>
       <div className="product-preview">
         <img src={ props.machine.preview } className="w-100 h-100" />
-        <div className="time">{formatSeconds(time)}</div>
-        {
-          status == "Pending" ? <button className="action play" onClick={toggleTimer}>
-            <span className="mdi mdi-play"></span>
-          </button> : (status == "Started" ? <button className="action stop" onClick={toggleTimer}>
-            <span className="mdi mdi-stop"></span>
-          </button> : "")
-        }
       </div>
       <div className="product-info">
         <div className="product-name w-100">
           <span>{ props.machine.name }</span>
-          <span className={`${status == "Ended" && totalTime <= props.productionTime ? "text-success" : "text-danger"}`}>
-            { formatSeconds(totalTime) }
+          <span>
+            <div className={`time ${time <= props.productionTime ? 'text-success' : 'text-danger'}`}>{formatSeconds(time)}</div>
           </span>
         </div>
 
         <div className="product-details">
           <div className="product-detail">
             <span>Daily Units</span>
-            <span>{props.dailyUnits}</span>
+            <span>{props.dailyUnit}</span>
           </div>
           
           <div className="product-detail">
             <span>Daily Tons</span>
-            <span>{props.dailyTons}</span>
+            <span>{props.dailyTon}</span>
           </div>
 
           <div className="product-detail">
             <span>Average Ton/hr</span>
-            <span>{props.averageTon}</span>
+            <span>{props.dailyTon / productTime}</span>
           </div>
 
           <div className="product-detail">
             <span>Average Unit/hr</span>
-            <span>{props.averageUnit}</span>
+            <span>{props.dailyUnit / productTime}</span>
           </div>
         </div>
       </div>

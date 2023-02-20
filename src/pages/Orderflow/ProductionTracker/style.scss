@@ -82,6 +82,7 @@ $gray-color: rgb(221, 222, 226);
       height: 50px;
       border-radius: 5px;
       display: flex;
+      font-weight: 500;
       align-items: center;
       justify-content: center;
       color: white;
@@ -129,7 +130,10 @@ $gray-color: rgb(221, 222, 226);
           border: none;
           background-color: white !important;
           vertical-align: middle;
+          .name {
+            white-space: pre-wrap;
 
+          }
           b {
             color: black;
           }
@@ -171,9 +175,17 @@ $gray-color: rgb(221, 222, 226);
       }
     }
 
-    .job-status {
-      padding-bottom: .25rem;
-      border-bottom: 3px solid #e4a93c !important;
+    // .job-status {
+      
+    //   // border-bottom: 3px solid #e4a93c !important;
+
+    // }
+
+    .indicator-line {
+      display: block;
+      margin-top: 6px;
+      width: 18px;
+      height: 4px;
     }
   }
 

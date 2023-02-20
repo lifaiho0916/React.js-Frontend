@@ -24,7 +24,7 @@ class UiSessionTimeout extends Component {
   }
 
   hideAlert() {
-    window.location = "/login"
+    window.location = "/"
   }
   confirmAlert() {
     this.setState({ timeralert: null })
