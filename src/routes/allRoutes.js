@@ -21,6 +21,7 @@ import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
+import ProfileHome from "../pages/Authentication/ProfileHome"
 
 //  // Inner Authentication
 import Login1 from "../pages/AuthenticationInner/Login"
@@ -122,7 +123,7 @@ import ControlTimer from "pages/Production/ControlTimers"
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
 
-  { path: "/profile-home", component: Dashboard },
+  { path: "/profile-home", component: ProfileHome },
 
   { path: "/orderflow/production-tracker", component: ProductionTracker },
 

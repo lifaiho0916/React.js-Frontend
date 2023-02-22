@@ -29,6 +29,9 @@ const ProductionTracker = (props) => {
   const [sortKey, setSortKey] = useState('')
   const [jobs, setJobs] = useState([])
   const [job, setJob] = useState({})
+  const [page, setPage] = useState(1)
+  const [query, setQuery] = useState('')
+
 
   const [orderBy, setOrderby] = useState(1)
   const compare = (a, b) => {
@@ -51,6 +54,8 @@ const ProductionTracker = (props) => {
   const [machines, setMachines] = useState([])
   const [parts, setParts] = useState([])
   const [timerPart, setTimerPart] = useState("")
+
+
   const [tab, setTab] = useState(1)
   const [users, setUsers] = useState([])
 
@@ -71,14 +76,26 @@ const ProductionTracker = (props) => {
       const _parts = await getProducts("Part")
       const _machines = await getProducts("Machine")
       const _users = await getUsers()
-      const _jobs = await getJobsAction()
 
       setMachines(_machines.products)
       setParts(_parts.products)
       setUsers(_users)
-      setJobs(_jobs)
     })()
   }, [])
+
+  const [activeJobCount, setActiveJobCount] = useState(0)
+  const [finishedJobCount, setFinishedJobCount] = useState(0)
+  const [resultCount, setResultCount] = useState(0)
+  useEffect(() => {
+    (async () => {
+      const getJobData = await getJobsAction(page, query, tab)
+      const _jobs = getJobData.jobs
+      setActiveJobCount(getJobData.totalActiveCount)
+      setFinishedJobCount(getJobData.totalFinishedCount)
+      setResultCount(getJobData.resultCount)
+      setJobs(_jobs)
+    })()
+  }, [page, query, tab])
 
   const [jobParams, setJobParams] = useState({
     factory: "Pipe And Box",
@@ -110,10 +127,10 @@ const ProductionTracker = (props) => {
     Stee: 'bg-light text-dark',
     prec: 'bg-warning',
     Prec: 'bg-warning',
-    pipe: 'bg-primary',
-    Pipe: 'bg-primary',
-    box: 'bg-info',
-    Box: 'bg-info',
+    pipe: 'bg-info',
+    Pipe: 'bg-info',
+    box: 'bg-primary',
+    Box: 'bg-primary',
     cage: 'bg-dark',
     Cage: 'bg-dark'
   }
@@ -130,7 +147,7 @@ const ProductionTracker = (props) => {
     _jobs = _jobs.filter((job, index) =>
       index !== removeID
     )
-    
+
     setJobs(_jobs)
     setJobDeleteModal(false)
   }
@@ -142,7 +159,7 @@ const ProductionTracker = (props) => {
     <Container fluid>
       <div className="jobslist-page-container mt-5 w-100 p-2">
         <div className="row p-0 m-0">
-          <div className="col-xxl-10 p-0">
+          <div className="col-xxl-12 p-0">
             <div className="d-flex justify-content-between timer-page-header">
               <div>
                 <h1>Production Tracker</h1>
@@ -159,18 +176,32 @@ const ProductionTracker = (props) => {
             </div>
             <div className='bg-white jobs-table-container'>
               <div className='jobs-table-header d-flex'>
-                <div className={`jobs-tab ongoing-job-tab cursor-pointer ${tab === 1 ? 'active' : ''}`} onClick={() => setTab(1)}>
-                  <div className='number'>3</div>
+                <div className={`jobs-tab ongoing-job-tab cursor-pointer ${tab === 1 ? 'active' : ''}`} onClick={() => {
+                  setTab(1)
+                  setPage(1)
+                }}>
+                  <div className='number'>{activeJobCount}</div>
                   <div>
                     <h4 className="mb-0">ACTIVE</h4>
                     <h6 className="text-secondary">Ongonig jobs</h6>
                   </div>
                 </div>
-                <div className={`jobs-tab past-job-tab cursor-pointer ${tab === 2 ? 'active' : ''}`} style={{ marginRight: 'auto' }} onClick={() => setTab(2)}>
-                  <div className='number'>2</div>
+                <div className={`jobs-tab past-job-tab cursor-pointer ${tab === 0 ? 'active' : ''}`}
+                  onClick={() => {
+                    setTab(0)
+                    setPage(1)
+                  }}
+                >
+                  <div className='number'>{finishedJobCount}</div>
                   <div>
                     <h4 className="mb-0">ARCHIEVED</h4>
                     <h6 className="text-secondary">Past jobs</h6>
+                  </div>
+                </div>
+                <div className='d-flex align-items-center ms-4 me-auto ' >
+                  <div className='position-relative'>
+                    <input className='form-control bg-light ps-5' placeholder='Search...' onChange={(e) => setQuery(e.target.value)} />
+                    <i class="bi bi-search position-absolute"></i>
                   </div>
                 </div>
                 <div className='d-flex align-items-center' >
@@ -190,44 +221,52 @@ const ProductionTracker = (props) => {
                 <table className='w-100 table table-nowrap mb-0' id='jobstable'>
                   <thead className=''>
                     <tr>
+                      <th></th>
                       <th style={{ paddingLeft: '84px' }} onClick={() => sortTable('name', jobs)}>
                         JOBS
                       </th>
                       <th>PART/MACHINE</th>
-                      <th>STATUS</th>
-                      <th>STATUS</th>
-                      <th>DUE</th>
+                      <th className='' style={{ width: '48px' }}>DRAWING NUMBER</th>
+                      <th style={{ width: '48px' }}>COUNT</th>
+                      <th style={{ width: '48px' }}>STATUS</th>
+                      <th style={{ width: '48px' }}>DUE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {jobs.map((job, index) => (
                       <tr key={index}>
+                        <td>{index + 1}</td>
                         <td style={{ paddingLeft: '24px' }}>
                           <div className='d-flex align-items-center'>
-                            { job.user? <img className='job-user' src={sampleAvatar}></img> : <div className='job-user'> UA</div>}
-                            <div className={`job-factory ${job.factory? factoryStyle[job.factory.substring(0,4)] : ''}`}>
+                            {job.user ? <img className='job-user' src={sampleAvatar}></img> : <div className='job-user'> UA</div>}
+                            <div className={`job-factory ${job.factory ? factoryStyle[job.factory.substring(0, 4)] : ''}`}>
                               {job.factory.substring(0, 4).toUpperCase()}
                             </div>
-                            <div className='ms-2' style={{ maxWidth: '200px' }}>
+                            <div className='ms-2'>
                               <div><b className='name'>{job.name}</b></div>
                               <div className="text-secondary">{job.city}</div>
                             </div>
                           </div>
                         </td>
                         <td className=''>
-                          <div style={{ maxWidth: '200px' }}>
+                          <div>
                             <div><b className='name'>{job.part && job.part.name}</b></div>
                             <div className="text-secondary">{job.machine && job.machine.name}</div>
                           </div>
                         </td>
+                        <td>
+                          <div className='name' style={{ width: '288px' }}>
+                            {job.drawingNumber}
+                          </div>
+                        </td>
                         <td className='name'>
-                          {job.producedCount} / {job.count}
+                          <div>{job.producedCount} / {job.count}</div>
                         </td>
                         <td>
                           <span className="job-status name">{job.active === true ? "Active" : "Finished"}</span>
-                          <span className={`${job.active === true ? 'bg-info' : 'bg-primary'} rounded indicator-line`}> </span>
+                          <span className={`${job.active === true ? 'bg-primary' : 'bg-info'} rounded indicator-line`}> </span>
                         </td>
-                        <td>
+                        <td >
                           <b className='name'>{new Date(job.dueDate).toLocaleDateString("en-US")}</b>
                           <div className="text-secondary ">{
                             subStractDate(new Date(job.dueDate), new Date()) < 0 ?
@@ -264,29 +303,48 @@ const ProductionTracker = (props) => {
                     )
                     )
                     }
-                    <tr className='border-0 pagination overflow-hidden' style={{ borderRadius: '10px' }}>
-                      <td className='pe-0' style={{ paddingLeft: '24px' }}>
-                        <div className='d-flex align-items-center border-end pe-2'>
-                          <span className='mdi mdi-chevron-left'></span>
-                          <span>PREV</span>
-                        </div>
-                      </td>
 
-                      <td className='px-0'>
-                        <div className='d-flex align-items-center border-end px-2'>
-                          1
-                        </div>
-                      </td>
-
-                      <td className='px-2'>
-                        <div className='d-flex align-items-center'>
-                          <span>NEXT</span>
-                          <span className='mdi mdi-chevron-right'></span>
-                        </div>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
+              </div>
+              <div className='border-0 pagination py-3' style={{ borderRadius: '10px' }}>
+                <div className='pe-0 cursor-pointer' style={{ paddingLeft: '24px' }}>
+                  <div className='d-flex align-items-center border-end pe-2'
+
+                    onClick={() => {
+                      if (page > 1) {
+                        setPage(page - 1)
+                      }
+                    }
+                    }
+                  >
+                    <span className='mdi mdi-chevron-left'></span>
+                    <span>PREV</span>
+                  </div>
+                </div>
+
+                <div className='px-0 cursor-pointer'>
+                  <div className='d-flex align-items-center border-end px-2 position-relative'>
+                    {page}
+                    <i className='mdi mdi-menu-down' data-bs-toggle="dropdown" aria-expanded="false" id="setpage" ></i>
+                    <span> of {parseInt(resultCount / 10) + 1}</span>
+                    <div className='dropdown-menu dropdown-menu-end border-0 p-0' aria-labelledby="setpage">
+                      <input className='form-control' type='number'
+                        onChange={(e) => {
+                          if (e.target.value > 0)
+                            setPage(e.target.value)
+                        }}
+                        style={{ width: '64px' }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className='px-2 cursor-pointer'>
+                  <div className='d-flex align-items-center' onClick={() => setPage(page + 1)}>
+                    <span>NEXT</span>
+                    <span className='mdi mdi-chevron-right'></span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -358,8 +416,7 @@ const ProductionTracker = (props) => {
               placeholder="Due Date"
               className="form-control"
               name="dueDate"
-              type={editID === -1 ? 'text' : 'date'}
-              value={editID === -1 ? 'Due Date' : job.dueDate.split('T')[0]}
+              type={'date'}
               onFocus={(e) => (e.target.type = 'date')}
               id="date"
               onChange={(e) => {

@@ -159,7 +159,7 @@
     color: $sidebar-menu-item-icon-color !important;
     font-weight: $fw-medium;
 }
-.mm-show .mm-show .mm-active {
+#sidebar-menu .mm-show .mm-show .mm-active {
     background-color: rgb(39,44,50);
     border-radius: 20px;
     position: relative;
@@ -518,7 +518,7 @@ body[data-sidebar="dark"] {
         }
         .active {
             color: $sidebar-dark-menu-item-active-color !important;
-            background-color: $sidebar-dark-menu-item-active-bg;
+            background: none;
 
             i {
                 color: $sidebar-dark-menu-item-active-color !important;

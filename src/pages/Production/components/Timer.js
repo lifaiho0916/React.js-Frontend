@@ -2,13 +2,13 @@ import "./style.scss"
 import { formatSeconds } from "../../../helpers/functions"
 import { useState } from "react"
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { endTimerAction, startTimerAction, stopTimerAction } from "actions/timer";
+import { endTimerAction, startTimerAction } from "actions/timer";
 import { useEffect } from "react";
 import { useRef } from "react";
 
 const Timer = (props) => {
-
   const [moreMenu, setMoreMenu] = useState(false)
+  const [timerId, setTimerId] = useState(-1)
 
   const toggle = () => {
     setMoreMenu(!moreMenu)
@@ -23,19 +23,6 @@ const Timer = (props) => {
         }, 100)
         props.startTimer()
         await startTimerAction(props._id)
-      }
-
-      if (props.status == "Started" && prevRef.current == "Pending") {
-        console.log('here')
-        setTimeout(() => {
-          setTime(0.1)
-        }, 100)
-        props.startTimer()
-        await startTimerAction(props._id)
-      }
-
-      if (props.status == "Pending" && prevRef.current == "Started") {
-        stopTimer()
       }
 
       prevRef.current = props.status
@@ -59,12 +46,6 @@ const Timer = (props) => {
   //   }
   // }
 
-  const stopTimer = async () => {
-    setTotalTime(time)
-    props.endTimer(props.idx, time)
-    await endTimerAction(props._id)
-  }
-
   const calculateInitialTime = () => {
     const _times = props.status=="Pending" ? props.latest : props.times
     return _times.reduce((total, t) => {
@@ -77,9 +58,11 @@ const Timer = (props) => {
     }, 0)
   }
 
+  useEffect(() => {
+    setTime(calculateInitialTime())
+  }, [props.status])
+
   const [time, setTime] = useState(calculateInitialTime())
-  const [totalTime, setTotalTime] = useState(props.totalTime)
-  const [currentTimerId, setCurrentTimerId] = useState(-1)
 
   useEffect(() => {
     if (props.status != "Started" || time == -1) return
@@ -87,7 +70,7 @@ const Timer = (props) => {
     const timerId = setInterval(() => {
       setTime(time + .1);
     }, 100)
-    setCurrentTimerId(timerId)
+    setTimerId(timerId)
 
     return (() => { clearInterval(timerId) })
   }, [time])
@@ -95,13 +78,14 @@ const Timer = (props) => {
   const editTimer = () => {
     props.editTimer(props.idx)
   }
+  
   const productTime = Math.round(props.totalTime / 3600) || 1
 
   return <div className="col-lg-4 col-md-6 p-2">
     <div className="product p-2">
       <div className="product-header">
         <select className="form-select">
-          <option>{ props.part.name }</option>
+          <option>{ props.part && props.part.name }</option>
         </select>
         <Dropdown isOpen={moreMenu} toggle={toggle}>
           <DropdownToggle caret>
@@ -109,17 +93,16 @@ const Timer = (props) => {
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem>Remove</DropdownItem>
-            <DropdownItem onClick={stopTimer}>Stop</DropdownItem>
             <DropdownItem onClick={editTimer}>Edit</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
       <div className="product-preview">
-        <img src={ props.machine.preview } className="w-100 h-100" />
+        <img src={ props.machine && props.machine.preview } className="w-100 h-100" />
       </div>
       <div className="product-info">
         <div className="product-name w-100">
-          <span>{ props.machine.name }</span>
+          <span>{ props.machine && props.machine.name }</span>
           <span>
             <div className={`time ${time <= props.productionTime ? 'text-success' : 'text-danger'}`}>{formatSeconds(time)}</div>
           </span>

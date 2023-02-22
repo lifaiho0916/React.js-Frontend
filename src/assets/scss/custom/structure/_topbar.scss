@@ -103,8 +103,23 @@
 }
 
 .page-content {
-    padding: 86px calc(0.25rem) 60px calc(5.75rem);
+    padding: 86px calc(0.05rem) 60px calc(5.55rem);
     // padding: $header-height calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
+}
+
+@media screen and (max-width: 576px) {
+    .page-content {
+        padding: 10px !important;
+        padding-top: 86px !important;        
+    }
+
+    .timer-page-container {
+        width: 100% !important;
+    }
+}
+
+.timer-page-container {
+    width: 100% !important;
 }
 
 .header-item {

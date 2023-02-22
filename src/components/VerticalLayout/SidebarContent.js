@@ -127,7 +127,7 @@ const SidebarContent = props => {
             </form>
             <div>
               <li>
-                <Link to="/PROFILEHOME" className="waves-effect text-uppercase">
+                <Link to="/profile-home" className="waves-effect text-uppercase">
                   <span>{props.t("PROFILEHOME")}</span>
                 </Link>
               </li>

@@ -53,8 +53,6 @@ const ControlTimer = (props) => {
     endTimerAction(controlTimer)
   }
 
-  console.log(filteredControllerTimers)
-
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
@@ -62,7 +60,7 @@ const ControlTimer = (props) => {
     <Container fluid>
       <div className="timer-page-container mt-5">
         <div className="row p-0 m-0">
-          <div className="col-xl-9 p-0">
+          <div className="col-xl-3 col-lg-6 col-sm-8 p-0">
             <div className="d-flex justify-content-between timer-page-header">
               <div>
                 <h1>Timer Controller</h1>
@@ -74,7 +72,7 @@ const ControlTimer = (props) => {
               </div>
             </div>
 
-            <div className="mt-3 shadow-sm p-3">
+            <div className="mt-5 shadow-sm p-3">
               <CitySelect onChange={(e) => filterChanged("city", e) }/>
               <FactoryList className="mt-3" onChange={(e) => filterChanged("facotry", e)} />
               <div className='mt-3'>

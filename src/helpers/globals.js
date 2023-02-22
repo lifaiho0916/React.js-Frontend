@@ -9,3 +9,12 @@ export const cities = [
   "Conroe",
   "Gunter"
 ]
+
+export const machineClasses = [
+  "Radial Press",
+  "Variant Perfect",
+  "System",
+  "Blizzard",
+  "Tornado",
+  "Steel",
+]

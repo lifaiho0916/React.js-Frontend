@@ -26,14 +26,13 @@ const Part = (props) => {
             <span className="mdi mdi-dots-horizontal" style={{ color: "rgba(0,0,0,0.5)", fontSize: "36px" }}></span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem onClick={removePart}>Remove</DropdownItem>
             <DropdownItem>Edit</DropdownItem>
+            <DropdownItem onClick={removePart}>Remove</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
       <div className="product-preview">
         <img src={ props.preview } className="w-100 h-100" />
-        <div className="time">{formatSeconds(props.time)}</div>
       </div>
       <div className="product-info">
         <div className="product-name w-100">

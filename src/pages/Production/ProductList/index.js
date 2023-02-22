@@ -1,4 +1,4 @@
-import { CitySelect, FactoryList } from "components/Common/Select"
+import { CitySelect, FactoryList, MachineClassSelect } from "components/Common/Select"
 import { factories } from "helpers/globals"
 import { useState } from "react"
 import MetaTags from "react-meta-tags"
@@ -98,25 +98,53 @@ const ProductList = props => {
   const [edit, setEdit] = useState(false)
   const [machines, setMachines] = useState([])
   const [parts, setParts] = useState([])
-  const [machine, setMachine] = useState({})
-  const [part, setPart] = useState({})
 
-  const updateMachine = (f, e) => {
-    setMachine({
-      ...machine,
-      [f]: e.target.value,
+  const [newPart, setNewPart] = useState({
+    city: "",
+    factory: "",
+    machineClass: "",
+    name: "",
+    pounds: '',
+    avgTime: '',
+    finishGoodWeight: '',
+    cageWeightScrap: '',
+    cageWeightActuals: ''
+  })
+  const [availToCreatePart, setAvailToCreatePart] = useState(false)
+  const [availToCreateMachine, setAvailToCreateMachine] = useState(false)
+  const [newMachine, setNewMachine] = useState({
+    city: "",
+    factory: "",
+    machineClass: "",
+    name: "",
+    details: "",
+  })
+  const updateNewPart = (f, e) => {
+    setNewPart({
+      ...newPart,
+      [f]: e.target ? e.target.value : e
     })
+    let enable = true
+    Object.entries(newPart).map(v => {
+      if (!v[1]) enable = false
+    })
+    setAvailToCreatePart(enable)
+  }
+  const updateNewMachine = (f, e) => {
+    setNewMachine({
+      ...newMachine,
+      [f]: e.target ? e.target.value : e
+    })
+    let enable = true
+    Object.entries(newMachine).map(v => {
+      if (!v[1]) enable = false
+    })
+    setAvailToCreateMachine(enable)
   }
 
-  const updatePart = (f, e) => {
-    setPart({
-      ...part,
-      [f]: e.target.value,
-    })
-  }
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const _parts = await getProducts("Part")
       const _machines = await getProducts("Machine")
       setMachines(_machines.products)
@@ -206,9 +234,6 @@ const ProductList = props => {
                       }}
                     >
                       <span>{_type}</span>
-                      <span className="percent">
-                        <span className="mdi mdi-menu-up"></span>
-                      </span>
                       <span>
                         <i className="mdi mdi-poll"></i>
                       </span>
@@ -227,7 +252,7 @@ const ProductList = props => {
 
             <div className="search-container">
               <div className="search-box row">
-                <div className="col-6">
+                <div className="col-6" style={{padding: "20px 0px 20px 40px"}}>
                   <div>
                     <b>General Search</b>
                   </div>
@@ -282,7 +307,26 @@ const ProductList = props => {
         <ModalBody>
           <form className="p-2" onSubmit={e => createPart(e)} id="part-form">
             <div>
-              <CitySelect />
+              <CitySelect 
+                onChange = {(e) => updateNewPart("city", e)}
+                placeholder="City"
+                value={newPart.city}
+                />
+            </div>
+
+            <div className="mt-3">
+              <FactoryList 
+                onChange = {(e) => updateNewPart("factory", e)}
+                placeholder="Factory"
+                value={newPart.factory}
+                />
+            </div>
+
+            <div className="mt-3">
+              <MachineClassSelect
+                onChange = {(e) => updateNewPart("machineClass", e)}                
+                placeholder="Machine Class"
+                value={newPart.machineClass} />
             </div>
 
             <div className="mt-3 d-flex align-items-center">
@@ -291,7 +335,8 @@ const ProductList = props => {
                 type="text"
                 placeholder="Part"
                 name="name"
-                onChange={e => updatePart("name", e)}
+                value={newPart.name}
+                onChange = {(e) => updateNewPart("name", e)}
               />
             </div>
 
@@ -301,7 +346,8 @@ const ProductList = props => {
                 type="number"
                 placeholder="Pounds"
                 name="pounds"
-                onChange={e => updatePart("pounds", e)}
+                value={newPart.pounds}
+                onChange = {(e) => updateNewPart("pounds", e)}
               />
             </div>
 
@@ -311,7 +357,8 @@ const ProductList = props => {
                 type="number"
                 placeholder="Avg Time"
                 name="avgTime"
-                onChange={e => updatePart("avgTime", e)}
+                value={newPart.avgTime}
+                onChange = {(e) => updateNewPart("avgTime", e)}
               />
             </div>
 
@@ -372,7 +419,8 @@ const ProductList = props => {
                 type="number"
                 placeholder="Finish Good Weight (lbs)"
                 name="finishGoodWeight"
-                onChange={e => updatePart("finishGoodWeight", e)}
+                onChange = {(e) => updateNewPart("finishGoodWeight", e)}
+                value={newPart.finishGoodWeight}
               />
             </div>
 
@@ -382,7 +430,8 @@ const ProductList = props => {
                 type="number"
                 placeholder="Cage Weight Scrap (lbs)"
                 name="cageWeightScrap"
-                onChange={e => updatePart("cageWeightScrap", e)}
+                onChange = {(e) => updateNewPart("cageWeightScrap", e)}
+                value={newPart.cageWeightScrap}
               />
             </div>
 
@@ -391,14 +440,15 @@ const ProductList = props => {
                 className="form-control"
                 type="number"
                 placeholder="Case Weight Actuals (lbs)"
-                name="caseWeightActuals"
-                onChange={e => updatePart("caseWeightActuals", e)}
+                name="cageWeightActuals"
+                onChange = {(e) => updateNewPart("cageWeightActuals", e)}
+                value={newPart.cageWeightActuals}
               />
             </div>
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={createPart}>
+          <Button color="primary" onClick={createPart} disabled={!availToCreatePart}>
             Save
           </Button>{" "}
           <Button color="secondary" onClick={togglePartsModal}>
@@ -416,10 +466,23 @@ const ProductList = props => {
             id="machine-form"
           >
             <div>
-              <CitySelect />
+              <CitySelect
+                value={newMachine.city}
+                onChange={(e) => updateNewMachine("city", e)}
+                placeholder="City" />
             </div>
             <div className="mt-3">
-              <FactoryList />
+              <FactoryList
+                value={newMachine.factory}
+                onChange={(e) => updateNewMachine("factory", e)}
+                placeholder="Factory" />
+            </div>
+
+            <div className="mt-3">
+              <MachineClassSelect
+                value={newMachine.machineClass}
+                onChange={(e) => updateNewMachine("machineClass", e)}
+                placeholder="Machine Class" />
             </div>
 
             <div className="mt-3 d-flex align-items-center">
@@ -428,7 +491,8 @@ const ProductList = props => {
                 type="text"
                 placeholder="Machine"
                 name="name"
-                onChange={e => updateMachine("name", e)}
+                value={newMachine.name}
+                onChange={(e) => updateNewMachine("name", e)}
               />
             </div>
 
@@ -438,7 +502,8 @@ const ProductList = props => {
                 type="text"
                 placeholder="Details"
                 name="details"
-                onChange={e => updateMachine("details", e)}
+                value={newMachine.details}
+                onChange={(e) => updateNewMachine("details", e)}
               />
             </div>
 
@@ -515,7 +580,7 @@ const ProductList = props => {
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={createMachine}>
+          <Button color="primary" onClick={createMachine} disabled={!availToCreateMachine} >
             Save
           </Button>{" "}
           <Button color="secondary" onClick={toggleModal}>

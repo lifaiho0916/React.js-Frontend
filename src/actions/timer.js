@@ -61,3 +61,18 @@ export const updateTimerAction = async (id, updates) => {
   const res = await axios.post("/timer/update-timer", { id, updates })
   return res
 }
+
+export const refreshTimerAction = async(id) => {
+  const res = await axios.get("/timer/get-timer?id="+id)
+  return res.data.timer
+}
+
+export const searchMacheinsAction = async (machineClass) => {
+  const res = await axios.get("/timer/search-machines", {params: { machineClass }})
+  return res.data.machines
+}
+
+export const getTimerLogsOfMachine = async (machine, part, from, to, page) => {
+  const res = await axios.get("/timer/timer-logs-of-machine", {params: { machine, part, from, to, page }})
+  return res.data
+}

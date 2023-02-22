@@ -20,7 +20,7 @@ export const deleteJobAction = async (id) => {
   return res.data.result
 }
 
-export const getJobsAction = async () => {
-  const res = await axios.get("/job/get-jobs")
-  return res.data.jobs
+export const getJobsAction = async (page, query, tab) => {
+  const res = await axios.get("/job/get-jobs?page=" + page + '&query=' + query + '&tab=' + tab)
+  return res.data
 }

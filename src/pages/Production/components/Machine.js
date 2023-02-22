@@ -37,7 +37,6 @@ const Machine = (props) => {
       </div>
       <div className="product-preview">
         <img src={ props.preview } className="w-100 h-100" />
-        <div className="time">{formatSeconds(props.time)}</div>
       </div>
       <div className="product-info">
         <div className="product-name w-100">

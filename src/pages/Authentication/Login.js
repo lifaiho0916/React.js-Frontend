@@ -146,7 +146,7 @@ const Login = props => {
                 </p>
                 <p>
                   © {new Date().getFullYear()} Veltrix. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Ieoko Media
+                  <i className="mdi mdi-heart text-danger" /> by Ieko Media
                 </p>
               </div>
             </Col>
