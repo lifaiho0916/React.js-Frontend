@@ -8,7 +8,7 @@ import { formatSeconds } from "../../../../helpers/functions"
 const TimerLogs = (props) => {
 
   const { compare, city, filteredParts } = props
-  const [resultCount, setResultCount] = useState([])
+  const [resultCount, setResultCount] = useState(0)
   const [part, setPart] = useState({})
   const [trackTimers, setTrackTimers] = useState([])
   const [machines, setMachines] = useState([])
@@ -16,6 +16,9 @@ const TimerLogs = (props) => {
   const [page, setPage] = useState(1)
   const [tab, setTab] = useState(0)
   const [logs, setLogs] = useState([])
+  const [totalTons, setTotalTons] = useState(0)
+  const [totalLoss, setTotalLoss] = useState(0)
+  const [totalGain, setTotalGain] = useState(0)
   const [filters, setFilters] = useState({
     machineClass: machineClasses[0],
     productClass: "",
@@ -39,13 +42,13 @@ const TimerLogs = (props) => {
     if (f == "machineClass")
       setFilters({
         ...filters,
-        [f]: e.target?e.target.value:e,
+        [f]: e.target ? e.target.value : e,
         productClass: ""
       })
     else
       setFilters({
         ...filters,
-        [f]: e.target?e.target.value:e
+        [f]: e.target ? e.target.value : e
       })
   }
   const setActiveTab = async (index) => {
@@ -58,6 +61,9 @@ const TimerLogs = (props) => {
     const res = await getTimerLogsOfMachine(id, filters.productClass, filters.from, filters.to, page)
     setLogs(res.logs)
     setResultCount(res.total)
+    setTotalTons(res.totalTons)
+    setTotalGain(res.totalGain)
+    setTotalLoss(res.totalLoss)
   }
 
   useEffect(() => {
@@ -98,12 +104,12 @@ const TimerLogs = (props) => {
 
           <div className="m-0 search-box row mb-3">
             <div className="col-xl-3">
-              <MachineClassSelect name="log-filter" onChange={(e) => updateFilter("machineClass", e)}/>
+              <MachineClassSelect name="log-filter" onChange={(e) => updateFilter("machineClass", e)} />
             </div>
 
             <div className="col-xl-3">
-              <select 
-                className="form-select" 
+              <select
+                className="form-select"
                 onChange={(e) => {
                   updateFilter("productClass", e)
                 }}
@@ -114,7 +120,7 @@ const TimerLogs = (props) => {
                   filteredParts
                     .filter(part => part.machineClass == filters.machineClass)
                     .map(part => (
-                      <option value={part._id} key={"log-filter-"+part._id}>{part.name}</option>
+                      <option value={part._id} key={"log-filter-" + part._id}>{part.name}</option>
                     ))
                 }
               </select>
@@ -129,7 +135,7 @@ const TimerLogs = (props) => {
 
             <div className="col-xl-4   d-flex">
               <input type="date" className="form-control me-2" onChange={(e) => updateFilter("from", e)} />
-              <input type="date" className="form-control" onChange={(e) => updateFilter("to", e)}  />
+              <input type="date" className="form-control" onChange={(e) => updateFilter("to", e)} />
             </div>
           </div>
         </div>
@@ -144,11 +150,11 @@ const TimerLogs = (props) => {
         <div className='flex-1 d-flex'>
           {
             colors.map((color, index) => (
-              <div 
+              <div
                 className={`time-tracker-tab ongoing-job-tab cursor-pointer ${tab === index ? 'active' : ''}`}
                 style={{ borderTop: `5px solid ${color}` }}
                 onClick={() => setActiveTab(index)}
-                key={"tab"+index}
+                key={"tab" + index}
               >
                 <div>
                   <h4 className="mb-0">{machines[index] && machines[index].name}</h4>
@@ -158,16 +164,16 @@ const TimerLogs = (props) => {
             ))
           }
         </div>
-        
+
         <div className='d-flex align-items-center mx-3 ' >
           <div className='position-relative'>
             <input className='form-control bg-light ps-5' placeholder='Search...' onChange={(e) => setQuery(e.target.value)} />
             <i className="bi bi-search position-absolute"></i>
           </div>
         </div>
-        <div className='d-flex align-items-center me-5' >
+        <div className='d-flex align-items-center me-5 py-1' >
           <span className="me-2">Show</span>
-          <span className="p-2 bg-light rounded border">8</span>
+          <input className="p-2 bg-light form-control" style={{ width: 32 }} />
         </div>
       </div>
 
@@ -203,7 +209,7 @@ const TimerLogs = (props) => {
                 </td>
                 <td>
                   <div className='name' style={{ width: '288px' }}>
-                    <b>{ trackTimer.timer.part.name }</b>
+                    <b>{trackTimer.timer.part.name}</b>
                   </div>
                 </td>
                 <td className='name'>
@@ -219,8 +225,8 @@ const TimerLogs = (props) => {
                 <td >
                   <div><b className={`${trackTimer.time > trackTimer.productionTime ? 'text-danger' : 'text-success'}`}>{formatSeconds(trackTimer.time)}</b></div>
                 </td>
-                <td>
-                  <b className='position-relative'>
+                <td className='position-relative'>
+                  <b className='position-absolute three-dot-icon-end'>
                     <i className='mdi mdi-dots-vertical cursor-pointer' data-bs-toggle="dropdown" aria-expanded="false" id={"expEdit" + index}></i>
                     <div className='dropdown-menu dropdown-menu-end' aria-labelledby={"expEdit" + index} >
                       <div className='dropdown-item p-4 py-2 cursor-pointer'>
@@ -240,7 +246,7 @@ const TimerLogs = (props) => {
           </tbody>
         </table>
       </div>
-      <div className='border-0 pagination py-3' style={{ borderRadius: '10px' }}>
+      <div className='border-0 pagination py-3 d-flex align-items-center' style={{ borderRadius: '10px' }}>
         <div className='pe-0 cursor-pointer' style={{ paddingLeft: '24px' }}>
           <div className='d-flex align-items-center border-end pe-2'
 
@@ -260,7 +266,7 @@ const TimerLogs = (props) => {
           <div className='d-flex align-items-center border-end px-2 position-relative'>
             {page}
             <i className='mdi mdi-menu-down' data-bs-toggle="dropdown" aria-expanded="false" id="setpage" ></i>
-            <span> of {parseInt(resultCount / 8) + 1}</span>
+            <span> of {Math.round(resultCount / 8)}</span>
             <div className='dropdown-menu dropdown-menu-end border-0 p-0' aria-labelledby="setpage">
               <input className='form-control' type='number'
                 onChange={(e) => {
@@ -276,6 +282,31 @@ const TimerLogs = (props) => {
           <div className='d-flex align-items-center' onClick={() => setPage(page + 1)}>
             <span>NEXT</span>
             <span className='mdi mdi-chevron-right'></span>
+          </div>
+        </div>
+
+        <div className="flex-1 ms-3 d-flex align-items-center">
+          <div className="d-flex" style={{ marginRight: 'auto' }}>
+            <div className='d-inline-flex flex-column'>
+              <div className='text-end'><b>{machines[tab] && machines[tab].name} TOTAL UNITS:</b></div>
+              <div className='text-end'><b>{machines[tab] && machines[tab].name} TOTAL TONS:</b></div>
+            </div>
+            <div className='d-inline-flex flex-column ms-3'>
+              <div className='text-end'><b>{resultCount}</b></div>
+              <div className='text-end'><b>{totalTons}</b></div>
+            </div>
+          </div>
+          <div className="me-4">
+            <div className='d-inline-flex flex-column'>
+              <div className='text-end text-success'><b>TOTAL GAIN:</b></div>
+              <div className='text-end text-danger'><b>TOTAL LOSS:</b></div>
+              <div className='text-end text-warning'><b>TOTAL FLOAT:</b></div>
+            </div>
+            <div className='d-inline-flex flex-column ms-3'>
+              <div className='text-end text-success'><b>{formatSeconds(totalGain)}</b></div>
+              <div className='text-end text-danger'><b>{formatSeconds(totalLoss)}</b></div>
+              <div className='text-end text-warning'><b>{formatSeconds(totalGain - totalLoss)}</b></div>
+            </div>
           </div>
         </div>
       </div>

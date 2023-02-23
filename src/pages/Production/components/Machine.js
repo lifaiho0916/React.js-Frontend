@@ -22,7 +22,7 @@ const Machine = (props) => {
     setMoreMenu(!moreMenu)
   }
 
-  return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3">
+  return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3 d-flex align-items-stretch">
     <div className="product p-2 px-4">
       <div className="product-header justify-content-end">
         <Dropdown isOpen={moreMenu} toggle={toggle}>

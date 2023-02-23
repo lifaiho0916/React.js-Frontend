@@ -81,7 +81,7 @@ const Timer = (props) => {
   
   const productTime = Math.round(props.totalTime / 3600) || 1
 
-  return <div className="col-lg-4 col-md-6 p-2">
+  return <div className="col-lg-4 col-md-6 p-2 d-flex align-items-stretch">
     <div className="product p-2">
       <div className="product-header">
         <select className="form-select">

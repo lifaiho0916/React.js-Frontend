@@ -154,7 +154,6 @@
   "devDependencies": {
     "eslint-config-standard-react": "^9.2.0",
     "eslint-plugin-react": "^7.20.6",
-    "prettier": "^2.1.1",
-    "react-error-overlay": "^6.0.11"
+    "prettier": "^2.1.1"
   }
 }

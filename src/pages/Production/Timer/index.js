@@ -25,6 +25,7 @@ import { getCurrentTime } from "helpers/functions"
 import { CitySelect, FactoryList } from "components/Common/Select"
 import io from "socket.io-client"
 import TimerLogs from "./component/TimerLogs"
+import Pagination from "components/Common/Pagination"
 
 const socket = io("http://localhost:8000")
 
@@ -40,6 +41,17 @@ const TimerPage = props => {
   const [machines, setMachines] = useState([])
   const [timers, setTimers] = useState([])
   const [compare, setCompare] = useState([false, false, false])
+  const [timerPagination, setTimerPagination] = useState({
+    page: 1,
+    totalPage: 0,
+  })
+
+  const moveToTimerPage = (page) => {
+    setTimerPagination({
+      ...timerPagination,
+      page
+    })
+  }
   
   useEffect(() => {
     (async () => {
@@ -350,6 +362,14 @@ const TimerPage = props => {
             </div>
           </div>
           <div className="products-container row m-0 p-0 mt-5">
+            <div className="d-flex justify-content-end">
+              <div className="border d-flex p-2">
+                <Pagination
+                  page={timerPagination.page}
+                  movePage={moveToTimerPage}
+                  totalPage={timerPagination.totalPage} />
+              </div>
+            </div>
             <div className="col-xl-9 row p-0 m-0">
               {
                 filteredTimers.map((timer, idx) => (

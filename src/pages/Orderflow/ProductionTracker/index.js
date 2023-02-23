@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cities, factories } from 'helpers/globals';
 import MetaTags from 'react-meta-tags';
 import {
@@ -21,10 +21,11 @@ const ProductionTracker = (props) => {
   const [jobDeleteModal, setJobDeleteModal] = useState(false)
   const toggleModal = () => setJobModal(!jobModal)
   const toggleDeleteModal = () => setJobDeleteModal(!jobDeleteModal)
+  const queryRef = useRef()
 
   const [editID, setEditID] = useState(-1)
   const [removeID, setRemoveID] = useState(-1)
-
+  const [inputType, setInputType] = useState('text')
 
   const [sortKey, setSortKey] = useState('')
   const [jobs, setJobs] = useState([])
@@ -151,8 +152,14 @@ const ProductionTracker = (props) => {
     setJobs(_jobs)
     setJobDeleteModal(false)
   }
-  console.log(jobs)
-  return <div className="page-content">
+
+  const onKey = (event) => {
+    if (event.keyCode === 13)
+      setQuery(queryRef.current.value)
+  }
+
+  console.log(job)
+  return <div className="page-content production-tracker">
     <MetaTags>
       <title>Timer Page</title>
     </MetaTags>
@@ -200,14 +207,15 @@ const ProductionTracker = (props) => {
                 </div>
                 <div className='d-flex align-items-center ms-4 me-auto ' >
                   <div className='position-relative'>
-                    <input className='form-control bg-light ps-5' placeholder='Search...' onChange={(e) => setQuery(e.target.value)} />
-                    <i class="bi bi-search position-absolute"></i>
+                    <input className='form-control bg-light ps-5' placeholder='Search...' ref={queryRef} onKeyUp={onKey} />
+                    <i className="bi bi-search position-absolute"></i>
                   </div>
                 </div>
                 <div className='d-flex align-items-center' >
                   <button className='btn btn-newjob ms-3 '
                     onClick={() => {
                       setEditID(-1)
+                      setInputType('text')
                       setJob({})
                       toggleModal()
                     }
@@ -222,7 +230,7 @@ const ProductionTracker = (props) => {
                   <thead className=''>
                     <tr>
                       <th></th>
-                      <th style={{ paddingLeft: '84px' }} onClick={() => sortTable('name', jobs)}>
+                      <th style={{ paddingLeft: '72px' }} onClick={() => sortTable('name', jobs)}>
                         JOBS
                       </th>
                       <th>PART/MACHINE</th>
@@ -234,9 +242,9 @@ const ProductionTracker = (props) => {
                   </thead>
                   <tbody>
                     {jobs.map((job, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td style={{ paddingLeft: '24px' }}>
+                      <tr key={'job' + index}>
+                        <td style={{ paddingLeft: '20px' }}>{index + 1}</td>
+                        <td>
                           <div className='d-flex align-items-center'>
                             {job.user ? <img className='job-user' src={sampleAvatar}></img> : <div className='job-user'> UA</div>}
                             <div className={`job-factory ${job.factory ? factoryStyle[job.factory.substring(0, 4)] : ''}`}>
@@ -267,7 +275,7 @@ const ProductionTracker = (props) => {
                           <span className={`${job.active === true ? 'bg-primary' : 'bg-info'} rounded indicator-line`}> </span>
                         </td>
                         <td >
-                          <b className='name'>{new Date(job.dueDate).toLocaleDateString("en-US")}</b>
+                          <b className=''>{job.dueDate.replace(/T.*$/, '')}</b>
                           <div className="text-secondary ">{
                             subStractDate(new Date(job.dueDate), new Date()) < 0 ?
                               (<span className='text-danger'>Overdue</span>) : subStractDate(new Date(job.dueDate), new Date()) + " Days"
@@ -282,6 +290,7 @@ const ProductionTracker = (props) => {
                                 onClick={() => {
                                   setJob(job)
                                   setEditID(index)
+                                  setInputType('date')
                                   toggleModal()
                                 }
                                 } >
@@ -303,7 +312,6 @@ const ProductionTracker = (props) => {
                     )
                     )
                     }
-
                   </tbody>
                 </table>
               </div>
@@ -327,7 +335,7 @@ const ProductionTracker = (props) => {
                   <div className='d-flex align-items-center border-end px-2 position-relative'>
                     {page}
                     <i className='mdi mdi-menu-down' data-bs-toggle="dropdown" aria-expanded="false" id="setpage" ></i>
-                    <span> of {parseInt(resultCount / 10) + 1}</span>
+                    <span> of {Math.round(resultCount / 10)}</span>
                     <div className='dropdown-menu dropdown-menu-end border-0 p-0' aria-labelledby="setpage">
                       <input className='form-control' type='number'
                         onChange={(e) => {
@@ -372,7 +380,6 @@ const ProductionTracker = (props) => {
               }
             />
           </div>
-
           <div className="mt-3 d-flex align-items-center">
             <select className="form-control" name="user" value={job.user ? job.user._id : ''} onChange={(e) => updateTempJobField(e, "user")}>
               {
@@ -407,16 +414,21 @@ const ProductionTracker = (props) => {
               />
             </div>
           </div>
-
           <div className="mt-3 d-flex align-items-center">
-            <input className="form-control" type="number" value={job.count || ''} placeholder='Count' name="count" onChange={(e) => updateTempJobField(e, "count")} />
+            <input className="form-control" value={job.drawingNumber || ''} placeholder='Drawing Number' name="drawingNumber" onChange={(e) => updateTempJobField(e, "drawingNumber")} />
+          </div>
+          <div className="mt-3 d-flex align-items-center">
+            <input className="form-control" type={editID === -1 ? 'hidden' : 'number'} value={job.producedCount || 0} placeholder='Produced Count' name="producedCount" onChange={(e) => updateTempJobField(e, "producedCount")} />
+            <div className={`px-3 ${editID === -1 ? 'd-none' : ''}`}>/</div>
+            <input className="form-control" type="number" value={job.count || ''} placeholder='Total Count' name="count" onChange={(e) => updateTempJobField(e, "count")} />
           </div>
           <div className="mt-3 d-flex align-items-center">
             <input
               placeholder="Due Date"
               className="form-control"
               name="dueDate"
-              type={'date'}
+              type={inputType}
+              value={job.dueDate ? job.dueDate.replace(/T.*$/, '') : ''}
               onFocus={(e) => (e.target.type = 'date')}
               id="date"
               onChange={(e) => {

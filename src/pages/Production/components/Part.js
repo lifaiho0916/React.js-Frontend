@@ -18,7 +18,7 @@ const Part = (props) => {
     props.deleteProduct("Part", props._id)
   }
 
-  return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3">
+  return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3 d-flex align-items-stretch">
     <div className="product p-2 px-4">
       <div className="product-header justify-content-end">
         <Dropdown isOpen={moreMenu} toggle={toggle}>
@@ -47,7 +47,7 @@ const Part = (props) => {
           </div>
           
           <div className="product-detail">
-            <span>Avg Time</span>
+            <span>Avg Time:</span>
             <span>{props.avgTime}</span>
           </div>
         </div>

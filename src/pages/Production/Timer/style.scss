@@ -341,8 +341,25 @@ $gray-font: rgb(141, 144, 150);
       color: $gray-font !important;
     }
   }
+
+  b {
+    font-weight: 700;
+  }
+
+  .three-dot-icon-end {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 iframe {
   display: none;
+}
+
+@media screen and (min-width: 1000px){
+  .container-fluid {
+    width: 76% !important;
+  }
 }

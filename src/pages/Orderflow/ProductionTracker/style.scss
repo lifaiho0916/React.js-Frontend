@@ -2,259 +2,263 @@ $background-gray: rgb(246, 247, 251);
 $gray-font: rgb(141, 144, 150);
 $gray-color: rgb(221, 222, 226);
 
-.divide-line {
-  font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
-  color: black;
-
-  .line {
-    width: 100%;
-    height: 1.5px;
-    background-color: $gray-color;
-
+.production-tracker {
+  .container-fluid {
+    width: 100% !important;
   }
-}
+  .divide-line {
+    font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+    color: black;
 
-.jobs-table-container {
-  border-radius: 10px;
-  border: 1px solid $gray-color;
+    .line {
+      width: 100%;
+      height: 1.5px;
+      background-color: $gray-color;
 
-  .jobs-table-header {
-    i {
-      font-size: 1rem;
-      font-weight: 600;
-      left: 16px;
-      top: 6px;
     }
+  }
 
-    .jobs-tab {
-      background-color: $background-gray;
-      padding: 12px 24px;
-      border-right: 1px solid $gray-color;
-      display: flex;
-      align-items: center;
-      font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+  .jobs-table-container {
+    border-radius: 10px;
+    border: 1px solid $gray-color;
 
-      width: 250px;
-      border-top: 5px solid rgba(72, 131, 268, 0);
-
-      .number {
-        font-size: 1.999rem;
-        margin-right: 20px;
-        font-weight: 700;
-      }
-
-      h4 {
+    .jobs-table-header {
+      i {
         font-size: 1rem;
-        font-weight: 700;
-      }
-    }
-
-    .past-job-tab {
-
-    }
-
-    .ongoing-job-tab {
-      border-top-left-radius: 10px;
-    }
-
-    .active {
-      border-top: 5px solid #4aa2ee;
-      background-color: white;
-
-      .number,
-      h4 {
-        color: black;
-      }
-
-    }
-
-    border-bottom: 1px solid $gray-color;
-
-    .btn-newjob {
-      background-color: rgb(155, 0, 4);
-      color: white;
-      font-size: 1rem;
-      border: .5rem;
-      font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
-      padding: .5rem 1rem;
-      margin-right: calc(48px + 2vw);
-    }
-  }
-
-  .jobs-table {
-    overflow: auto;
-
-    table {
-      min-width: 1120px;
-    }
-
-    .job-factory {
-      width: 50px;
-      min-width: 50px;
-      height: 50px;
-      border-radius: 5px;
-      display: flex;
-      font-weight: 500;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 12px;
-      background-color: rgb(74, 161, 238);
-    }
-
-    .job-user {
-      width: 40px;
-      min-width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: gray;
-      color: white;
-      border-radius: 20px;
-      margin-right: 20px;
-    }
-
-    thead {
-      border-bottom: 1px solid $gray-color;
-
-      th {
-        padding: 12px;
-        font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
-        color: black;
         font-weight: 600;
-        border: none;
-        cursor: pointer;
+        left: 16px;
+        top: 6px;
       }
 
-      th:after {
-        padding-left: .5rem;
-        content: url("data:image/svg+xml;utf8,<svg width='6' height='10' viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M3 0L6 4H0L3 0ZM3 10L0 6H6L3 10Z' fill='rgba(39, 44, 51, 0.54)'/></svg>")
-      }
-    }
+      .jobs-tab {
+        background-color: $background-gray;
+        padding: 12px 24px;
+        border-right: 1px solid $gray-color;
+        display: flex;
+        align-items: center;
+        font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
 
-    tbody {
-      tr {
+        width: 250px;
+        border-top: 5px solid rgba(72, 131, 268, 0);
 
-        border-bottom: 1px solid $gray-color;
+        .number {
+          font-size: 1.999rem;
+          margin-right: 20px;
+          font-weight: 700;
+        }
 
-        td {
-          padding: 12px;
-          border: none;
-          background-color: white !important;
-          vertical-align: middle;
-
-          .name {
-            white-space: pre-wrap;
-
-          }
-
-          b {
-            color: black;
-          }
-
-          i {
-            font-family: Material Icons;
-            font-weight: 400;
-            font-style: normal;
-            font-size: 24px;
-            color: grey;
-          }
-
-          i:hover {
-            color: black;
-          }
-
-          .dropdown-menu {
-            min-width: 100px;
-            transform: none !important;
-            inset: unset !important;
-            right: 0 !important;
-            top: 100% !important;
-            animation-name: DropDownSlide !important;
-            animation-duration: .3s !important;
-            animation-fill-mode: both !important;
-          }
+        h4 {
+          font-size: 1rem;
+          font-weight: 700;
         }
       }
 
+      .past-job-tab {}
 
+      .ongoing-job-tab {
+        border-top-left-radius: 10px;
+      }
+
+      .active {
+        border-top: 5px solid #4aa2ee;
+        background-color: white;
+
+        .number,
+        h4 {
+          color: black;
+        }
+
+      }
+
+      border-bottom: 1px solid $gray-color;
+
+      .btn-newjob {
+        background-color: rgb(155, 0, 4);
+        color: white;
+        font-size: 1rem;
+        border: .5rem;
+        font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+        padding: .5rem 1rem;
+        margin-right: calc(48px + 2vw);
+      }
     }
 
-    // .job-status {
+    .jobs-table {
+      overflow: auto;
 
-    //   // border-bottom: 3px solid #e4a93c !important;
+      table {
+        min-width: 1120px;
+      }
 
-    // }
+      .job-factory {
+        width: 50px;
+        min-width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        display: flex;
+        font-weight: 500;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        background-color: rgb(74, 161, 238);
+      }
 
-    .indicator-line {
-      display: block;
-      margin-top: 6px;
-      width: 18px;
-      height: 4px;
+      .job-user {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: gray;
+        color: white;
+        border-radius: 20px;
+        margin-right: 20px;
+      }
+
+      thead {
+        border-bottom: 1px solid $gray-color;
+
+        th {
+          padding: 12px;
+          font-family: Exo\ 2, Helvetica Neue, Arial, sans-serif !important;
+          color: black;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+        }
+
+        th:after {
+          padding-left: .5rem;
+          content: url("data:image/svg+xml;utf8,<svg width='6' height='10' viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M3 0L6 4H0L3 0ZM3 10L0 6H6L3 10Z' fill='rgba(39, 44, 51, 0.54)'/></svg>")
+        }
+      }
+
+      tbody {
+        tr {
+
+          border-bottom: 1px solid $gray-color;
+
+          td {
+            padding: 12px;
+            border: none;
+            background-color: white !important;
+            vertical-align: middle;
+
+            .name {
+              white-space: pre-wrap;
+
+            }
+
+            b {
+              color: black;
+            }
+
+            i {
+              font-family: Material Icons;
+              font-weight: 400;
+              font-style: normal;
+              font-size: 24px;
+              color: grey;
+            }
+
+            i:hover {
+              color: black;
+            }
+
+            .dropdown-menu {
+              min-width: 100px;
+              transform: none !important;
+              inset: unset !important;
+              right: 0 !important;
+              top: 100% !important;
+              animation-name: DropDownSlide !important;
+              animation-duration: .3s !important;
+              animation-fill-mode: both !important;
+            }
+          }
+        }
+
+
+      }
+
+      // .job-status {
+
+      //   // border-bottom: 3px solid #e4a93c !important;
+
+      // }
+
+      .indicator-line {
+        display: block;
+        margin-top: 6px;
+        width: 18px;
+        height: 4px;
+      }
+    }
+
+    .pagination {
+      font-weight: 500;
+      font-size: .8125rem;
+      line-height: 24px !important;
+
+      .mdi {
+        font-size: 1rem;
+        line-height: 1rem;
+      }
+
+      .dropdown-menu {
+        min-width: fit-content !important;
+        transform: none !important;
+        inset: unset !important;
+        left: 0 !important;
+        top: 100% !important;
+        animation-name: DropDownSlide !important;
+        animation-duration: .3s !important;
+        animation-fill-mode: both !important;
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+
+      .dropdown-menu:after {
+        border: none;
+      }
+    }
+
+    .text-secondary {
+      color: $gray-font !important;
     }
   }
 
-  .pagination {
-    font-weight: 500;
-    font-size: .8125rem;
-    line-height: 24px !important;
-
-    .mdi {
-      font-size: 1rem;
-      line-height: 1rem;
-    }
-
-    .dropdown-menu {
-      min-width: fit-content !important;
-      transform: none !important;
-      inset: unset !important;
-      left: 0 !important;
-      top: 100% !important;
-      animation-name: DropDownSlide !important;
-      animation-duration: .3s !important;
-      animation-fill-mode: both !important;
-    }
-
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Firefox */
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
-    .dropdown-menu:after {
-      border: none;
-    }
+  .bold {
+    font-weight: 700;
   }
 
-  .text-secondary {
-    color: $gray-font !important;
+  .bg-pipe {
+    background-color: rgb(74, 161, 238) !important;
   }
-}
 
-.bold {
-  font-weight: 700;
-}
+  .bg-precast {
+    background-color: rgb(227, 169, 61) !important;
+  }
 
-.bg-pipe {
-  background-color: rgb(74, 161, 238) !important;
-}
+  .bg-steel {
+    background-color: rgb(1, 188, 195) !important;
+  }
 
-.bg-precast {
-  background-color: rgb(227, 169, 61) !important;
-}
+  @media (max-width: 1600px) {
+    .col-xxl-10 {
 
-.bg-steel {
-  background-color: rgb(1, 188, 195) !important;
-}
-
-@media (max-width: 1600px) {
-  .col-xxl-10 {
-
-    width: 100% !important;
+      width: 100% !important;
+    }
   }
 }
