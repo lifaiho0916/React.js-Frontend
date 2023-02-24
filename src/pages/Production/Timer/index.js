@@ -15,6 +15,7 @@ import "./style.scss"
 import {
   createTimerAction,
   getProducts,
+  Products,
   refreshTimerAction,
   updateTimerAction,
 } from "actions/timer"
@@ -37,8 +38,6 @@ const TimerPage = props => {
   }
 
   const [city, setCity] = useState("Seguin")
-  const [parts, setParts] = useState([])
-  const [machines, setMachines] = useState([])
   const [timers, setTimers] = useState([])
   const [compare, setCompare] = useState([false, false, false])
   const [timerPagination, setTimerPagination] = useState({
@@ -52,24 +51,11 @@ const TimerPage = props => {
       page
     })
   }
-  
-  useEffect(() => {
-    (async () => {
-      const _parts = await getProducts("Part")
-      const _machines = await getProducts("Machine")
-      const _timers = await getProducts("Timer")
 
-      setMachines(_machines.products)
-      setParts(_parts.products)
-      setTimers(_timers.products)
-      setInputs({
-        factory: _machines.products[0].factory,
-        weight: _parts.products[0].weight,
-        productionTime: _parts.products[0].productionTime,
-      })
-    })()
-  }, [])
   useEffect(() => {
+    socket.on("connect", () => {console.log('connected')})
+    socket.on("disconnect", () => {console.log('dis')})
+
     socket.on("timerUpdated", (id) => {
       refreshTimer(id)
     })
@@ -87,41 +73,6 @@ const TimerPage = props => {
     setTimers([res.data.timer, ...timers])
   }
 
-  const [inputs, setInputs] = useState({
-    factory: "",
-    weight: 0,
-    productionTime: 0,
-  })
-  const [timerPart, setTimerPart] = useState("")
-
-  const updateField = (f, e) => {
-    setInputs({
-      ...inputs,
-      [f]: e.target.value,
-    })
-  }
-
-  const machineChanged = e => {
-    if (e == "") return
-    const id = e.target.value
-    const idx = machines.findIndex(m => m._id == id)
-    setInputs({
-      ...inputs,
-      factory: machines[idx].factory,
-    })
-  }
-
-  const partChanged = v => {
-    const idx = parts.findIndex(m => m._id == v)
-    setInputs({
-      ...inputs,
-      weight: parts[idx].pounds,
-      productionTime: parts[idx].avgTime,
-    })
-    setTimerPart(v)
-    updateNewTimer("machine", "")
-  }
-
   const factoryFilters = [...factories, "All"]
   const [factoryFilter, setFactoryFilter] = useState([
     false,
@@ -129,28 +80,6 @@ const TimerPage = props => {
     false,
     true,
   ])
-  const filteredTimers = useMemo(() => {
-    return timers.filter(timer => {
-      if (timer.city != city) return false
-      for (let index = factoryFilter.length - 1; index > -1; index--) {
-        if (!factoryFilter[index]) continue
-        if (
-          factoryFilters[index] == "All" ||
-          factoryFilters[index] == timer.factory
-        )
-          return true
-      }
-      return false
-    })
-  }, [timers, city, factoryFilter])
-
-  const filteredMachines = useMemo(() => {
-    return machines.filter(machine => machine.city == city)
-  }, [timers, city])
-
-  const filteredParts = useMemo(() => {
-    return parts.filter(part => part.city == city)
-  }, [parts, city])
 
   const toggleFilter = (e, filter) => {
     let _filter = [...factoryFilter]
@@ -239,17 +168,6 @@ const TimerPage = props => {
     setCompare(compare.map((v, index) => idx == index ? v : !v))
   }
 
-  const [factoryOfTimerModal, setFactoryOfTimerModal] = useState("Pipe And Box")
-  const filteredMachinesModal = useMemo(() => {
-    const idx = filteredParts.findIndex(f => timerPart == f._id)
-    let machineClass = ""
-    if (idx != -1) machineClass = filteredParts[idx].machineClass
-    return filteredMachines.filter(m => m.factory == factoryOfTimerModal && m.machineClass == machineClass)
-  }, [factoryOfTimerModal, filteredMachines, timerPart])
-  const filteredPartsModal = useMemo(() => {
-    return filteredParts.filter(f => f.factory == factoryOfTimerModal)
-  }, [factoryOfTimerModal, filteredParts, timerPart])
-
   const [refreshLogs, setRefreshLogs] = useState(false)
   const refreshTimer = async (id) => {
     const timer = await refreshTimerAction(id)
@@ -257,6 +175,25 @@ const TimerPage = props => {
     setRefreshLogs(true)
   }
 
+  const updateTimers = async () => {
+    const _factories = factories.filter((f, idx) => factoryFilter[idx]||factoryFilter[3])
+    const res = await getProducts("Timer", timerPagination.page, { factories: _factories, city })
+
+    setTimers(res.products)
+    setTimerPagination({
+      ...timerPagination,
+      totalPage: Math.ceil(res.totalCount / 9)
+    })
+  }
+
+  useEffect(() => {
+    updateTimers()
+  }, [timerPagination.page, compare, city])
+
+  const [parts, setParts] = useState([])
+  const [part, setPart] = useState(null)
+  const [machines, setMachines] = useState([])
+  const [timerPart, setTimerPart] = useState("")
   const [newTimer, setNewTimer] = useState({
     factory: "",
     part: "",
@@ -268,8 +205,31 @@ const TimerPage = props => {
       [f]: e.target?e.target.value:e
     })
 
-    if (f == "machine") machineChanged(e)
   }
+
+  const partChanged = (v) => {
+    setTimerPart(v)
+    const idx = parts.findIndex(p => v == p._id)
+    setPart(parts[idx])
+  }
+
+  const getParts = async () => {
+    const res = await getProducts("Part", -1, { factory: newTimer.factory, city })
+    setParts(res.products)
+  }
+  const getMachines = async() => {
+    const res = await getProducts("Machine", -1, { factory: newTimer.factory, city, machineClass: part.machineClass })
+    setMachines(res.products)
+  }
+
+  useEffect(() => {
+    getParts()
+  }, [newTimer.factory, city])
+  useEffect(() => {
+    if (part) {
+      getMachines()
+    }
+  }, [part])
 
   return <div className="page-content">
     <MetaTags>
@@ -363,16 +323,14 @@ const TimerPage = props => {
           </div>
           <div className="products-container row m-0 p-0 mt-5">
             <div className="d-flex justify-content-end">
-              <div className="border d-flex p-2">
-                <Pagination
-                  page={timerPagination.page}
-                  movePage={moveToTimerPage}
-                  totalPage={timerPagination.totalPage} />
-              </div>
+              <Pagination
+                page={timerPagination.page}
+                movePage={moveToTimerPage}
+                totalPage={timerPagination.totalPage} />
             </div>
             <div className="col-xl-9 row p-0 m-0">
               {
-                filteredTimers.map((timer, idx) => (
+                timers.map((timer, idx) => (
                   <Timer
                     {...timer}
                     key={`timer-${timer._id}`}
@@ -388,8 +346,9 @@ const TimerPage = props => {
           <TimerLogs
             city={city}
             compare={compare}
-            filteredParts={filteredParts}
+            filteredParts={[]}
             refreshLogs={refreshLogs}
+            timers={timers}
             afterRefresh={() => setRefreshLogs(false)} />
         </div>
       </div>
@@ -418,7 +377,7 @@ const TimerPage = props => {
             <div className="col-3">Part:</div>
             <div className="col-9">
               <AutoCompleteSelect 
-                options={filteredPartsModal} onChange={v => partChanged(v)}
+                options={parts} onChange={v => partChanged(v)}
                 placeholder="Part" />
               <input type="hidden" name="part" value={timerPart} />
             </div>
@@ -432,7 +391,7 @@ const TimerPage = props => {
                 value={newTimer.machine}>
                 <option value="" disabled>Machine</option>
                 {
-                  filteredMachinesModal.map(m => <option value={m._id} key={"machine-" + m._id} >{m.name}</option>)
+                  machines.map(m => <option value={m._id} key={"machine-" + m._id} >{m.name}</option>)
                 }
               </select>
             </div>
@@ -441,14 +400,14 @@ const TimerPage = props => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Weight:</div>
             <div className="col-9">
-              <input className="form-control" readOnly type="number" name="weight" value={inputs.weight} />
+              <input className="form-control" readOnly type="number" name="weight" value={part && part.pounds} />
             </div>
           </div>
 
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Production Time:</div>
             <div className="col-9">
-              <input className="form-control" readOnly name="productionTime" type="number" value={inputs.productionTime} />
+              <input className="form-control" readOnly name="productionTime" type="number" value={part && part.avgTime} />
             </div>
           </div>
         </form>
@@ -466,14 +425,14 @@ const TimerPage = props => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Weight:</div>
             <div className="col-9">
-              <input value={editingTimer.weight} type="number" onChange={e => updateTimerFields("weight", e)} className="form-control" />
+              <input value={part && part.pounds} type="number" className="form-control" />
             </div>
           </div>
 
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Production Time:</div>
             <div className="col-9">
-              <input value={editingTimer.productionTime} type="number" onChange={e => updateTimerFields("productionTime", e)} className="form-control" />
+              <input value={part && part.avgTime} type="number" className="form-control" />
             </div>
           </div>
         </form>

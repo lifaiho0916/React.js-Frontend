@@ -25,13 +25,26 @@ import {
   getProducts,
 } from "actions/timer"
 import { useEffect } from "react"
+import Pagination from "components/Common/Pagination"
 
 const ProductList = props => {
   const [machineModal, setMachineModal] = useState(false)
-
-  const [type, setType] = useState("Parts")
-  const types = ["Parts", "Machine"]
+  const [editIndex, setEditIndex] = useState(-1)
+  const [type, setType] = useState("Part")
+  const types = ["Part", "Machine"]
   const [selectedFiles, setselectedFiles] = useState([])
+  const [totalCount, setTotalCount] = useState(0)
+  const [pagination, setPagination] = useState({
+    page: 1,
+    totalPage: 1
+  })
+
+  const moveToPage = (_page) => {
+    setPagination({
+      ...pagination,
+      page: _page
+    })
+  }
 
   function handleAcceptedFiles(files) {
     files.map(file =>
@@ -56,7 +69,26 @@ const ProductList = props => {
   const [partsModal, setPartsModal] = useState(false)
 
   const showCreateModal = () => {
-    if (type == "Parts") setPartsModal(true)
+    setEdit(false)
+    setNewPart({
+      city: "",
+      factory: "",
+      machineClass: "",
+      name: "",
+      pounds: '',
+      avgTime: '',
+      finishGoodWeight: '',
+      cageWeightScrap: '',
+      cageWeightActuals: ''
+    })
+    setNewMachine({
+      city: "",
+      factory: "",
+      machineClass: "",
+      name: "",
+      details: "",
+    })
+    if (type == "Part") setPartsModal(true)
     else setMachineModal(true)
   }
 
@@ -70,16 +102,20 @@ const ProductList = props => {
 
   const createPart = async () => {
     const form = new FormData(document.getElementById("part-form"))
+    if (edit)
+      form.append("id", parts[editIndex]._id)
     const { part } = await createPartAction(form)
-    setParts([part, ...parts])
     togglePartsModal()
+    updateProducts()
   }
 
   const createMachine = async () => {
     const form = new FormData(document.getElementById("machine-form"))
+    if (edit)
+      form.append("id", machines[editIndex]._id)
     const { machine } = await createMachineAction(form)
-    setMachines([machine, ...machines])
     toggleModal()
+    updateProducts()
   }
 
   const deleteProduct = async (type, id) => {
@@ -92,7 +128,20 @@ const ProductList = props => {
 
   const editMachine = async idx => {
     setEdit(true)
+    setEditIndex(idx)
+    let _machine
+    Object.entries(newMachine).forEach(v => _machine = {..._machine, [v[0]]: machines[idx][v[0]]})
+    setNewMachine(_machine)
     setMachineModal(true)
+  }
+
+  const editPart = async (idx) => {
+    setEditIndex(idx)
+    setEdit(true)
+    let _part
+    Object.entries(newPart).forEach(v => _part = {..._part, [v[0]]: parts[idx][v[0]]})
+    setNewPart(_part)
+    setPartsModal(true)
   }
 
   const [edit, setEdit] = useState(false)
@@ -120,37 +169,48 @@ const ProductList = props => {
     details: "",
   })
   const updateNewPart = (f, e) => {
-    setNewPart({
+    const _part = {
       ...newPart,
       [f]: e.target ? e.target.value : e
-    })
+    }
+    setNewPart(_part)
     let enable = true
-    Object.entries(newPart).map(v => {
+    Object.entries(_part).map(v => {
       if (!v[1]) enable = false
     })
     setAvailToCreatePart(enable)
   }
   const updateNewMachine = (f, e) => {
-    setNewMachine({
+    const _machine = {
       ...newMachine,
       [f]: e.target ? e.target.value : e
-    })
+    }
+    setNewMachine(_machine)
     let enable = true
-    Object.entries(newMachine).map(v => {
+    Object.entries(_machine).map(v => {
       if (!v[1]) enable = false
     })
     setAvailToCreateMachine(enable)
   }
 
+  const updateProducts = async () => {
+    const res = await getProducts(type, pagination.page)
 
+    if (type == "Machine") setMachines(res.products)
+    else setParts(res.products)
+
+    setPagination({
+      ...pagination,
+      totalPage: Math.ceil(res.totalCount / 9)
+    })
+    setTotalCount(res.totalCount)
+  }
+  
+  console.log(newPart)
+  
   useEffect(() => {
-    (async () => {
-      const _parts = await getProducts("Part")
-      const _machines = await getProducts("Machine")
-      setMachines(_machines.products)
-      setParts(_parts.products)
-    })()
-  }, [])
+    updateProducts()
+  }, [type, pagination.page])
 
   return (
     <div
@@ -183,13 +243,13 @@ const ProductList = props => {
                 >
                   <div className="d-flex justify-content-center flex-column align-items-center ms-3">
                     <h3 style={{ marginBottom: "-1px" }}>
-                      {(type == "Parts" ? parts : machines).length}
+                      {totalCount}
                     </h3>
                     <div
                       className="d-flex align-items-center text-uppercase"
                       style={{ fontSize: "11px" }}
                     >
-                      {type == "Machine" ? "Machines" : type}
+                      {type}s
                     </div>
                   </div>
                   <div className="ms-2 me-3 d-flex align-items-end h-100">
@@ -223,7 +283,12 @@ const ProductList = props => {
                     key={_type}
                     className="type text-uppercase cursor-pointer"
                     style={{ marginLeft: "0px" }}
-                    onClick={() => setType(_type)}
+                    onClick={() => {
+                      if (type != _type) {
+                        setType(_type)
+                        moveToPage(1)
+                      }
+                    }}
                   >
                     <div
                       className={`type-selector ${
@@ -281,20 +346,29 @@ const ProductList = props => {
           </div>
 
           {/* <div className="products-container row m-0 p-0 mt-5"> */}
+          <div className="d-flex justify-content-end mt-5">
+            <Pagination 
+              {...pagination}
+              movePage={moveToPage} />
+          </div>
           <div className="row mt-5 p-0">
-            {type == "Parts"
-              ? parts.map(product => (
+            {type == "Part"
+              ? parts.map((product, idx) => (
                   <Part
                     {...product}
                     key={`part-${product._id}`}
                     deleteProduct={deleteProduct}
+                    editPart={editPart}
+                    idx={idx}
                   />
                 ))
-              : machines.map(product => (
+              : machines.map((product, idx) => (
                   <Machine
                     key={`machine-${product._id}`}
                     {...product}
                     deleteProduct={deleteProduct}
+                    editMachine={editMachine}
+                    idx={idx}
                   />
                 ))}
           </div>
@@ -326,7 +400,7 @@ const ProductList = props => {
               <MachineClassSelect
                 onChange = {(e) => updateNewPart("machineClass", e)}                
                 placeholder="Machine Class"
-                value={newPart.machineClass} />
+                value={newPart.machineClass||""} />
             </div>
 
             <div className="mt-3 d-flex align-items-center">

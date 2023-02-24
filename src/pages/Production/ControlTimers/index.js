@@ -44,6 +44,7 @@ const ControlTimer = (props) => {
     })
   }
   const filteredControllerTimers = useMemo(() => {
+    console.log(timers, controlFilter, 'here')
     return timers.filter(timer => timer.city==controlFilter.city&&timer.factory==controlFilter.factory)
   }, [controlFilter, timers])
   const startTimerInController = () => {

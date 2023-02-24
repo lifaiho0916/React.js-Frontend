@@ -10,7 +10,7 @@ export const CitySelect = props => {
 }
 
 export const FactoryList = props => {
-  return <select  {...props} className={"form-select "+ props.className} name="machineClass" onChange={(e) => props.onChange(e)}>
+  return <select  {...props} className={"form-select "+ props.className} name="factory" onChange={(e) => props.onChange(e)}>
     <option value="" disabled>{props.placeholder}</option>
     {
       factories.map(factory => <option key={"factory-"+factory} value={factory}>{factory}</option>)

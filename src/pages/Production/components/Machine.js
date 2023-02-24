@@ -15,7 +15,7 @@ const Machine = (props) => {
   }
 
   const editMachine = () => {
-    props.editMachine()
+    props.editMachine(props.idx)
   }
 
   const toggle = () => {

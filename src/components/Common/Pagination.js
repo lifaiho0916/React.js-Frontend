@@ -1,4 +1,5 @@
 import React from "react"
+import "./pagination.scss"
 
 const Pagination = (props) => {
 
@@ -10,10 +11,19 @@ const Pagination = (props) => {
   }
 
   const goToNextPage = () => {
-    movePage(page + 1)
+    if (page < totalPage)
+      movePage(page + 1)
   }
 
-  return <React.Fragment>
+  const pageChanged = (e) => {
+    if (e.keyCode === 13) {
+      const _page = e.target.value
+      if (_page > 1 && _page <= totalPage)
+        movePage(_page)
+    }
+  }
+
+  return <div className="pagination d-flex">
     <div className='pe-0 cursor-pointer' style={{ paddingLeft: '24px' }}>
       <div className='d-flex align-items-center border-end pe-2'
         onClick={goToPrevPage}
@@ -30,10 +40,7 @@ const Pagination = (props) => {
         <span> of {totalPage}</span>
         <div className='dropdown-menu dropdown-menu-end border-0 p-0' aria-labelledby="setpage" style={{minWidth: 64}}>
           <input className='form-control' type='number'
-            onChange={(e) => {
-              if (e.target.value > 0)
-                movePage(e.target.value)
-            }}
+            onKeyUp={(e) => pageChanged(e)}
             style={{ width: 64 }} />
         </div>
       </div>
@@ -45,7 +52,7 @@ const Pagination = (props) => {
         <span className='mdi mdi-chevron-right'></span>
       </div>
     </div>
-  </React.Fragment>
+  </div>
 }
 
 export default Pagination

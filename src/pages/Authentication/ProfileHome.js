@@ -8,7 +8,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "reactstrap"
-// import "./app.css";
+import "./app.css";
 const ProfileHome = () => {
   const [menu, setMenu] = useState(false)
   const toggle = () => {

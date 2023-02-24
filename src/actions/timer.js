@@ -15,8 +15,8 @@ export const createPartAction = async (form) => {
   return res.data
 }
 
-export const getProducts = async(type) => {
-  const res = await axios.post("/timer/get-products", { type })
+export const getProducts = async(type, page = 1, filters) => {
+  const res = await axios.post("/timer/get-products", { type, page, filters })
   return res.data
 }
 

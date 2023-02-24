@@ -1,4 +1,4 @@
-import { getTimerLogsOfMachine, searchMacheinsAction } from 'actions/timer';
+import { getProducts, getTimerLogsOfMachine, searchMacheinsAction } from 'actions/timer';
 import { MachineClassSelect } from 'components/Common/Select';
 import { machineClasses } from 'helpers/globals';
 import React, { useEffect, useState } from 'react';
@@ -23,9 +23,10 @@ const TimerLogs = (props) => {
     machineClass: machineClasses[0],
     productClass: "",
     includeOperator: true,
-    from: new Date(),
-    to: new Date()
+    from: null,
+    to: null
   })
+  const [parts, setParts] = useState([])
 
   const searchMachines = async () => {
     const idx = filteredParts.findIndex(p => p._id == filters.productClass)
@@ -78,7 +79,22 @@ const TimerLogs = (props) => {
       getTimers(machines[tab]._id)
   }, [page])
 
-  // console.log(filteredParts, filters.machineClass)
+  const updateProducts = async() => {
+    const res = await getProducts("Part", -1, { city, machineClass: filters.machineClass })
+    setParts(res.products)
+  }
+  useEffect(() => {
+    updateProducts()
+  }, [city, filters.machineClass])
+
+  useEffect(() => {
+    console.log(props.timers)
+    const _machines = props.timers.map(timer => timer.machine)
+    setMachines(_machines)
+    setColors(_machines.map(m => `rgb(${parseInt(Math.random() * 256)},
+      ${parseInt(Math.random() * 256)}, ${parseInt(Math.random() * 256)})`))
+    getTimers(_machines.length && _machines[0]._id)
+  }, [props.timers])
 
   return <React.Fragment>
     <div className="row m-0 mt-5">
@@ -117,11 +133,9 @@ const TimerLogs = (props) => {
               >
                 <option value="" disabled />
                 {
-                  filteredParts
-                    .filter(part => part.machineClass == filters.machineClass)
-                    .map(part => (
-                      <option value={part._id} key={"log-filter-" + part._id}>{part.name}</option>
-                    ))
+                  parts.map(part => (
+                    <option value={part._id} key={"log-filter-" + part._id}>{part.name}</option>
+                  ))
                 }
               </select>
             </div>

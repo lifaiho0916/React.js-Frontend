@@ -18,6 +18,10 @@ const Part = (props) => {
     props.deleteProduct("Part", props._id)
   }
 
+  const editPart = async () => {
+    props.editPart(props.idx)
+  }
+
   return <div className="col-xl-4 col-lg-4 col-md-6 p-2 px-3 d-flex align-items-stretch">
     <div className="product p-2 px-4">
       <div className="product-header justify-content-end">
@@ -26,7 +30,7 @@ const Part = (props) => {
             <span className="mdi mdi-dots-horizontal" style={{ color: "rgba(0,0,0,0.5)", fontSize: "36px" }}></span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem>Edit</DropdownItem>
+            <DropdownItem onClick={editPart}>Edit</DropdownItem>
             <DropdownItem onClick={removePart}>Remove</DropdownItem>
           </DropdownMenu>
         </Dropdown>

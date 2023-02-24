@@ -7,10 +7,12 @@ const AutoCompleteSelect = (props) => {
   const optionsGroup = [
     {
       label: "Parts",
-      options: props.options.map(v => ({
+      options: props.options.map(v => {
+        console.log(v.name, v.machine)
+        return ({
         label: v.name || v.machine.name,
         value: v._id
-      }))
+      })})
     }
   ]
   const [option, setOption] = useState(props.option);
