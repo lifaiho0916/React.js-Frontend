@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+// export const BACKEND = "http://localhost:8000"
+export const BACKEND = "https://apms.global"
+
 export const setAxiosConfig = () => {
   const token = localStorage.getItem("token")
-  // axios.defaults.baseURL = "https://apms.global/api/"
-  axios.defaults.baseURL = "http://localhost:8000/api/"
+  axios.defaults.baseURL = BACKEND+"/api/"
   axios.defaults.headers.common["Authorization"] = token
 }

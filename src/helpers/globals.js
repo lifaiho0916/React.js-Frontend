@@ -12,9 +12,9 @@ export const cities = [
 
 export const machineClasses = [
   "Radial Press",
-  "Variant Perfect",
-  "System",
+  "Variant",
   "Blizzard",
   "Tornado",
   "Steel",
+  "Perfect System",
 ]

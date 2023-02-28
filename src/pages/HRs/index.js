@@ -120,7 +120,7 @@ const Users = props => {
                               <th scope="row">{index + 1}</th>
                               <td>
                                 <div>
-                                  { user.name }
+                                  { user.firstName + ' ' + user.lastName}
                                 </div>
                               </td>
                               <td>{ user.email }</td>

@@ -57,31 +57,32 @@
 
 #sidebar-menu {
     padding: 10px 0 30px 0;
+    font-family: Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 
     .mm-active {
         >.has-arrow {
             &:after {
-                transform: rotate(-180deg);
-                font-size: 25px;
+                transform: rotate(0);
+
             }
         }
-        
-    // background-color: black;
-    // border-radius: 20px;
-    // position: relative;
-    // left: -20px;
+
+        // background-color: black;
+        // border-radius: 20px;
+        // position: relative;
+        // left: -20px;
 
     }
 
     .has-arrow {
         &:after {
             content: "\F0140";
+            transform: rotate(-90deg);
             font-family: 'Material Design Icons';
             display: block;
             float: right;
             transition: transform .2s;
-            font-size: 1rem;
-            font-size: 25px;
+            font-size: 1.25rem;
         }
     }
 
@@ -89,12 +90,12 @@
         li {
             a {
                 display: block;
-                padding: 10px 8px 10px 0px;
-                margin-right: 25px;
-                font-family: $font-family-secondary;
+                padding: 0 .5rem 0 0;
+                line-height: 40px;
+                font-weight: 500;
                 color: $sidebar-menu-item-color;
                 position: relative;
-                font-size: 22px;
+                font-size: 15px;
                 transition: all .4s;
 
                 i {
@@ -122,13 +123,14 @@
             }
 
             ul.sub-menu {
-                padding: 0;
+                padding: 0 0 .75rem 0;
 
                 li {
 
                     a {
-                        padding: .4rem 1.5rem .4rem 3.3rem;
-                        font-size: 19px;
+                        padding: 0 .5rem 0 1.5rem;
+                        font-size: 15px;
+                        line-height: 32px;
                         color: $sidebar-menu-sub-item-color;
                     }
 
@@ -159,29 +161,39 @@
     color: $sidebar-menu-item-icon-color !important;
     font-weight: $fw-medium;
 }
-#sidebar-menu .mm-show .mm-show .mm-active {
-    background-color: rgb(39,44,50);
-    border-radius: 20px;
+
+#sidebar-menu .mm-show .mm-active {
+    background-color: rgb(39, 44, 50);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     position: relative;
-    left: -20px;
-    a {
-        left: 20px;
-    }
-    ul {
-        left: 20px;
-        .mm-active {
-            left: 0px;
-            background: none;
-        }
-    }
+
+    // left: -20px;
+    // a {
+    //     left: 20px;
+    // }
+    // ul {
+    //     left: 20px;
+    //     .mm-active {
+    //         left: 0px;
+    //         background: none;
+    //     }
+    // }
 
 }
+
+.profile-menu {
+    background: #303840 !important;
+}
+
 .mm-collapsed {
     background: none !important;
     left: 0px !important;
 }
+
 .mm-active {
     color: $sidebar-menu-item-active-color !important;
+
     >a {
         color: $sidebar-menu-item-active-color !important;
         // background-color: $sidebar-menu-item-active-bg;
@@ -250,7 +262,7 @@
 
         .simplebar-mask,
         .simplebar-content-wrapper {
-            overflow: visible !important;
+            
         }
 
         .simplebar-scrollbar {
@@ -280,16 +292,16 @@
                 }
             }
 
-            > ul {
-                > li {
+            >ul {
+                >li {
                     position: relative;
                     white-space: nowrap;
 
-                    > a {
+                    >a {
                         padding: 15px 20px;
                         min-height: 55px;
                         transition: none;
-                        
+
                         &:hover,
                         &:active,
                         &:focus {
@@ -308,14 +320,14 @@
                     }
 
                     &:hover {
-                        > a {
+                        >a {
                             position: relative;
                             width: calc(190px + #{$sidebar-collapsed-width});
                             color: $primary;
                             background-color: darken($sidebar-bg, 4%);
                             transition: none;
 
-                            i{
+                            i {
                                 color: $primary;
                             }
 
@@ -381,7 +393,7 @@
                     }
 
                     li.active {
-                        
+
                         a {
                             color: $gray-100;
                         }
@@ -393,6 +405,23 @@
     }
 }
 
+.metismenu .mm-show .mm-active .active:after {
+    content: "";
+    background-color: #e01160 !important;
+    border-radius: 100% !important;
+    width: 8px !important;
+    height: 8px !important;
+    box-sizing: border-box;
+    position: absolute;
+    left: -20px;
+    top: 16px;
+
+}
+
+.sub-menu .active:after {
+    left: 0 !important;
+    top: 12px !important;
+}
 
 body[data-sidebar="dark"] {
     .vertical-menu {
@@ -400,18 +429,19 @@ body[data-sidebar="dark"] {
     }
 
     #sidebar-menu {
-    
+
         ul {
             li {
-               
+
                 a {
+                    overflow: visible;
                     color: $sidebar-dark-menu-item-color;
-                    margin-left: 75px;
+                    margin-left: 48px;
 
                     i {
                         color: $sidebar-dark-menu-item-icon-color;
                     }
-    
+
                     &:hover {
                         color: $sidebar-dark-menu-item-hover-color;
 
@@ -420,7 +450,7 @@ body[data-sidebar="dark"] {
                         }
                     }
                 }
-                
+
                 // >.mm-active{
                 //     background-color: $sidebar-dark-menu-item-active-bg;
                 // }
@@ -440,40 +470,44 @@ body[data-sidebar="dark"] {
                 }
             }
 
-            >li{
-                >a{
-                    &.mm-active{
+            >li {
+                >a {
+                    &.mm-active {
                         background-color: $sidebar-dark-menu-item-active-bg;
                     }
                 }
             }
         }
     }
+
     // Enlarge menu
     &.vertical-collpsed {
         min-height: 1200px;
+
         // Side menu
         .vertical-menu {
 
             // Sidebar Menu
             #sidebar-menu {
 
-                > ul {
-                    > li {
-                        
+                >ul {
+                    >li {
+
                         &:hover {
-                            > a {
+                            >a {
                                 background: lighten($sidebar-dark-bg, 2%);
                                 color: $sidebar-dark-menu-item-hover-color;
-                                i{
+
+                                i {
                                     color: $sidebar-dark-menu-item-hover-color;
                                 }
                             }
 
                             >ul {
-                                a{
+                                a {
                                     color: $sidebar-dark-menu-sub-item-color;
-                                    &:hover{
+
+                                    &:hover {
                                         color: $sidebar-dark-menu-item-hover-color;
                                     }
                                 }
@@ -481,18 +515,19 @@ body[data-sidebar="dark"] {
                         }
                     }
 
-                    ul{
+                    ul {
                         background-color: $sidebar-dark-bg;
                     }
-                    
+
                 }
 
-                ul{
-                    
-                    li{
-                        &.mm-active .active{
+                ul {
+
+                    li {
+                        &.mm-active .active {
                             color: $sidebar-dark-menu-item-active-color;
-                            i{
+
+                            i {
                                 color: $sidebar-dark-menu-item-active-color !important;
                             }
                         }
@@ -504,18 +539,23 @@ body[data-sidebar="dark"] {
 
         }
     }
+
     .mm-active {
         color: $sidebar-dark-menu-item-active-color !important;
-        > a{
+
+        >a {
             color: $sidebar-dark-menu-item-active-color !important;
+
             // background-color: $sidebar-dark-menu-item-active-bg;
             i {
                 color: $sidebar-dark-menu-item-active-color !important;
             }
         }
-        > i {
+
+        >i {
             color: $sidebar-dark-menu-item-active-color !important;
         }
+
         .active {
             color: $sidebar-dark-menu-item-active-color !important;
             background: none;
@@ -541,49 +581,58 @@ body[data-layout="horizontal"] {
 // Compact Sidebar
 
 body[data-sidebar-size="small"] {
-    .navbar-brand-box{
+    .navbar-brand-box {
         width: $sidebar-width-sm;
     }
-    .vertical-menu{
+
+    .vertical-menu {
         width: $sidebar-width-sm;
         text-align: center;
+
         .has-arrow:after,
         .badge {
             display: none !important;
         }
     }
+
     .main-content {
         margin-left: $sidebar-width-sm;
     }
+
     .footer {
         left: $sidebar-width-sm;
     }
+
     #sidebar-menu {
         ul li {
-            a{
-                i{
+            a {
+                i {
                     display: block;
                 }
             }
+
             ul.sub-menu {
-                li a{
+                li a {
                     padding-left: 1.5rem !important;
 
                 }
             }
         }
     }
+
     &.vertical-collpsed {
         .main-content {
             margin-left: $sidebar-collapsed-width;
         }
+
         .vertical-menu {
-            #sidebar-menu{
+            #sidebar-menu {
                 text-align: left;
-                >ul{
-                    >li{
+
+                >ul {
+                    >li {
                         >a {
-                            i{
+                            i {
                                 display: inline-block;
                             }
                         }
@@ -591,6 +640,7 @@ body[data-sidebar-size="small"] {
                 }
             }
         }
+
         .footer {
             left: $sidebar-collapsed-width;
         }
@@ -606,17 +656,17 @@ body[data-sidebar="light"] {
     }
 
     #sidebar-menu {
-    
+
         ul {
             li {
-               
+
                 a {
                     color: $sidebar-menu-item-color;
 
                     i {
                         color: $sidebar-menu-item-icon-color;
                     }
-    
+
                     &:hover {
                         color: $sidebar-menu-item-hover-color;
 
@@ -625,16 +675,17 @@ body[data-sidebar="light"] {
                         }
                     }
                 }
-                
-               
+
+
                 >.mm-active {
                     color: $sidebar-menu-item-active-color !important;
-                    > a{
+
+                    >a {
                         color: $white !important;
                         background-color: $sidebar-menu-item-active-bg;
-                        
+
                     }
-                    
+
                 }
 
                 ul.sub-menu {
@@ -652,40 +703,44 @@ body[data-sidebar="light"] {
                 }
             }
 
-            >li{
-                >a{
-                    &.mm-active{
+            >li {
+                >a {
+                    &.mm-active {
                         background-color: $sidebar-menu-item-active-bg;
                     }
                 }
             }
         }
     }
+
     // Enlarge menu
     &.vertical-collpsed {
         min-height: 1200px;
+
         // Side menu
         .vertical-menu {
 
             // Sidebar Menu
             #sidebar-menu {
 
-                > ul {
-                    > li {
-                        
+                >ul {
+                    >li {
+
                         &:hover {
-                            > a {
+                            >a {
                                 background: lighten($sidebar-bg, 2%);
                                 color: $sidebar-menu-item-hover-color;
-                                i{
+
+                                i {
                                     color: $sidebar-menu-item-hover-color;
                                 }
                             }
 
                             >ul {
-                                a{
+                                a {
                                     color: $sidebar-menu-sub-item-color;
-                                    &:hover{
+
+                                    &:hover {
                                         color: $sidebar-menu-item-hover-color;
                                     }
                                 }
@@ -693,18 +748,19 @@ body[data-sidebar="light"] {
                         }
                     }
 
-                    ul{
+                    ul {
                         background-color: $sidebar-bg;
                     }
-                    
+
                 }
 
-                ul{
-                    
-                    li{
-                        &.mm-active .active{
+                ul {
+
+                    li {
+                        &.mm-active .active {
                             color: $sidebar-menu-item-active-color;
-                            i{
+
+                            i {
                                 color: $sidebar-menu-item-active-color !important;
                             }
                         }
@@ -716,11 +772,14 @@ body[data-sidebar="light"] {
 
         }
     }
+
     .mm-active {
         color: $sidebar-menu-item-active-color !important;
-        > i {
+
+        >i {
             color: $sidebar-menu-item-active-color !important;
         }
+
         .active {
             color: $sidebar-menu-item-active-color !important;
             background-color: $sidebar-menu-item-active-bg;
@@ -734,7 +793,7 @@ body[data-sidebar="light"] {
     .menu-title {
         color: $sidebar-menu-item-icon-color !important;
     }
-} 
+}
 
 // Colored Sidebar
 
@@ -744,20 +803,20 @@ body[data-sidebar="colored"] {
         background: $sidebar-colored-bg;
     }
 
-    
+
 
     #sidebar-menu {
-    
+
         ul {
             li {
-               
+
                 a {
                     color: $sidebar-colored-menu-item-color;
 
                     i {
                         color: $sidebar-colored-menu-item-icon-color;
                     }
-    
+
                     &:hover {
                         color: $sidebar-colored-menu-item-hover-color;
 
@@ -766,8 +825,8 @@ body[data-sidebar="colored"] {
                         }
                     }
                 }
-                
-                >.mm-active{
+
+                >.mm-active {
                     background-color: $sidebar-colored-menu-item-active-bg;
                 }
 
@@ -779,6 +838,7 @@ body[data-sidebar="colored"] {
                             background: transparent;
                             margin-top: 0px;
                             margin-bottom: 20px;
+
                             &:hover {
                                 color: $sidebar-colored-menu-item-hover-color;
                             }
@@ -787,40 +847,44 @@ body[data-sidebar="colored"] {
                 }
             }
 
-            >li{
-                >a{
-                    &.mm-active{
+            >li {
+                >a {
+                    &.mm-active {
                         background-color: $sidebar-colored-menu-item-active-bg;
                     }
                 }
             }
         }
     }
+
     // Enlarge menu
     &.vertical-collpsed {
         min-height: 1200px;
+
         // Side menu
         .vertical-menu {
 
             // Sidebar Menu
             #sidebar-menu {
 
-                > ul {
-                    > li {
-                        
+                >ul {
+                    >li {
+
                         &:hover {
-                            > a {
+                            >a {
                                 background: lighten($sidebar-colored-bg, 2%);
                                 color: $sidebar-colored-menu-item-hover-color;
-                                i{
+
+                                i {
                                     color: $sidebar-colored-menu-item-hover-color;
                                 }
                             }
 
                             >ul {
-                                a{
+                                a {
                                     color: $sidebar-colored-menu-sub-item-color;
-                                    &:hover{
+
+                                    &:hover {
                                         color: $sidebar-colored-menu-item-hover-color;
                                     }
                                 }
@@ -828,18 +892,19 @@ body[data-sidebar="colored"] {
                         }
                     }
 
-                    ul{
+                    ul {
                         background-color: $sidebar-colored-bg;
                     }
-                    
+
                 }
 
-                ul{
-                    
-                    li{
-                        &.mm-active .active{
+                ul {
+
+                    li {
+                        &.mm-active .active {
                             color: $sidebar-colored-menu-item-active-color;
-                            i{
+
+                            i {
                                 color: $sidebar-colored-menu-item-active-color !important;
                             }
                         }
@@ -850,18 +915,23 @@ body[data-sidebar="colored"] {
 
         }
     }
+
     .mm-active {
         color: $sidebar-colored-menu-item-active-color !important;
-        > a{
+
+        >a {
             color: $sidebar-colored-menu-item-active-color !important;
             background-color: $sidebar-colored-menu-item-active-bg;
+
             i {
                 color: $sidebar-colored-menu-item-active-color !important;
             }
         }
-        > i {
+
+        >i {
             color: $sidebar-colored-menu-item-active-color !important;
         }
+
         .active {
             color: $sidebar-colored-menu-item-active-color !important;
             background-color: $sidebar-colored-menu-item-active-bg;
@@ -875,4 +945,4 @@ body[data-sidebar="colored"] {
     .menu-title {
         color: $sidebar-colored-menu-item-icon-color !important;
     }
-} 
+}

@@ -39,15 +39,15 @@ export const createTimerAction = async (data) => {
   return res
 }
 
-export const startTimerAction = async (id) => {
+export const startTimerAction = async (id, city) => {
   const time = new Date()
-  const res = await axios.post("/timer/start-timer", { id, time: time.toISOString() })
+  const res = await axios.post("/timer/start-timer", { id, city, time: time.toISOString() })
   return res
 }
 
-export const endTimerAction = async (id) => {
+export const endTimerAction = async (id, city) => {
   const time = new Date()
-  const res = await axios.post("/timer/end-timer", { id, time })
+  const res = await axios.post("/timer/end-timer", { id, city, time })
   return res
 }
 

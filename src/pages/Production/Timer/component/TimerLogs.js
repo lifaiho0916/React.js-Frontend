@@ -72,14 +72,14 @@ const TimerLogs = (props) => {
       getTimers(machines[tab]._id)
       props.afterRefresh()
     }
-  }, [props.refreshLogs])
+  }, [props.refreshLogs ])
 
   useEffect(() => {
     if (machines[tab])
       getTimers(machines[tab]._id)
   }, [page])
 
-  const updateProducts = async() => {
+  const updateProducts = async () => {
     const res = await getProducts("Part", -1, { city, machineClass: filters.machineClass })
     setParts(res.products)
   }
@@ -88,7 +88,6 @@ const TimerLogs = (props) => {
   }, [city, filters.machineClass])
 
   useEffect(() => {
-    console.log(props.timers)
     const _machines = props.timers.map(timer => timer.machine)
     setMachines(_machines)
     setColors(_machines.map(m => `rgb(${parseInt(Math.random() * 256)},
@@ -97,7 +96,7 @@ const TimerLogs = (props) => {
   }, [props.timers])
 
   return <React.Fragment>
-    <div className="row m-0 mt-5">
+    {/* <div className="row m-0 mt-5">
       <div className="search-container mx-0">
         <div className="flex-1">
           <div className="row m-0 mt-2">
@@ -158,8 +157,10 @@ const TimerLogs = (props) => {
           <span className="mdi mdi-refresh cursor-pointer" onClick={() => searchMachines()}></span>
         </div>
       </div>
-    </div>
-    <div className='bg-white time-tracker-table-container mt-5'>
+    </div> */}
+    <h2 className='mb-3'>TIMER TRACKER - {props.classify} </h2>
+    <div className='bg-white time-tracker-table-container'>
+
       <div className='time-tracker-table-header d-flex' >
         <div className='flex-1 d-flex'>
           {
@@ -185,7 +186,7 @@ const TimerLogs = (props) => {
             <i className="bi bi-search position-absolute"></i>
           </div>
         </div>
-        <div className='d-flex align-items-center me-5 py-1' >
+        <div className='d-flex align-items-center me-5 py-1 count-show' >
           <span className="me-2">Show</span>
           <input className="p-2 bg-light form-control" style={{ width: 32 }} />
         </div>
@@ -195,14 +196,16 @@ const TimerLogs = (props) => {
         <table className='w-100 table table-nowrap mb-0' id='jobstable'>
           <thead className=''>
             <tr>
-              <th style={{ paddingLeft: '24px' }} onClick={() => sortTable('name', jobs)}>
+              <th style={{ paddingLeft: '16px', width: 88 }} onClick={() => sortTable('name', jobs)} >
                 CYCLE
               </th>
               <th>DATE</th>
               <th className=''>PART/PRODUCT</th>
+
               <th>OPERATOR</th>
-              <th style={{ width: '48px' }}>STATUS</th>
-              <th style={{ width: '48px' }}>TIME</th>
+              <th>ID</th>
+              <th style={{ width: '90px' }}>STATUS</th>
+              <th style={{ width: '120px' }}>TIME</th>
             </tr>
           </thead>
 
@@ -227,8 +230,9 @@ const TimerLogs = (props) => {
                   </div>
                 </td>
                 <td className='name'>
-                  <div><b>Martinez</b></div>
+                  <div><b>{trackTimer.operator}</b></div>
                 </td>
+                <td></td>
                 <td>
                   <div>
                     <b className={`${trackTimer.time > trackTimer.productionTime ? 'text-danger' : 'text-success'}`}>
@@ -260,7 +264,7 @@ const TimerLogs = (props) => {
           </tbody>
         </table>
       </div>
-      <div className='border-0 pagination py-3 d-flex align-items-center' style={{ borderRadius: '10px' }}>
+      <div className='border-0 pagination py-2 d-flex align-items-center' style={{ borderRadius: '10px' }}>
         <div className='pe-0 cursor-pointer' style={{ paddingLeft: '24px' }}>
           <div className='d-flex align-items-center border-end pe-2'
 
@@ -299,7 +303,7 @@ const TimerLogs = (props) => {
           </div>
         </div>
 
-        <div className="flex-1 ms-3 d-flex align-items-center">
+        <div className="flex-1 ms-3 d-flex align-items-center total-analytics">
           <div className="d-flex" style={{ marginRight: 'auto' }}>
             <div className='d-inline-flex flex-column'>
               <div className='text-end'><b>{machines[tab] && machines[tab].name} TOTAL UNITS:</b></div>
@@ -310,11 +314,14 @@ const TimerLogs = (props) => {
               <div className='text-end'><b>{totalTons}</b></div>
             </div>
           </div>
-          <div className="me-4">
+          <div className='divide-vertical'>
+
+          </div>
+          <div className="me-4  ps-2">
             <div className='d-inline-flex flex-column'>
-              <div className='text-end text-success'><b>TOTAL GAIN:</b></div>
-              <div className='text-end text-danger'><b>TOTAL LOSS:</b></div>
-              <div className='text-end text-warning'><b>TOTAL FLOAT:</b></div>
+              <div className='text-end '><b>TOTAL GAIN:</b></div>
+              <div className='text-end '><b>TOTAL LOSS:</b></div>
+              <div className='text-end '><b>TOTAL FLOAT:</b></div>
             </div>
             <div className='d-inline-flex flex-column ms-3'>
               <div className='text-end text-success'><b>{formatSeconds(totalGain)}</b></div>

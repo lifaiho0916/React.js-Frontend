@@ -9,17 +9,18 @@
     left: 0;
     z-index: 1002;
     background-color: $header-bg;
-    
+
 }
 
 .navbar-header {
+    
     display: flex;
     box-shadow: 0 6px 6px -3px rgba(39, 44, 51, 0.1), 0 10px 14px 1px rgba(39, 44, 51, .4), 0 4px 18px 3px rgba(39, 44, 51, .2);
     -ms-flex-pack: justify;
     align-items: center;
     margin: 0 auto;
     height: $header-height;
-    padding: 0 calc(#{$grid-gutter-width} / 2) 0 0;
+    padding: 0;
 
     .dropdown {
         .header-item.show {
@@ -55,31 +56,33 @@
         height: 38px;
         padding-left: 20px;
         padding-right: 40px;
-        background-color: rgb(39,44,50) !important;
+        background-color: rgb(39, 44, 50) !important;
         box-shadow: none;
         border-radius: 30px;
     }
+
     span {
         position: absolute;
         z-index: 10;
-        font-size: 13px;
-        line-height: 38px;
+        font-size: 12px;
         right: 13px;
-        top: 8px;
+        top: 12px;
         color: rgba($white, 0.5);
     }
 }
-.d-flex .app-search form-control{
+
+.d-flex .app-search form-control {
     background-color: rgb(255, 255, 255) !important;
 }
 
 // Mega menu
 
 .megamenu-list {
-    li{
+    li {
         position: relative;
         padding: 5px 0px;
-        a{
+
+        a {
             color: $dropdown-color;
         }
     }
@@ -103,14 +106,15 @@
 }
 
 .page-content {
-    padding: 86px calc(0.05rem) 60px calc(5.55rem);
+    padding: 64px 0 64px ;
+    
     // padding: $header-height calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
 }
 
 @media screen and (max-width: 576px) {
     .page-content {
         padding: 10px !important;
-        padding-top: 86px !important;        
+        padding-top: 64px !important;
     }
 
     .timer-page-container {
@@ -200,9 +204,10 @@
 }
 
 body[data-topbar="dark"] {
-    #page-topbar { 
+    #page-topbar {
         background-color: $header-dark-bg;
     }
+
     .navbar-header {
         .dropdown.show {
             .header-item {
@@ -213,7 +218,7 @@ body[data-topbar="dark"] {
 
     .header-item {
         color: $header-dark-item-color;
-    
+
         &:hover {
             color: $header-dark-item-color;
         }
@@ -222,7 +227,7 @@ body[data-topbar="dark"] {
     .header-profile-user {
         background-color: rgba($white, 0.25);
     }
-    
+
     .noti-icon {
         i {
             color: $header-dark-item-color;
@@ -238,15 +243,16 @@ body[data-topbar="dark"] {
     }
 
     .app-search {
-    
+
         .form-control {
-            background-color: rgba($topbar-search-bg,0.07);
+            background-color: rgba($topbar-search-bg, 0.07);
             color: $white;
-            border: 1px solid rgba($white,0.07);
+            border: 1px solid rgba($white, 0.07);
         }
+
         span,
         input.form-control::-webkit-input-placeholder {
-            color: rgba($white,0.5);
+            color: rgba($white, 0.5);
         }
     }
 }
@@ -302,32 +308,34 @@ body[data-sidebar="colored"] {
 
 
 body[data-layout="horizontal"] {
-    
-    .navbar-header{
-        padding: 0 calc(#{$grid-gutter-width} / 2) ;
+
+    .navbar-header {
+        padding: 0 calc(#{$grid-gutter-width} / 2);
     }
 
     .navbar-brand-box {
         width: auto;
         padding-left: 0px;
     }
+
     .page-content {
         margin-top: $header-height;
         padding: 54px calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
-    }    
+    }
 }
 
-@media (max-width: 992px) { 
+@media (max-width: 992px) {
     body[data-layout="horizontal"] {
         .navbar-brand-box {
             width: auto;
             padding-left: 5px;
         }
+
         // #page-topbar {
         //     padding: 0px; 
         // }
         .page-content {
             margin-top: 10px;
-        }    
+        }
     }
 }

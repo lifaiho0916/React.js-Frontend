@@ -23,12 +23,13 @@ import { useMemo } from "react"
 
 import AutoCompleteSelect from "components/Common/AutoCompleteSelect"
 import { getCurrentTime } from "helpers/functions"
-import { CitySelect, FactoryList } from "components/Common/Select"
+import { CitySelect, FactoryList, MachineClassSelect } from "components/Common/Select"
 import io from "socket.io-client"
 import TimerLogs from "./component/TimerLogs"
 import Pagination from "components/Common/Pagination"
+import { BACKEND } from "helpers/axiosConfig"
 
-const socket = io("http://localhost:8000")
+const socket = io(BACKEND)
 
 const TimerPage = props => {
   const [machineModal, setMachineModal] = useState(false)
@@ -53,8 +54,8 @@ const TimerPage = props => {
   }
 
   useEffect(() => {
-    socket.on("connect", () => {console.log('connected')})
-    socket.on("disconnect", () => {console.log('dis')})
+    socket.on("connect", () => { console.log('connected') })
+    socket.on("disconnect", () => { console.log('dis') })
 
     socket.on("timerUpdated", (id) => {
       refreshTimer(id)
@@ -169,15 +170,19 @@ const TimerPage = props => {
   }
 
   const [refreshLogs, setRefreshLogs] = useState(false)
-  const refreshTimer = async (id) => {
-    const timer = await refreshTimerAction(id)
-    setTimers(timers.map(t => t._id == timer._id ? timer : t))
+  const refreshTimer = async (ids) => {
+    let _timers = [...timers]
+    for (const id of ids) {
+      const timer = await refreshTimerAction(id)
+      _timers = _timers.map(t => t._id == timer._id ? timer : t)
+    }
+    setTimers(_timers)
     setRefreshLogs(true)
   }
 
   const updateTimers = async () => {
-    const _factories = factories.filter((f, idx) => factoryFilter[idx]||factoryFilter[3])
-    const res = await getProducts("Timer", timerPagination.page, { factories: _factories, city })
+    const _factories = factories.filter((f, idx) => factoryFilter[idx] || factoryFilter[3])
+    const res = await getProducts("Timer", -1, { factories: _factories, city })
 
     setTimers(res.products)
     setTimerPagination({
@@ -188,7 +193,7 @@ const TimerPage = props => {
 
   useEffect(() => {
     updateTimers()
-  }, [timerPagination.page, compare, city])
+  }, [timerPagination.page, factoryFilter, city])
 
   const [parts, setParts] = useState([])
   const [part, setPart] = useState(null)
@@ -202,7 +207,7 @@ const TimerPage = props => {
   const updateNewTimer = (f, e) => {
     setNewTimer({
       ...newTimer,
-      [f]: e.target?e.target.value:e
+      [f]: e.target ? e.target.value : e
     })
 
   }
@@ -214,11 +219,11 @@ const TimerPage = props => {
   }
 
   const getParts = async () => {
-    const res = await getProducts("Part", -1, { factory: newTimer.factory, city })
+    const res = await getProducts("Part", -1)
     setParts(res.products)
   }
-  const getMachines = async() => {
-    const res = await getProducts("Machine", -1, { factory: newTimer.factory, city, machineClass: part.machineClass })
+  const getMachines = async () => {
+    const res = await getProducts("Machine", -1)
     setMachines(res.products)
   }
 
@@ -231,30 +236,44 @@ const TimerPage = props => {
     }
   }, [part])
 
+  const classify = [["Radial Press"], ["Steel"], ["Variant", "Variant Perfect"], ["Blizzard", "Tornado", "Perfect System"]]
+  const classifiedTimers = useMemo(() => {
+    let _timers = []
+    classify.forEach(machineClass => {
+      const filteredRes = timers
+        .filter(timer => machineClass.indexOf(timer.machine.machineClass) != -1)
+        .sort((a, b) => {
+          return a.machine.name < b.machine.name ? -1 : (a.machine.name > b.machine.name ? 1 : 0)
+        })
+      _timers.push(filteredRes)
+    })
+    return _timers
+  }, [timers])
+
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
     </MetaTags>
     <Container fluid>
       <div className="timer-page-container mt-5 mx-auto">
-        <div className="row p-0 m-0">
+        <div className="p-0 m-0">
           {/* <div className="col-xl-9 p-0"> */}
-          <div className="d-flex justify-content-between timer-page-header">
+          <div className="d-flex justify-content-between timer-page-header page-content-header pb-5">
             <div>
-              <h1 style={{ fontSize: "44px" }}>Timer and Analytics</h1>
-              <div style={{ fontSize: "18px" }}>
-                <span className="text-black-50">PRODUCTION</span>
-                <span className="mx-3"> &gt; </span>
-                <span className="text-danger">TEXAS</span>
+              <h2>Timer and Analytics</h2>
+              <div className='sub-menu text-uppercase'>
+                <span className="parent">Production</span>
+                <span className="mx-1"> &gt; </span>
+                <span className='sub text-danger'>TEXAS</span>
               </div>
             </div>
             <div className="d-flex align-items-center">
-              <div className="d-flex flex-column align-items-center border-left-right px-2">
-                <h2>{timers.length}</h2>
-                <div>Timers </div>
+              <div className="d-flex flex-column align-items-center border-left-right px-4">
+                <h3 className="mb-0">{timers.length}</h3>
+                <div className="text-black-50">Timers </div>
               </div>
               <button
-                className="btn btn-primary ms-3 h-75"
+                className="btn btn-newtimer btn-primary ms-3 "
                 onClick={() => setMachineModal(true)}
               >
                 NEW TIMER
@@ -263,41 +282,32 @@ const TimerPage = props => {
           </div>
 
           <div
-            className="mt-3"
+            className="mt-3 pb-3"
             style={{
-              paddingLeft: "0px",
-              paddingRight: "0px",
-              borderBottom: "2px solid rgba(221, 222, 226, 0.5)",
-              paddingBottom: "1rem",
-              marginLeft: "-10px",
-              maxWidth: "none",
-              width: "calc(100% + 20px)",
+              borderBottom: "2px solid #dddee2",
             }}
           >
             <div className="d-flex city-selector-container row p-0 m-0">
               {cities.map((_city, index) => (
                 <div
-                  key={_city._id}
-                  className="city text-uppercase p-2 col-lg-4 col-md-6 "
+                  key={'city' + index}
+                  className="city text-uppercase col-lg-4 col-md-6 "
                 >
                   <div
                     className={`city-selector ${_city == city ? "active" : ""
                       }`}
-                    style={{
-                      padding: "20px",
-                    }}
                     onClick={() => setCity(_city)}
                   >
-                    <span>{_city}</span>
+                    <span className="pt-2">{_city}</span>
                     <span>
                       <i className="mdi mdi-poll"></i>
                     </span>
                   </div>
                   <div
-                    className="mt-1 d-flex justify-content-end"
+                    className="mt-1 d-flex justify-content-end compare"
                     style={{ marginRight: "20px" }}
                   >
-                    COMPARE{" "}
+                    <span>COMPARE{" "}</span>
                     <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
                   </div>
                 </div>
@@ -307,49 +317,115 @@ const TimerPage = props => {
 
           <div className="sort-container">
             <div className="sort-text">
-              SORT
+              SHOW ONLY
             </div>
             <div className="d-flex">
               {
-                factoryFilters.map((factory, index) => <div key={`factory-${index}`} className="sort-factory-category">
+                factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
                   {factory}
                   <input type="checkbox" className="form-checkbox"
                     onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
                     onChange={() => { }}
                     checked={factoryFilter[index]} />
-                </div>)
+                </label>)
               }
             </div>
           </div>
-          <div className="products-container row m-0 p-0 mt-5">
-            <div className="d-flex justify-content-end">
-              <Pagination
-                page={timerPagination.page}
-                movePage={moveToTimerPage}
-                totalPage={timerPagination.totalPage} />
-            </div>
-            <div className="col-xl-9 row p-0 m-0">
-              {
-                timers.map((timer, idx) => (
-                  <Timer
-                    {...timer}
-                    key={`timer-${timer._id}`}
-                    idx={idx}
-                    startTimer={startTimer}
-                    stopTimer={stopTimer}
-                    refreshTimer={refreshTimer}
-                    editTimer={editTimer} />)
-                )
-              }
-            </div>
-          </div>
-          <TimerLogs
-            city={city}
-            compare={compare}
-            filteredParts={[]}
-            refreshLogs={refreshLogs}
-            timers={timers}
-            afterRefresh={() => setRefreshLogs(false)} />
+          {
+            classifiedTimers.map((cTimers, index) => {
+              return cTimers.length ? <>
+                <div className="products-container row">
+                  <h2 className="text-uppercase"> {index != 3 ? classify[index][0] : "Precast"} - TIMERS </h2>
+                  <div className="col-xl-12 row p-0 m-0">
+                    {
+                      cTimers.map((timer, idx) => (
+                        <Timer
+                          {...timer}
+                          key={`timer1-${timer._id}`}
+                          idx={idx}
+                          startTimer={startTimer}
+                          stopTimer={stopTimer}
+                          refreshTimer={refreshTimer}
+                          editTimer={editTimer} />)
+                      )
+                    }
+                  </div>
+                </div>
+
+                <div className="row m-0 rounded">
+                  <div className="search-container mx-0">
+                    <div className="flex-1">
+                      <div className="row m-0" style={{ paddingTop: 12 }}>
+                        <div className="d-flex align-items-center col-xl-3">
+                          <h5>PRODUCTION REPORT</h5>
+                        </div>
+                        <div className="d-flex align-items-center col-xl-3">
+                        </div>
+                        <div className="d-flex align-items-center col-xl-2">
+                          <h5>
+                            <div>INCLUDE</div>
+                            <div>OPERATOR</div>
+                          </h5>
+                        </div>
+                        <div className="d-flex align-items-center col-xl-4">
+                          <h5>REVIEW RANGE</h5>
+                        </div>
+                      </div>
+
+                      <div className="m-0 search-box row mb-3">
+                        <div className="col-xl-3">
+                          <MachineClassSelect name="log-filter" placeholder='Machine or Class' />
+                        </div>
+
+                        <div className="col-xl-3">
+                          <select
+                            className="form-select"
+                            value={[]}
+                          >
+                            <option value="" disabled selected>Product or Part</option>
+                            {
+                              parts.map(part => (
+                                <option value={part._id} key={"log-filter1-" + part._id}>{part.name}</option>
+                              ))
+                            }
+                          </select>
+                        </div>
+
+                        <div className="col-xl-2 d-flex align-items-center">
+                          <div className='d-flex align-items-stretch'>
+                            <input type="checkbox" className="form-checkbox" />
+                            <h6 className='ms-2 my-auto'>Yes</h6>
+                          </div>
+                        </div>
+
+                        <div className="col-xl-4 align-items-center  d-flex">
+                          <input type="date" className="form-control " />
+                          <span className="mx-1">to</span>
+                          <input type="date" className="form-control" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="search-action">
+                      <span className="mdi mdi-refresh cursor-pointer"></span>
+                    </div>
+                  </div>
+                </div>
+                <div className="timerlog-table-container mt-4">
+                  <TimerLogs
+                    city={city}
+                    compare={compare}
+                    filteredParts={[]}
+                    refreshLogs={refreshLogs}
+                    timers={cTimers}
+                    afterRefresh={() => setRefreshLogs(false)}
+                    factoryFilter={factoryFilter}
+                    classify={index != 3 ? classify[index][0] : "Precast"} />
+                </div>
+              </>
+                : <></>
+            })
+          }
         </div>
       </div>
 
@@ -366,7 +442,7 @@ const TimerPage = props => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Factory:</div>
             <div className="col-9">
-              <FactoryList 
+              <FactoryList
                 onChange={(e) => updateNewTimer("factory", e)}
                 value={newTimer.factory}
                 placeholder="Factory" />
@@ -376,7 +452,7 @@ const TimerPage = props => {
           <div className="row mt-3 d-flex align-items-center">
             <div className="col-3">Part:</div>
             <div className="col-9">
-              <AutoCompleteSelect 
+              <AutoCompleteSelect
                 options={parts} onChange={v => partChanged(v)}
                 placeholder="Part" />
               <input type="hidden" name="part" value={timerPart} />
@@ -391,7 +467,7 @@ const TimerPage = props => {
                 value={newTimer.machine}>
                 <option value="" disabled>Machine</option>
                 {
-                  machines.map(m => <option value={m._id} key={"machine-" + m._id} >{m.name}</option>)
+                  machines.map(m => <option value={m._id} key={"machine1-" + m._id} >{m.name}</option>)
                 }
               </select>
             </div>

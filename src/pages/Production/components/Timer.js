@@ -2,9 +2,11 @@ import "./style.scss"
 import { formatSeconds } from "../../../helpers/functions"
 import { useState } from "react"
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { endTimerAction, startTimerAction } from "actions/timer";
+import { endTimerAction, startTimerAction, updateTimerAction } from "actions/timer";
 import { useEffect } from "react";
 import { useRef } from "react";
+
+import Editable from "react-bootstrap-editable"
 
 const Timer = (props) => {
   const [moreMenu, setMoreMenu] = useState(false)
@@ -81,15 +83,19 @@ const Timer = (props) => {
   
   const productTime = Math.round(props.totalTime / 3600) || 1
 
-  return <div className="col-lg-4 col-md-6 p-2 d-flex align-items-stretch">
-    <div className="product p-2">
+  const updateOperatorName = (v) => {
+    updateTimerAction(props._id, { operator: v })
+  }
+
+  return <div className="col-lg-4 col-md-6 d-flex align-items-stretch p-2">
+    <div className="product">
       <div className="product-header">
         <select className="form-select">
           <option>{ props.part && props.part.name }</option>
         </select>
         <Dropdown isOpen={moreMenu} toggle={toggle}>
           <DropdownToggle caret>
-            <span className="mdi mdi-dots-horizontal"></span>
+            <span className="mdi mdi-dots-horizontal text-black-50"></span>
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem>Remove</DropdownItem>
@@ -108,7 +114,22 @@ const Timer = (props) => {
           </span>
         </div>
 
-        <div className="product-details">
+        <div className="production-details">
+          <div className="operator-name text-center">
+            <Editable
+              onSubmit={ updateOperatorName }
+              alwaysEditing={false}
+              disabled={false}
+              editText="Operator"
+              showText="aaa"
+              id={null}
+              isValueClickable={false}
+              mode="inline"
+              placement="top"
+              type="textfield"
+              initialValue={props.operator}
+            />
+          </div>
           <div className="product-detail">
             <span>Daily Units</span>
             <span>{props.dailyUnit}</span>

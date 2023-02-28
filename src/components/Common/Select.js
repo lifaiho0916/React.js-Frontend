@@ -20,7 +20,7 @@ export const FactoryList = props => {
 
 export const MachineClassSelect = props => {
   return <select {...props} className={"form-select "+ props.className} name="machineClass" onChange={(e) => props.onChange(e)}>
-    <option value="" disabled>{props.placeholder}</option>
+    <option value="" disabled selected>{props.placeholder}</option>
     {
       machineClasses.map(mClass => <option className="text-uppercase" key={"m-class-"+props.name+"-"+mClass} value={mClass}>{mClass}</option>)
     }

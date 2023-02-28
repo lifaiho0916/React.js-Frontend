@@ -55,10 +55,10 @@ const SidebarContent = props => {
     item.classList.add("active")
     const parent = item.parentElement
     const parent2El = parent.childNodes[1]
+    const _parent = parent.parentElement
     if (parent2El && parent2El.id !== "side-menu") {
       parent2El.classList.add("mm-show")
     }
-
     if (parent) {
       parent.classList.add("mm-active")
       const parent2 = parent.parentElement
@@ -74,11 +74,7 @@ const SidebarContent = props => {
           const parent4 = parent3.parentElement // ul
           if (parent4) {
             parent4.classList.add("mm-show") // ul
-            const parent5 = parent4.parentElement
-            if (parent5) {
-              parent5.classList.add("mm-show") // li
-              parent5.childNodes[0].classList.add("mm-active") // a tag
-            }
+
           }
         }
       }
@@ -96,58 +92,60 @@ const SidebarContent = props => {
       <SimpleBar style={{ maxHeight: "100%" }} ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
-            <li className="sidebar-avatar-container">
-              <div className="sidebar-avatar d-flex align-items-center">
-                <div style={{ height: "90%", marginLeft: "4px" }}>
-                  <img src={sampleAvatar} className="h-100 rounded-circle" />
-                </div>
-                <div className="ms-3 text-dark" style={{ marginRight: "auto" }}>
-                  <h4 style={{ marginBottom: "0px" }}>{user.name}</h4>
-                  <div className="text-black-50">{user.role}</div>
+            <li className="sidebar-avatar-container p-3 pe-0">
+              <div className="sidebar-avatar d-flex align-items-center justify-content-between px-3 py-2">
+                <div className=" d-flex align-items-center">
+                  <div >
+                    <img src={sampleAvatar} className="h-100 rounded-circle" />
+                  </div>
+                  <div className="text-dark mx-auto ps-2">
+                    <h4 className="mb-0 font-size-16">{user.firstName + ' ' + user.lastName}</h4>
+                    <div className="text-black-50">{user.role === 'Admin' ? 'Administrator' : user.role}</div>
+                  </div>
                 </div>
                 <div>
                   <span
-                    className="mdi mdi-chevron-down"
-                    style={{ fontSize: 25 }}
+                    className="mdi mdi-chevron-down font-size-16"
+                    style={{ color: '#5b626b' }}
                   ></span>
                 </div>
               </div>
             </li>
 
-            <form className="app-search d-none d-lg-block sidebar-padding">
-              <div className="position-relative">
+            <form className="app-search d-none d-lg-block p-0 ps-3">
+              <div className="position-relative pb-3">
                 <input
                   type="text"
                   className="form-control bg-dark text-white rounded"
                   placeholder={props.t("Search") + "..."}
-                  style={{ backgroundColor: "rgb(35, 35, 40) !important", padding: "25px", }}
+                  style={{ backgroundColor: "rgb(35, 35, 40) !important" }}
                 />
                 <span className="fa fa-search"></span>
               </div>
             </form>
             <div>
-              <li>
-                <Link to="/profile-home" className="waves-effect text-uppercase">
-                  <span>{props.t("PROFILEHOME")}</span>
+              <li className="profile-menu" style={{}}>
+                <Link to="/profile-home" className="waves-effect text-capitalize" >
+                  <span>{props.t("Profile Home")}</span>
                 </Link>
               </li>
 
               <li>
-                <Link to="/#" className="has-arrow waves-effect text-uppercase">
-                  <span>{props.t("ORDER FLOW")}</span>
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
+                  <span>{props.t("Order Flow")}</span>
                 </Link>
                 <ul className="sub-menu" aria-expanded="true">
                   <li>
-                    <Link to="/#">{props.t("Dashboard")}</Link>
+                    <Link to="/orderflow/dashboard">{props.t("Project Dashboard")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Projects")}</Link>
+                    <Link to="/orderflow/projects">{props.t("Projects")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Drafting")}</Link>
+                    <Link to="/orderflow/drafting">{props.t("Drafting")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Inventory")}</Link>
+                    <Link to="/orderflow/inventory">{props.t("Inventory")}</Link>
                   </li>
                   <li>
                     <Link to="/orderflow/production-tracker">
@@ -155,17 +153,17 @@ const SidebarContent = props => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Load out")}</Link>
+                    <Link to="/orderflow/load-out">{props.t("Load out")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Project Close")}</Link>
+                    <Link to="/orderflow/project-close">{props.t("Project Close")}</Link>
                   </li>
-                  
+
                 </ul>
               </li>
 
               <li>
-                <Link to="/#" className="has-arrow waves-effect text-uppercase">
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Production")}</span>
                 </Link>
                 <ul className="sub-menu" aria-expanded="true">
@@ -176,7 +174,7 @@ const SidebarContent = props => {
                     <Link to="/production/control-timers">{props.t("Control Timers")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("System Check")}</Link>
+                    <Link to="/production/system-check">{props.t("System Check")}</Link>
                   </li>
                   <li>
                     <Link to="/production/list">{props.t("Product List")}</Link>
@@ -185,75 +183,77 @@ const SidebarContent = props => {
               </li>
 
               <li>
-                <Link to="/#" className="has-arrow waves-effect text-uppercase">
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Operations")}</span>
                 </Link>
                 <ul className="sub-menu" aria-expanded="true">
                   <li>
-                    <Link to="/#">{props.t("Dashboard")}</Link>
+                    <Link to="/operations/dashboard">{props.t("Operations Dashboard")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Quality Control")}</Link>
+                    <Link to="/operations/quality-control">{props.t("Quality Control")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Maintenance")}</Link>
+                    <Link to="/operations/maintenance">{props.t("Maintenance")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Safety 101")}</Link>
+                    <Link to="/operations/safety101">{props.t("Safety 101")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Forms")}</Link>
+                    <Link to="/operations/forms">{props.t("Forms")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Line Data")}</Link>
+                    <Link to="/operations/line-data">{props.t("Line Data")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("FIXX")}</Link>
+                    <Link to="/operations/fixx">{props.t("FIXX")}</Link>
                   </li>
                 </ul>
               </li>
 
               <li>
-                <Link to="/#" className="has-arrow waves-effect text-uppercase">
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Human Resources")}</span>
                 </Link>
                 <ul className="sub-menu" aria-expanded="true">
                   <li>
-                    <Link to="/#">{props.t("Dashboard")}</Link>
+                    <Link to="/human-resources/dashboard">{props.t("HR Dashboard")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("ADT")}</Link>
+                    <Link to="/human-resources/adt">{props.t("ADT")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Down Time")}</Link>
+                    <Link to="/human-resources/down-time">{props.t("Down Time")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Community")}</Link>
+                    <Link to="/human-resources/community">{props.t("Community")}</Link>
                   </li>
                   <li>
-                    <Link to="/#">{props.t("Msg / Discussions")}</Link>
+                    <Link to="/human-resources/msg-discussions">{props.t("Msg / Discussions")}</Link>
                   </li>
                 </ul>
               </li>
 
               <li>
-                <Link
-                  to="/PROFILEHOME"
-                  className="waves-effect d-flex justify-content-between text-uppercase"
-                >
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Accounting")}</span>
-                  <span className="mdi mdi-chevron-right"></span>
                 </Link>
+                <ul className="sub-menu" aria-expanded="true">
+                  <li>
+                    <Link to="/accounting/dashboard">{props.t("Accounting Dashboard")}</Link>
+                  </li>
+                </ul>
               </li>
 
               <li>
-                <Link
-                  to="/PROFILEHOME"
-                  className="waves-effect d-flex justify-content-between text-uppercase"
-                >
+                <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Sales")}</span>
-                  <span className="mdi mdi-chevron-right"></span>
                 </Link>
+                <ul className="sub-menu" aria-expanded="true">
+                  <li>
+                    <Link to="/sales/dashboard">{props.t("Sales Dashboard")}</Link>
+                  </li>
+                </ul>
               </li>
             </div>
           </ul>

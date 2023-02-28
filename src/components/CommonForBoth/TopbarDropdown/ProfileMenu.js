@@ -47,22 +47,24 @@ const ProfileMenu = props => {
         className="d-inline-block"
       >
         <DropdownToggle
-          className="btn header-item waves-effect"
+          className="btn header-item waves-effect px-2"
           id="page-header-user-dropdown"
           tag="button"
+          style={{ minWidth: 216 }}
         >
           <div className="d-flex align-items-center">
             <img
               className="rounded-circle header-profile-user"
               src={sampleAvatar}
               alt="Header Avatar"
+              style={{ width: 36, height: 36 }}
             />
             <div className="ms-2">
-              <div style={{ fontSize: "22px" }}>{user.name}</div>
-              <div style={{ marginTop: "-10px", marginLeft: "-20px" }}>{user.role}</div>
+              <div className="font-size-16" style={{ fontWeight: 500 }}>{user.firstName + ' ' + user.lastName}</div>
+              <div className="text-black-50 text-start">{user.role === 'Admin' ? 'Administrator' : user.role}</div>
             </div>
-            <div className="ms-4 me-3">
-              <span className="mdi mdi-menu-down" style={{fontSize: 20}}></span>
+            <div className="p-2 pe-0">
+              <span className="mdi mdi-menu-down"></span>
             </div>
           </div>
         </DropdownToggle>
@@ -71,10 +73,6 @@ const ProfileMenu = props => {
             {" "}
             <i className="bx bx-user font-size-16 align-middle me-1" />
             {props.t("Profile")}{" "}
-          </DropdownItem>
-          <DropdownItem tag="a" href="auth-lock-screen">
-            <i className="bx bx-lock-open font-size-16 align-middle me-1" />
-            {props.t("Lock screen")}
           </DropdownItem>
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">

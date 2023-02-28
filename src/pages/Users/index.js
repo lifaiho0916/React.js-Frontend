@@ -48,7 +48,7 @@ const Users = props => {
   const [roles, setRoles] = useState([])
   const onChangeRole = async(e, index) => {
     if (loading) return
-    const response = updateUser({ id: users[index].id, role: e.target.value })
+    const response = updateUser({ id: users[index]._id, role: e.target.value })
     setLoaing(true)
     setUsers(users.map((user, _index) => index==_index ? {...user, role: e.target.value} : user))
     setLoaing(false)
@@ -56,7 +56,7 @@ const Users = props => {
   const toggleUserProperty = async (index, field) => {
     if (!isAdmin || loading) return
     setLoaing(true)
-    const response = updateUser({ id: users[index].id, [field]: !users[index][field] })
+    const response = updateUser({ id: users[index]._id, [field]: !users[index][field] })
     setLoaing(false)
     setUsers(users.map((user, _index) => index == _index ? {...user, [field]: !user[field]} : user))
   }
@@ -64,7 +64,7 @@ const Users = props => {
   const factoryChanged = async (value, index) => {
     if (loading) return
     setLoaing(true)
-    const response = updateUser({ id: users[index].id, factory: value })
+    const response = updateUser({ id: users[index]._id, factory: value })
     setLoaing(false)
     setUsers(users.map((user, _index) => index == _index ? {...user, factory: value} : user))
   }
@@ -72,7 +72,7 @@ const Users = props => {
   const locationChanged = async (value, index) => {
     if (loading) return
     setLoaing(true)
-    const response = updateUser({ id: users[index].id, location: value })
+    const response = updateUser({ id: users[index]._id, location: value })
     setLoaing(false)
     setUsers(users.map((user, _index) => index == _index ? {...user, location: value} : user))
   }
@@ -80,7 +80,7 @@ const Users = props => {
   const deleteAccount = async () => {
     if (loading) return
     setLoaing(true)
-    const response = await removeUser(users[selectedPersonIndex].id)
+    const response = await removeUser(users[selectedPersonIndex]._id)
     setLoaing(false)
     setUsers(users.filter((_, index) => index != selectedPersonIndex))
   }
@@ -198,18 +198,18 @@ const Users = props => {
                       </thead>
                       <tbody>
                         {
-                          users.filter(user => user.name.toLocaleLowerCase().indexOf(searchName.toLocaleLowerCase()) != -1).map((user, index) => (
+                          users.filter(user => (user.firstName + ' ' + user.lastName).toLocaleLowerCase().indexOf(searchName.toLocaleLowerCase()) != -1).map((user, index) => (
                             <tr key={"user" + index}>
                               <th scope="row">{index + 1}</th>
                               <td>
                                 <div>
-                                  { user.name }
+                                  {user.firstName + ' ' + user.lastName }
                                 </div>
                               </td>
                               <td>{ user.email }</td>
                               <td>
                                 {
-                                  isAdmin ? <select className='form-select' onChange={e => locationChanged(e.target.value, index)} value={user.location}>
+                                  isAdmin ? user.role == "Admin" ? "Global" : <select className='form-select' onChange={e => locationChanged(e.target.value, index)} value={user.location}>
                                       <option value="Seguin">Seguin</option>
                                       <option value="Conroe">Conroe</option>
                                       <option value="Gunter">Gunter</option>
@@ -257,12 +257,12 @@ const Users = props => {
                                 }}>
                                   Delete
                                 </Button>
-                                <Button className="text-white bg-info ms-3" disabled={!isAdmin} onClick={() => {
+                                <Button className={`text-white ${user.restrict ? "bg-primary" : "bg-info"} ms-3`} disabled={!isAdmin} onClick={() => {
                                   setSaveAlert(true)
                                   setSelectedPersonIndex(index)                                  
                                   setActionType("Archieve")
                                 }}>
-                                  Archieve
+                                  { user.restrict ? "Restore" : "Archieve" }
                                 </Button>
                               </td>
                             </tr>

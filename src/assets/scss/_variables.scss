@@ -5,13 +5,13 @@
 //
 // Vertical Sidebar - Dark
 $sidebar-dark-bg: #303840; //2c313a
-$sidebar-dark-menu-item-color: #8699ad;
-$sidebar-dark-menu-sub-item-color: #8699ad;
-$sidebar-dark-menu-item-icon-color: #8699ad;
-$sidebar-dark-menu-item-hover-color: #b4c9de;
-$sidebar-dark-menu-item-active-color: #b4c9de;
+$sidebar-dark-menu-item-color: rgba(172,182,191,.5);
+$sidebar-dark-menu-sub-item-color: rgba(172,182,191,.5);
+$sidebar-dark-menu-item-icon-color: rgba(172,182,191,.5);
+$sidebar-dark-menu-item-hover-color: white;
+$sidebar-dark-menu-item-active-color: white;
 $sidebar-dark-menu-item-active-bg: #383b4e;
-$sidebar-width:  240px;
+$sidebar-width:  255px;
 $sidebar-collapsed-width:  70px;
 $sidebar-width-sm:  160px;
 
@@ -36,7 +36,7 @@ $sidebar-colored-menu-item-active-color: rgba($white, 1.0);
 $sidebar-colored-menu-item-active-bg: #6b77dd;
 
 // Topbar - Deafult Light
-$header-height: 70px;
+$header-height: 64px;
 $header-bg: #f5f7fa;
 $header-item-color: #525f80;
 
@@ -373,7 +373,7 @@ $position-values: (
 // Settings for the `<body>` element.
 
 $body-bg:                   #f5f7fa;
-$body-color:                #5b626b;
+$body-color:                #272c33;
 $body-text-align:           null;
 
 
@@ -504,7 +504,7 @@ $aspect-ratios: (
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif:      'Roboto', sans-serif;
+$font-family-sans-serif:      Roboto,Helvetica Neue,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
 
@@ -516,7 +516,7 @@ $font-family-code:            var(--#{$variable-prefix}font-monospace);
 // $font-size-base effects the font size of the body text
 
 $font-size-root:              null;
-$font-size-base:              0.875rem;
+$font-size-base:              0.8125rem;
 $font-size-sm:                $font-size-base * .875;
 $font-size-lg:                $font-size-base * 1.25;
 

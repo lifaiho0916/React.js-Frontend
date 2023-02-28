@@ -1666,7 +1666,6 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .container-fluid, body[
   /* Required for horizontal native scrollbar to not appear if parent is taller than natural height */
   width: auto;
   visibility: visible;
-  overflow: auto;
   /* Scroll on this element otherwise element can't have a padding applied properly */
   max-width: 100%;
   /* Not required for horizontal scroll to trigger */

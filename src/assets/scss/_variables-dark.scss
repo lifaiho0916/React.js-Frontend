@@ -7,11 +7,11 @@
 $sidebar-dark-bg: #2a3142; //2c313a
 $sidebar-dark-menu-item-color: #a6b0cf;
 $sidebar-dark-menu-sub-item-color: #79829c;
-$sidebar-dark-menu-item-icon-color: #8699ad;
+$sidebar-dark-menu-item-icon-color: rgba(172,182,191,.5);
 $sidebar-dark-menu-item-hover-color: #ffffff;
 $sidebar-dark-menu-item-active-color: rgb(39,44,50);
 $sidebar-dark-menu-item-active-bg: rgb(39,44,50);
-$sidebar-width:  240px;
+$sidebar-width:  255px;
 $sidebar-collapsed-width:  70px;
 $sidebar-width-sm:  160px;
 
@@ -36,7 +36,7 @@ $sidebar-colored-menu-item-active-color: rgba($white, 1.0);
 $sidebar-colored-menu-item-active-bg: #6b77dd;
 
 // Topbar - Deafult Light
-$header-height: 70px;
+$header-height: 64px;
 $header-bg: #36394c;
 $header-item-color: #dee2e6;
 
@@ -516,7 +516,7 @@ $font-family-code:            var(--#{$variable-prefix}font-monospace);
 // $font-size-base effects the font size of the body text
 
 $font-size-root:              null;
-$font-size-base:              0.875rem;
+$font-size-base:              0.8125rem;
 $font-size-sm:                $font-size-base * .875;
 $font-size-lg:                $font-size-base * 1.25;
 
@@ -553,7 +553,7 @@ $font-sizes: (
 $headings-margin-bottom:      $spacer / 2;
 $headings-font-family:        null;
 $headings-font-style:         null;
-$headings-font-weight:        500;
+$headings-font-weight:        400;
 $headings-line-height:        1.2;
 $headings-color:              null;
 

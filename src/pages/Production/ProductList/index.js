@@ -1,5 +1,5 @@
 import { CitySelect, FactoryList, MachineClassSelect } from "components/Common/Select"
-import { factories } from "helpers/globals"
+import { cities, factories } from "helpers/globals"
 import { useState } from "react"
 import MetaTags from "react-meta-tags"
 import {
@@ -28,6 +28,7 @@ import { useEffect } from "react"
 import Pagination from "components/Common/Pagination"
 
 const ProductList = props => {
+  const [city, setCity] = useState("Seguin")
   const [machineModal, setMachineModal] = useState(false)
   const [editIndex, setEditIndex] = useState(-1)
   const [type, setType] = useState("Part")
@@ -130,7 +131,10 @@ const ProductList = props => {
     setEdit(true)
     setEditIndex(idx)
     let _machine
-    Object.entries(newMachine).forEach(v => _machine = {..._machine, [v[0]]: machines[idx][v[0]]})
+    Object.entries(newMachine).forEach(v => {
+      console.log(v[0], machines[idx][v[0]])
+      _machine = { ..._machine, [v[0]]: machines[idx][v[0]] }
+    })
     setNewMachine(_machine)
     setMachineModal(true)
   }
@@ -139,7 +143,7 @@ const ProductList = props => {
     setEditIndex(idx)
     setEdit(true)
     let _part
-    Object.entries(newPart).forEach(v => _part = {..._part, [v[0]]: parts[idx][v[0]]})
+    Object.entries(newPart).forEach(v => _part = { ..._part, [v[0]]: parts[idx][v[0]] })
     setNewPart(_part)
     setPartsModal(true)
   }
@@ -194,7 +198,7 @@ const ProductList = props => {
   }
 
   const updateProducts = async () => {
-    const res = await getProducts(type, pagination.page)
+    const res = await getProducts(type, pagination.page, { city })
 
     if (type == "Machine") setMachines(res.products)
     else setParts(res.products)
@@ -205,17 +209,35 @@ const ProductList = props => {
     })
     setTotalCount(res.totalCount)
   }
-  
-  console.log(newPart)
-  
+
   useEffect(() => {
     updateProducts()
-  }, [type, pagination.page])
+  }, [type, pagination.page, city])
+
+  const factoryFilters = [...factories, "All"]
+  const [factoryFilter, setFactoryFilter] = useState([
+    false,
+    false,
+    false,
+    true,
+  ])
+
+  const toggleFilter = (e, filter) => {
+    let _filter = [...factoryFilter]
+    const index = factoryFilters.findIndex(f => f == filter)
+    _filter[index] = !_filter[index]
+
+    if (filter == "All" && factoryFilter[index] == false)
+      _filter = [false, false, false, true]
+
+    if (filter != "All" && factoryFilter[index] == false) _filter[3] = false
+    setFactoryFilter(_filter)
+  }
 
   return (
     <div
       className="page-content"
-      // style={{ padding: "86px calc(0.5rem / 2) 60px calc(11.5rem / 2)" }}
+    // style={{ padding: "86px calc(0.5rem / 2) 60px calc(11.5rem / 2)" }}
     >
       <MetaTags>
         <title>Timer Page</title>
@@ -223,16 +245,17 @@ const ProductList = props => {
       <Container fluid>
         <div className="timer-page-container mt-5 mx-auto">
           <div className="row p-0 m-0">
-            {/* <div className="col-xl-9 p-0"> */}
-            <div className="d-flex justify-content-between timer-page-header">
+            <div className="d-flex justify-content-between timer-page-header page-content-header pb-5">
+
               <div>
-                <h1 style={{ fontSize: "44px" }}>Product List</h1>
-                <div style={{ fontSize: "18px" }}>
-                  <span className="text-black-50">PRODUCTION</span>
-                  <span className="mx-3"> &gt; </span>
-                  <span className="text-danger">TEXAS</span>
+                <h2>Product List</h2>
+                <div className='sub-menu text-uppercase'>
+                  <span className="parent">Production</span>
+                  <span className="mx-1"> &gt; </span>
+                  <span className='sub text-danger'>TEXAS</span>
                 </div>
               </div>
+
               <div
                 className="d-flex align-items-center"
                 style={{ height: "60px" }}
@@ -246,7 +269,7 @@ const ProductList = props => {
                       {totalCount}
                     </h3>
                     <div
-                      className="d-flex align-items-center text-uppercase"
+                      className="d-flex align-items-center text-uppercase text-black-50"
                       style={{ fontSize: "11px" }}
                     >
                       {type}s
@@ -260,9 +283,9 @@ const ProductList = props => {
                   </div>
                 </div>
                 <button
-                  className="btn btn-primary ms-3 h-75 text-uppercase"
+                  className="btn btn-primary btn-newtimer ms-3 text-uppercase"
                   onClick={showCreateModal}
-                  style={{ width: "145px" }}
+                  
                 >
                   NEW {type}
                 </button>
@@ -270,18 +293,17 @@ const ProductList = props => {
             </div>
 
             <div
-              className="mt-3"
+              className="mt-3 px-0"
               style={{
-                paddingLeft: "0px",
                 borderBottom: "2px solid rgba(221, 222, 226, 0.5)",
                 paddingBottom: "1rem",
               }}
             >
-              <div className="d-flex type-selector-container">
+              <div className="type-selector-container row p-0 m-0">
                 {types.map(_type => (
                   <div
                     key={_type}
-                    className="type text-uppercase cursor-pointer"
+                    className="type text-uppercase cursor-pointer col-lg-4 col-md-6"
                     style={{ marginLeft: "0px" }}
                     onClick={() => {
                       if (type != _type) {
@@ -291,11 +313,10 @@ const ProductList = props => {
                     }}
                   >
                     <div
-                      className={`type-selector ${
-                        _type == type ? "active" : ""
-                      }`}
+                      className={`type-selector ${_type == type ? "active" : ""
+                        }`}
                       style={{
-                        padding: "20px",
+                        padding: '1rem 1.5rem',
                       }}
                     >
                       <span>{_type}</span>
@@ -313,22 +334,61 @@ const ProductList = props => {
                   </div>
                 ))}
               </div>
+
+              <div className="d-flex city-selector-container row p-0 m-0 mt-3">
+                {cities.map((_city, index) => (
+                  <div
+                    key={'city' + index}
+                    className="city text-uppercase col-lg-4 col-md-6 "
+                  >
+                    <div
+                      className={`city-selector ${_city == city ? "active" : ""
+                        }`}
+                      onClick={() => setCity(_city)}
+                    >
+                      <span className="pt-2">{_city}</span>
+                      <span>
+                        <i className="mdi mdi-poll"></i>
+                      </span>
+                    </div>
+                    <div
+                      className="mt-1 d-flex justify-content-end compare"
+                      style={{ marginRight: "20px" }}
+                    >
+                      <span>COMPARE{" "}</span>
+                      <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="sort-container" style={{borderBottom: 'none'}}>
+                <div className="sort-text">
+                  SHOW ONLY
+                </div>
+                <div className="d-flex">
+                  {
+                    factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
+                      {factory}
+                      <input type="checkbox" className="form-checkbox"
+                        onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
+                        onChange={() => { }}
+                        checked={factoryFilter[index]} />
+                    </label>)
+                  }
+                </div>
+              </div>
             </div>
 
-            <div className="search-container">
-              <div className="search-box row">
-                <div className="col-6" style={{padding: "20px 0px 20px 40px"}}>
+            <div className="search-container mt-3">
+              <div className="search-box row" style={{ padding: "1rem 0 1rem 1.5rem" }}>
+                <div className="col-6" >
                   <div>
-                    <b>General Search</b>
+                    <h5>General Search</h5>
                   </div>
                   <div className="mt-2">
                     <select
                       className="form-select"
-                      style={{
-                        paddingLeft: "24px",
-                        paddingBottom: "10px",
-                        paddingTop: "10px",
-                      }}
                     >
                       <option>RP2225-1</option>
                     </select>
@@ -347,30 +407,36 @@ const ProductList = props => {
 
           {/* <div className="products-container row m-0 p-0 mt-5"> */}
           <div className="d-flex justify-content-end mt-5">
-            <Pagination 
+            <Pagination
               {...pagination}
               movePage={moveToPage} />
           </div>
           <div className="row mt-5 p-0">
             {type == "Part"
               ? parts.map((product, idx) => (
-                  <Part
-                    {...product}
-                    key={`part-${product._id}`}
-                    deleteProduct={deleteProduct}
-                    editPart={editPart}
-                    idx={idx}
-                  />
-                ))
+                <Part
+                  {...product}
+                  key={`part-${product._id}`}
+                  deleteProduct={deleteProduct}
+                  editPart={editPart}
+                  idx={idx}
+                />
+              ))
               : machines.map((product, idx) => (
-                  <Machine
-                    key={`machine-${product._id}`}
-                    {...product}
-                    deleteProduct={deleteProduct}
-                    editMachine={editMachine}
-                    idx={idx}
-                  />
-                ))}
+                <Machine
+                  key={`machine-${product._id}`}
+                  {...product}
+                  deleteProduct={deleteProduct}
+                  editMachine={editMachine}
+                  idx={idx}
+                />
+              ))}
+          </div>
+
+          <div className="d-flex justify-content-end mt-5">
+            <Pagination
+              {...pagination}
+              movePage={moveToPage} />
           </div>
           {/* </div> */}
         </div>
@@ -381,26 +447,26 @@ const ProductList = props => {
         <ModalBody>
           <form className="p-2" onSubmit={e => createPart(e)} id="part-form">
             <div>
-              <CitySelect 
-                onChange = {(e) => updateNewPart("city", e)}
+              <CitySelect
+                onChange={(e) => updateNewPart("city", e)}
                 placeholder="City"
                 value={newPart.city}
-                />
+              />
             </div>
 
             <div className="mt-3">
-              <FactoryList 
-                onChange = {(e) => updateNewPart("factory", e)}
+              <FactoryList
+                onChange={(e) => updateNewPart("factory", e)}
                 placeholder="Factory"
                 value={newPart.factory}
-                />
+              />
             </div>
 
             <div className="mt-3">
               <MachineClassSelect
-                onChange = {(e) => updateNewPart("machineClass", e)}                
+                onChange={(e) => updateNewPart("machineClass", e)}
                 placeholder="Machine Class"
-                value={newPart.machineClass||""} />
+                value={newPart.machineClass || ""} />
             </div>
 
             <div className="mt-3 d-flex align-items-center">
@@ -410,7 +476,7 @@ const ProductList = props => {
                 placeholder="Part"
                 name="name"
                 value={newPart.name}
-                onChange = {(e) => updateNewPart("name", e)}
+                onChange={(e) => updateNewPart("name", e)}
               />
             </div>
 
@@ -421,7 +487,7 @@ const ProductList = props => {
                 placeholder="Pounds"
                 name="pounds"
                 value={newPart.pounds}
-                onChange = {(e) => updateNewPart("pounds", e)}
+                onChange={(e) => updateNewPart("pounds", e)}
               />
             </div>
 
@@ -432,7 +498,7 @@ const ProductList = props => {
                 placeholder="Avg Time"
                 name="avgTime"
                 value={newPart.avgTime}
-                onChange = {(e) => updateNewPart("avgTime", e)}
+                onChange={(e) => updateNewPart("avgTime", e)}
               />
             </div>
 
@@ -493,7 +559,7 @@ const ProductList = props => {
                 type="number"
                 placeholder="Finish Good Weight (lbs)"
                 name="finishGoodWeight"
-                onChange = {(e) => updateNewPart("finishGoodWeight", e)}
+                onChange={(e) => updateNewPart("finishGoodWeight", e)}
                 value={newPart.finishGoodWeight}
               />
             </div>
@@ -504,7 +570,7 @@ const ProductList = props => {
                 type="number"
                 placeholder="Cage Weight Scrap (lbs)"
                 name="cageWeightScrap"
-                onChange = {(e) => updateNewPart("cageWeightScrap", e)}
+                onChange={(e) => updateNewPart("cageWeightScrap", e)}
                 value={newPart.cageWeightScrap}
               />
             </div>
@@ -515,7 +581,7 @@ const ProductList = props => {
                 type="number"
                 placeholder="Case Weight Actuals (lbs)"
                 name="cageWeightActuals"
-                onChange = {(e) => updateNewPart("cageWeightActuals", e)}
+                onChange={(e) => updateNewPart("cageWeightActuals", e)}
                 value={newPart.cageWeightActuals}
               />
             </div>

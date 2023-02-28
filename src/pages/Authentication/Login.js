@@ -20,6 +20,7 @@ import logoSm from "../../assets/images/logo-sm.png";
 const Login = props => {
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
+    console.log(values);
     props.loginUser(values, props.history)
   }
 

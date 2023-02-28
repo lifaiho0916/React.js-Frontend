@@ -21,7 +21,7 @@ import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
-import ProfileHome from "../pages/Authentication/ProfileHome"
+import ProfileHome from "pages/Profile"
 
 //  // Inner Authentication
 import Login1 from "../pages/AuthenticationInner/Login"
@@ -119,45 +119,66 @@ import TimerPage from "../pages/Production/Timer"
 import ProductList from "../pages/Production/ProductList"
 import ProductionTracker from "../pages/Orderflow/ProductionTracker"
 import ControlTimer from "pages/Production/ControlTimers"
+import Extra from "pages/Extra"
+import OrderFlowDashboard from "pages/Orderflow/Dashboard"
+import Projects from "pages/Orderflow/Projects"
+import Drafting from "pages/Orderflow/Drafting"
+import Inventory from "pages/Orderflow/Inventory"
+import Loadout from "pages/Orderflow/Loadout"
+import ProjectClose from "pages/Orderflow/ProjectClose"
+import SystemCheck from "pages/Production/SystemCheck"
+import OperationsDashboard from "pages/Operations/Dashboard"
+import QualityControl from "pages/Operations/QualityControl"
+import Maintenance from "pages/Operations/Maintenance"
+import Safety101 from "pages/Operations/Safety101"
+import Forms from "pages/Operations/Forms"
+import LineData from "pages/Operations/LineData"
+import FIXX from "pages/Operations/FIXX"
+import Accounting from "pages/Accounting"
+import Sales from "pages/Sales"
+import HRDashboard from "pages/HR/Dashboard"
+import ADT from "pages/HR/ADT"
+import DownTime from "pages/HR/DownTime"
+import Community from "pages/HR/Community"
+import Discussions from "pages/HR/Discussions"
 
 const userRoutes = [
   { path: "/dashboard", component: Dashboard },
 
   { path: "/profile-home", component: ProfileHome },
+  
 
+  { path: "/orderflow/dashboard", component: OrderFlowDashboard },
+  { path: "/orderflow/projects", component: Projects },
+  { path: "/orderflow/drafting", component: Drafting },
+  { path: "/orderflow/inventory", component: Inventory },
   { path: "/orderflow/production-tracker", component: ProductionTracker },
-
-  { path: "/orderflow/dashboard", component: TimerPage },
-  { path: "/orderflow/projects", component: ProductList },
-  { path: "/orderflow/drafting", component: ProductList },
-  { path: "/orderflow/inventory", component: ProductList },
-  { path: "/orderflow/production-taker", component: ProductList },
-  { path: "/orderflow/load-out", component: ProductList },
-  { path: "/orderflow/project-close", component: ProductList },
+  { path: "/orderflow/load-out", component: Loadout },
+  { path: "/orderflow/project-close", component: ProjectClose },
 
   { path: "/production/dashboard", component: TimerPage },
   { path: "/production/timer", component: TimerPage },
   { path: "/production/list", component: ProductList },
-  { path: "/production/system-check", component: ProductList },
+  { path: "/production/system-check", component: SystemCheck },
   { path: "/production/control-timers", component: ControlTimer },
 
-  { path: "/operations/dashboard", component: ProductList },
-  { path: "/operations/quality-control", component: ProductList },
-  { path: "/operations/maintenance", component: ProductList },
-  { path: "/operations/safety101", component: ProductList },
-  { path: "/operations/forms", component: ProductList },
-  { path: "/operations/line-data", component: ProductList },
-  { path: "/operations/fixx", component: ProductList },
+  { path: "/operations/dashboard", component: OperationsDashboard },
+  { path: "/operations/quality-control", component: QualityControl },
+  { path: "/operations/maintenance", component: Maintenance },
+  { path: "/operations/safety101", component: Safety101 },
+  { path: "/operations/forms", component: Forms },
+  { path: "/operations/line-data", component: LineData },
+  { path: "/operations/fixx", component: FIXX },
 
-  { path: "/human-resources/dashboard", component: ProductList },
-  { path: "/human-resources/adt", component: ProductList },
-  { path: "/human-resources/down-time", component: ProductList },
-  { path: "/human-resources/community", component: ProductList },
-  { path: "/human-resources/msg-discussions", component: ProductList },
+  { path: "/human-resources/dashboard", component: HRDashboard },
+  { path: "/human-resources/adt", component: ADT },
+  { path: "/human-resources/down-time", component: DownTime },
+  { path: "/human-resources/community", component: Community },
+  { path: "/human-resources/msg-discussions", component: Discussions },
 
-  { path: "/accounting", component: ProductList },
+  { path: "/accounting/dashboard", component: Accounting },
 
-  { path: "/sales", component: ProductList },
+  { path: "/sales/dashboard", component: Sales },
 
   { path: "/users/:filter?", component: Users, admin: 1 },
   { path: "/hrs", component: HRs, admin: 2 },
@@ -250,9 +271,9 @@ const userRoutes = [
 
 const authRoutes = [
   { path: "/logout", component: Logout },
-  // { path: "/login", component: Login },
+  { path: "/login", component: Login },
   // { path: "/forgot-password", component: ForgetPwd },
-  // { path: "/register", component: Register },
+  { path: "/register", component: Register },
 
   { path: "/pages-maintenance", component: PagesMaintenance },
   { path: "/pages-comingsoon", component: PagesComingsoon },

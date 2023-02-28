@@ -8,7 +8,6 @@ const AutoCompleteSelect = (props) => {
     {
       label: "Parts",
       options: props.options.map(v => {
-        console.log(v.name, v.machine)
         return ({
         label: v.name || v.machine.name,
         value: v._id

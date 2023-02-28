@@ -4,28 +4,39 @@ $gray-color: rgb(221, 222, 226);
 .type-selector-container {
   display: flex;
   .type {
-    width: 30%;
     margin-left: 20px;
     .type-selector {
-      box-shadow: 0px 1px 6px 1px rgba(0,0,0,0.1);
-      height: 100px;
-      margin-right: 28px;
-      padding: 26px;
-
+      
+      box-shadow: 0px 1px 6px 1px rgba(0, 0, 0, 0.1);
+      // margin-right: 10px;
+      font-family: 'Bebas Neue', sans-serif;
       border: 2px solid $gray-color;
+      letter-spacing: .25rem;
       background-color: white;
       border-radius: 10px;
-      padding: 10px;
-      font-size: 1.5rem;
+      padding: 1rem 1.5rem;
+      font-size: 2.5rem;
       font-weight: 700;
       display: flex;
+
       justify-content: space-between;
       align-items: center;
+
+      i {
+        font-size: 1.25rem;
+        color: white;
+        padding: .25rem 0 0 .25rem;
+        border-radius: .25rem;
+        background-color: #dddddd;
+      }
+
       .percent {
         font-size: 16px;
+
         span {
           font-size: 20px;
         }
+
         color: green;
       }
 
@@ -33,8 +44,10 @@ $gray-color: rgb(221, 222, 226);
         border: 2px solid rgba(75, 75, 75, 0.5) !important;
         background-color: rgb(131, 188, 199);
         color: white;
-        .percent {
-          color: white;
+
+        i {
+          background-color: white;
+          color: #83bcc7;
         }
       }
     }

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import MetaTags from "react-meta-tags"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import {
   Container,
   Row,
@@ -14,50 +14,22 @@ import {
 } from "reactstrap"
 import sampleAvatar from "../../assets/images/users/user-1.jpg"
 // availity-reactstrap-validation
-import { AvForm, AvField } from "availity-reactstrap-validation"
-
+import './styles.scss'
 // Redux
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 
 //Import Breadcrumb
-import Breadcrumb from "../../components/Common/Breadcrumb"
 
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions"
 
-import ReactImagePickerEditor, {
-  ImagePickerConf,
-} from "react-image-picker-editor"
 import "react-image-picker-editor/dist/index.css"
 import axios from "axios"
 
 const UserProfile = props => {
-  const [email, setemail] = useState("")
-  const [name, setname] = useState("")
-  const [idx, setidx] = useState(1)
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser"))
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        setname(obj.displayName)
-        setemail(obj.email)
-        setidx(obj.uid)
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        setname(obj.username)
-        setemail(obj.email)
-        setidx(obj.uid)
-      }
-      setTimeout(() => {
-        props.resetProfileFlag()
-      }, 3000)
-    }
-  }, [props.success])
-
+  const authuser = JSON.parse(localStorage.getItem("authUser"))
+  const [user, setUser] = useState(authuser)
   function handleValidSubmit(event, values) {
     props.editProfile(values)
   }
@@ -71,6 +43,7 @@ const UserProfile = props => {
     compressInitial: null,
   }
   const [imageSrc, setImageSrc] = useState(null)
+  const userAvatarRef = useRef()
   const avatarChanged = async src => {
     setImageSrc(src)
     let formData = new FormData()
@@ -91,10 +64,14 @@ const UserProfile = props => {
     })
   }
 
-  const user = JSON.parse(localStorage.getItem("authUser"))
-  const avatarUrl = "https://apms.global/uploads/" + user.name + ".png"
-  const brand = "BRAND"
 
+  const avatarUrl = "https://apms.global/uploads/" + authuser.name + ".png"
+  const brand = "BRAND"
+  const updateUser = (e, field) => {
+    const _user = { ...user, [field]: e.target ? e.target.value : e }
+    setUser(_user)
+  }
+  console.log(user)
   return (
     <React.Fragment>
       <div className="page-content">
@@ -102,38 +79,28 @@ const UserProfile = props => {
           <title>Profile</title>
         </MetaTags>
         <Container fluid>
-          <div className="page-title-box timer-page-container mt-5 mx-auto">
-            <Row className="align-items-center">
-              <Col md={8}>
-                <h1 className="page-title" style={{ fontSize: "44px" }}>
-                  My Profile
-                </h1>
-                <ol className="breadcrumb m-0">
-                  <li className="breadcrumb-item active">OVERVIEW</li>
-                </ol>
-              </Col>
+          <div className="eidt-account-page-container mt-5 mx-auto">
+            <div className='page-content-header'>
+              <h2>My Profile</h2>
+              <div className='sub-menu text-uppercase'>
+                <span className="parent">OVERVIEW</span>
+                <span className="mx-1"> &gt; </span>
+                <span className='sub text-danger'>EDIT ACCOUNT</span>
+              </div>
+              <div className='divide-line d-flex align-items-center pt-5'>
+                <div className='line'></div>
+              </div>
+            </div>
 
-              <Col md="4">
-                <div className="float-end d-none d-md-block"></div>
-              </Col>
-            </Row>
-            {/* Render Breadcrumb */}
-            {/* <Breadcrumb title="Veltrix" breadcrumbItem="Profile" /> */}
 
-            <div className="timer-page-container mt-5 mx-auto">
-              {/* {props.error && props.error ? (
-                <Alert color="danger">{props.error}</Alert>
-              ) : null}
-              {props.success ? (
-                <Alert color="success">{props.success}</Alert>
-              ) : null} */}
+            <div className="mt-5 mx-auto">
 
-              <h4>Basic Information</h4>
+              <h3>Basic Information</h3>
 
               <Card>
                 <CardBody>
                   <div className="list-group list-group-form">
-                    <div className="list-group-item">
+                    <div className="list-group-item ">
                       <div className="form-group row align-items-center mb-0">
                         <label className="form-label col-form-label col-sm-3">
                           First name
@@ -142,8 +109,9 @@ const UserProfile = props => {
                           <input
                             type="text"
                             className="form-control"
-                            value="Alexander"
+                            value={user.firstName}
                             placeholder="Your first name ..."
+                            onChange={e => updateUser(e, 'firstName')}
                           />
                         </div>
                       </div>
@@ -157,13 +125,15 @@ const UserProfile = props => {
                           <input
                             type="text"
                             className="form-control"
-                            value="Watson"
+                            value={user.lastName}
                             placeholder="Your last name ..."
+                            onChange={e => updateUser(e, 'lastName')}
+
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="list-group-item">
+                    <div className="list-group-item rounded-0">
                       <div className="form-group row align-items-center mb-0">
                         <label className="form-label col-form-label col-sm-3">
                           Email address
@@ -172,24 +142,25 @@ const UserProfile = props => {
                           <input
                             type="email"
                             className="form-control"
-                            value="alexander.watson@fake-mail.com"
+                            value={user.email}
                             placeholder="Your email address ..."
+                            onChange={e => updateUser(e, 'email')}
                           />
-                          <small className="form-text text-muted">
+                          <div className="mt-1 text-black-50">
                             Note that if you change your email, you will have to
                             confirm it again.
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">Save</Button>
+                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
 
-              <h4>Profile & Privacy</h4>
+              <h3>Profile & Privacy</h3>
 
               <Card>
                 <CardBody>
@@ -199,7 +170,7 @@ const UserProfile = props => {
                         <label className="col-form-label form-label col-sm-3">
                           Your photo
                         </label>
-                        <div className="col-sm-9 media align-items-center">
+                        <div className="col-sm-9 media d-flex align-items-center">
                           <a href="" className="media-left mr-16pt">
                             <img
                               src={sampleAvatar}
@@ -208,19 +179,26 @@ const UserProfile = props => {
                               className="rounded-circle"
                             />
                           </a>
-                          <div className="media-body">
-                            <div className="custom-file">
+                          <div className="media-body ps-3 flex-fill">
+                            <div className="custom-file w-100 ">
                               <input
                                 type="file"
-                                className="custom-file-input"
+                                ref={userAvatarRef}
+                                className="custom-file-input d-none"
                                 id="inputGroupFile01"
                               />
-                              <label
-                                className="custom-file-label"
-                                for="inputGroupFile01"
-                              >
-                                Choose file
-                              </label>
+                              <div className="d-flex align-items-center cursor-pointer" onClick={() => userAvatarRef.current.click()}>
+                                <div className="form-control rounded-0 rounded-start">
+                                  Choose File
+                                </div>
+                                <div
+                                  className="custom-file-label form-control border-start-0 rounded-0 rounded-end text-white"
+                                  htmlFor="inputGroupFile01"
+                                  style={{ background: '#868e96', width: 80, borderWidth: 1, borderColor: 'rgb(134, 142, 150)' }}
+                                >
+                                  Browse
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -229,19 +207,22 @@ const UserProfile = props => {
                     <div className="list-group-item">
                       <div className="form-group row align-items-center mb-0">
                         <label className="col-form-label form-label col-sm-3">
-                          ameritex profile name
+                          Ameritex profile name
                         </label>
                         <div className="col-sm-9">
                           <input
                             type="text"
                             className="form-control"
-                            value="ameritex.com/alexander"
+                            defaultValue=""
                             placeholder="Your profile name ..."
                           />
-                          <small className="form-text text-muted">
-                            Your profile name will be used as part of your
-                            public profile URL address.
-                          </small>
+
+                        </div>
+                      </div>
+                      <div className="row justify-content-end">
+                        <div className="mt-1 text-black-50 col-sm-9">
+                          Your profile name will be used as part of your
+                          public profile URL address.
                         </div>
                       </div>
                     </div>
@@ -264,19 +245,19 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          checked
-                          id="customCheck1"
+                          id="displayrealname"
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck1"
+                          htmlFor="displayrealname"
                         >
                           Display your real name on your profile
                         </label>
-                        <small className="form-text text-muted">
-                          If unchecked, your profile name will be displayed
-                          instead of your full name.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        If unchecked, your profile name will be displayed
+                        instead of your full name.
                       </div>
                     </div>
                     <div className="list-group-item">
@@ -284,29 +265,31 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
+                          id="profilevisibility"
                           checked
-                          id="customCheck2"
+                          readOnly
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck2"
+                          htmlFor="profilevisibility"
                         >
                           Allow everyone to see your profile
                         </label>
-                        <small className="form-text text-muted">
-                          If unchecked, your profile will be private and no one
-                          except you will be able to view it.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        If unchecked, your profile will be private and no one
+                        except you will be able to view it.
                       </div>
                     </div>
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">Save</Button>
+                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
 
-              <h4>Updates from ameritex</h4>
+              <h3>Updates from Ameritex</h3>
               <Card>
                 <CardBody>
                   <div className="list-group list-group-form">
@@ -315,18 +298,19 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          checked
-                          id="customCheck1"
+                          id="ameritexnews"
+                          defaultChecked
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck1"
+                          htmlFor="ameritexnews"
                         >
-                          ameritex Newsletter
+                          Ameritex Newsletter
                         </label>
-                        <small className="form-text text-muted">
-                          Get the latest on company news.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        Get the latest on company news.
                       </div>
                     </div>
                     <div className="list-group-item">
@@ -334,19 +318,20 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          checked
-                          id="customCheck2"
+                          id="newcontent"
+                          defaultChecked
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck2"
+                          htmlFor="newcontent"
                         >
                           New Content Releases
                         </label>
-                        <small className="form-text text-muted">
-                          Send me an email when new courses or bonus content is
-                          released.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        Send me an email when new courses or bonus content is
+                        released.
                       </div>
                     </div>
                     <div className="list-group-item">
@@ -354,19 +339,20 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          checked
-                          id="customCheck3"
+                          id="featureupdated"
+                          defaultChecked
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck3"
+                          htmlFor="featureupdated"
                         >
                           Product &amp; Feature Updates
                         </label>
-                        <small className="form-text text-muted">
-                          Be the first to know when we announce new features and
-                          updates.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        Be the first to know when we announce new features and
+                        updates.
                       </div>
                     </div>
                     <div className="list-group-item">
@@ -374,19 +360,20 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          checked
-                          id="customCheck4"
+                          id="emailfromteam"
+                          defaultChecked
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck4"
+                          htmlFor="emailfromteam"
                         >
-                          Emails from Teachers
+                          Emails from Team Memebers
                         </label>
-                        <small className="form-text text-muted">
-                          Get messages, encouragement and helpful information
-                          from your teachers.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        Get messages, encouragement and helpful information
+                        from your teachers.
                       </div>
                     </div>
                     <div className="list-group-item">
@@ -394,27 +381,28 @@ const UserProfile = props => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="customCheck5"
+                          id="contentsuggestions"
                         />
                         <label
                           className="custom-control-label"
-                          for="customCheck5"
+                          htmlFor="contentsuggestions"
                         >
                           Content Suggestions
                         </label>
-                        <small className="form-text text-muted">
-                          Get daily content suggestions to keep you on track.
-                        </small>
+
+                      </div>
+                      <div className=" text-muted">
+                        Get daily content suggestions to keep you on track.
                       </div>
                     </div>
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">Save</Button>
+                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
 
-              <h4>Change Password</h4>
+              <h3>Change Password</h3>
               <Card>
                 <CardBody>
                   {/* <div className="alert alert-soft-warning">
@@ -434,7 +422,7 @@ const UserProfile = props => {
                   <div className="list-group list-group-form">
                     <div className="list-group-item">
                       <div className="form-group row mb-0">
-                        <label className="col-form-label col-sm-3">
+                        <label className="form-label col-form-label col-sm-3">
                           New password
                         </label>
                         <div className="col-sm-9">
@@ -447,8 +435,8 @@ const UserProfile = props => {
                       </div>
                     </div>
                     <div className="list-group-item">
-                      <div className="form-group row mb-0">
-                        <label className="col-form-label col-sm-3">
+                      <div className=" form-group row mb-0">
+                        <label className="form-label col-form-label col-sm-3">
                           Confirm password
                         </label>
                         <div className="col-sm-9">
@@ -463,7 +451,7 @@ const UserProfile = props => {
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">Save</Button>
+                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
             </div>

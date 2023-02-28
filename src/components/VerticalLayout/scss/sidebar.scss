@@ -1,17 +1,22 @@
 #sidebar-menu {
+  
   .sidebar-avatar-container {
-    padding: 12px 20px;
+    .simplebar-content-wrapper{
+      overflow: hidden !important;
+    }
     .sidebar-avatar {
-      height: 50px;
-      width: 90%;
-      border-radius: 45px;
+      border-radius: 100px;
       background-color: white;
-      padding: 15px;
       box-sizing: initial;
+      font-family: Exo\ 2,Helvetica Neue,Arial,sans-serif;
+      h4{
+        font-family: Exo\ 2,Helvetica Neue,Arial,sans-serif;
+      }
+      img{
+        width: 36px;
+      }
     }
   }
 
-  .sidebar-padding {
-    padding: 12px 20px;
-  }
+
 }
