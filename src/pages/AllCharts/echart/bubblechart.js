@@ -150,7 +150,7 @@ class Bubble extends Component {
           itemStyle: {
             normal: {
               shadowBlur: 10,
-              shadowColor: "rgba(2, 164, 153, 0.5)",
+              shadowColor: "rgba(5, 139, 99, 0.5)",
               shadowOffsetY: 5,
               color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
                 {
@@ -159,7 +159,7 @@ class Bubble extends Component {
                 },
                 {
                   offset: 1,
-                  color: "rgb(2, 164, 153)",
+                  color: "rgb(5, 139, 99)",
                 },
               ]),
             },

@@ -33,10 +33,11 @@ export const extractFormData = form => {
   return data
 }
 
-export const getCurrentTime = () => {
-  const offset = -6 * 60 * 60 * 1000
+export const getCurrentTime = (offsetByHour) => {
+  const offset = offsetByHour * 60 * 60 * 1000
   const now = new Date()
   const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000)
-  // const time = new Date(utc.getTime() + offset)
-  return new Date()
+  return new Date(utc.getTime() + offset)
 }
+
+export const lbsToTons = lbs => (lbs * 0.0005).toFixed(3)

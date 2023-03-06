@@ -19,7 +19,7 @@ class Apexdonut extends Component {
                         }
                     },
                 },
-                colors: ['rgb(2, 164, 153)'],
+                colors: ['rgb(5, 139, 99)'],
                 labels: ['']
             },
             series: [60],

@@ -28,6 +28,7 @@ import io from "socket.io-client"
 import TimerLogs from "./component/TimerLogs"
 import Pagination from "components/Common/Pagination"
 import { BACKEND } from "helpers/axiosConfig"
+import ProductionClock from "./component/ProductionClock"
 
 const socket = io(BACKEND)
 
@@ -249,7 +250,7 @@ const TimerPage = props => {
     })
     return _timers
   }, [timers])
-
+  const user = JSON.parse(localStorage.getItem("authUser"))
   return <div className="page-content">
     <MetaTags>
       <title>Timer Page</title>
@@ -267,164 +268,114 @@ const TimerPage = props => {
                 <span className='sub text-danger'>TEXAS</span>
               </div>
             </div>
-            <div className="d-flex align-items-center">
-              <div className="d-flex flex-column align-items-center border-left-right px-4">
-                <h3 className="mb-0">{timers.length}</h3>
-                <div className="text-black-50">Timers </div>
-              </div>
-              <button
-                className="btn btn-newtimer btn-primary ms-3 "
-                onClick={() => setMachineModal(true)}
-              >
-                NEW TIMER
-              </button>
-            </div>
-          </div>
-
-          <div
-            className="mt-3 pb-3"
-            style={{
-              borderBottom: "2px solid #dddee2",
-            }}
-          >
-            <div className="d-flex city-selector-container row p-0 m-0">
-              {cities.map((_city, index) => (
-                <div
-                  key={'city' + index}
-                  className="city text-uppercase col-lg-4 col-md-6 "
-                >
-                  <div
-                    className={`city-selector ${_city == city ? "active" : ""
-                      }`}
-                    onClick={() => setCity(_city)}
-                  >
-                    <span className="pt-2">{_city}</span>
-                    <span>
-                      <i className="mdi mdi-poll"></i>
-                    </span>
-                  </div>
-                  <div
-                    className="mt-1 d-flex justify-content-end compare"
-                    style={{ marginRight: "20px" }}
-                  >
-                    <span>COMPARE{" "}</span>
-                    <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
-                  </div>
+            {user.role == 'Sales' || user.role == 'HR' ? "" :
+              <div className="d-flex align-items-center">
+                <div className="d-flex flex-column align-items-center border-left-right px-4">
+                  <h3 className="mb-0">{timers.length}</h3>
+                  <div className="text-black-50">Timers </div>
                 </div>
-              ))}
-            </div>
+                {user.role == 'Personnel' || user.role == 'Accounting' ? "" :
+                  <button
+                    className="btn btn-newtimer btn-primary ms-3 "
+                    onClick={() => setMachineModal(true)}
+                  >
+                    NEW TIMER
+                  </button>
+                }
+              </div>
+            }
           </div>
+          {user.role == 'Sales' || user.role == 'HR' ? <h4 className='mt-5'>Not authorized to see content</h4> :
+            <div>
+              <div
+                className="mt-3 pb-3"
+                style={{
+                  borderBottom: "2px solid #dddee2",
+                }}
+              >
+                <div className="d-flex city-selector-container row p-0 m-0">
+                  {cities.map((_city, index) => (
+                    <div
+                      key={'city' + index}
+                      className="city text-uppercase col-lg-4 col-md-6 "
+                    >
+                      <div
+                        className={`city-selector ${_city == city ? "active" : ""
+                          }`}
+                        onClick={() => setCity(_city)}
+                      >
+                        <span className="pt-2">{_city}</span>
+                        <span>
+                          <i className="mdi mdi-poll"></i>
+                        </span>
+                      </div>
+                      <div
+                        className="mt-1 d-flex justify-content-end compare"
+                        style={{ marginRight: "20px" }}
+                      >
+                        <span>COMPARE{" "}</span>
+                        <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          <div className="sort-container">
-            <div className="sort-text">
-              SHOW ONLY
-            </div>
-            <div className="d-flex">
+              <div className="sort-container">
+                <div className="sort-text">
+                  SHOW ONLY
+                </div>
+                <div className="d-flex">
+                  {
+                    factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
+                      {factory}
+                      <input type="checkbox" className="form-checkbox"
+                        onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
+                        onChange={() => { }}
+                        checked={factoryFilter[index]} />
+                    </label>)
+                  }
+                </div>
+              </div>
+
+              <ProductionClock city={city} />
+
               {
-                factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
-                  {factory}
-                  <input type="checkbox" className="form-checkbox"
-                    onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
-                    onChange={() => { }}
-                    checked={factoryFilter[index]} />
-                </label>)
+                classifiedTimers.map((cTimers, index) => {
+                  return cTimers.length ? <>
+                    <div className="products-container row">
+                      <h2 className="text-uppercase"> {index != 3 ? classify[index][0] : "Precast"} - TIMERS </h2>
+                      <div className="col-xl-12 row p-0 m-0">
+                        {
+                          cTimers.map((timer, idx) => (
+                            <Timer
+                              {...timer}
+                              key={`timer1-${timer._id}`}
+                              idx={idx}
+                              startTimer={startTimer}
+                              stopTimer={stopTimer}
+                              refreshTimer={refreshTimer}
+                              editTimer={editTimer} />)
+                          )
+                        }
+                      </div>
+                    </div>
+                    <div className="timerlog-table-container mt-4">
+                      <TimerLogs
+                        city={city}
+                        compare={compare}
+                        filteredParts={[]}
+                        refreshLogs={refreshLogs}
+                        timers={cTimers}
+                        afterRefresh={() => setRefreshLogs(false)}
+                        factoryFilter={factoryFilter}
+                        classify={index != 3 ? classify[index][0] : "Precast"} />
+                    </div>
+                  </>
+                    : <></>
+                })
               }
             </div>
-          </div>
-          {
-            classifiedTimers.map((cTimers, index) => {
-              return cTimers.length ? <>
-                <div className="products-container row">
-                  <h2 className="text-uppercase"> {index != 3 ? classify[index][0] : "Precast"} - TIMERS </h2>
-                  <div className="col-xl-12 row p-0 m-0">
-                    {
-                      cTimers.map((timer, idx) => (
-                        <Timer
-                          {...timer}
-                          key={`timer1-${timer._id}`}
-                          idx={idx}
-                          startTimer={startTimer}
-                          stopTimer={stopTimer}
-                          refreshTimer={refreshTimer}
-                          editTimer={editTimer} />)
-                      )
-                    }
-                  </div>
-                </div>
-
-                <div className="row m-0 rounded">
-                  <div className="search-container mx-0">
-                    <div className="flex-1">
-                      <div className="row m-0" style={{ paddingTop: 12 }}>
-                        <div className="d-flex align-items-center col-xl-3">
-                          <h5>PRODUCTION REPORT</h5>
-                        </div>
-                        <div className="d-flex align-items-center col-xl-3">
-                        </div>
-                        <div className="d-flex align-items-center col-xl-2">
-                          <h5>
-                            <div>INCLUDE</div>
-                            <div>OPERATOR</div>
-                          </h5>
-                        </div>
-                        <div className="d-flex align-items-center col-xl-4">
-                          <h5>REVIEW RANGE</h5>
-                        </div>
-                      </div>
-
-                      <div className="m-0 search-box row mb-3">
-                        <div className="col-xl-3">
-                          <MachineClassSelect name="log-filter" placeholder='Machine or Class' />
-                        </div>
-
-                        <div className="col-xl-3">
-                          <select
-                            className="form-select"
-                            value={[]}
-                          >
-                            <option value="" disabled selected>Product or Part</option>
-                            {
-                              parts.map(part => (
-                                <option value={part._id} key={"log-filter1-" + part._id}>{part.name}</option>
-                              ))
-                            }
-                          </select>
-                        </div>
-
-                        <div className="col-xl-2 d-flex align-items-center">
-                          <div className='d-flex align-items-stretch'>
-                            <input type="checkbox" className="form-checkbox" />
-                            <h6 className='ms-2 my-auto'>Yes</h6>
-                          </div>
-                        </div>
-
-                        <div className="col-xl-4 align-items-center  d-flex">
-                          <input type="date" className="form-control " />
-                          <span className="mx-1">to</span>
-                          <input type="date" className="form-control" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="search-action">
-                      <span className="mdi mdi-refresh cursor-pointer"></span>
-                    </div>
-                  </div>
-                </div>
-                <div className="timerlog-table-container mt-4">
-                  <TimerLogs
-                    city={city}
-                    compare={compare}
-                    filteredParts={[]}
-                    refreshLogs={refreshLogs}
-                    timers={cTimers}
-                    afterRefresh={() => setRefreshLogs(false)}
-                    factoryFilter={factoryFilter}
-                    classify={index != 3 ? classify[index][0] : "Precast"} />
-                </div>
-              </>
-                : <></>
-            })
           }
         </div>
       </div>

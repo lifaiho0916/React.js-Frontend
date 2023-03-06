@@ -1,7 +1,7 @@
 $gray-color: #dddee2;
 $broder-gray: #dfe2e6;
 $background-gray: rgb(246, 247, 251);
-$gray-font: rgb(141, 144, 150);
+$gray-font: rgba(39, 44, 51, 0.5);
 
 .timer-page-container {
 
@@ -126,12 +126,15 @@ $gray-font: rgb(141, 144, 150);
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: .15rem;
     font-size: 16px;
+    align-items: center;
 
     .sort-text {
       padding: 0 20px;
       border-right: 2px solid $gray-color;
       display: inline-flex;
       margin-right: 2rem;
+      min-width: 170px;
+      justify-content: flex-end;
     }
 
     .sort-factory-category {
@@ -431,8 +434,18 @@ $gray-font: rgb(141, 144, 150);
     border-bottom: 2px solid #dddee2;
     padding-bottom: 1rem;
   }
+
+  .clock-container {
+    &>div {
+      font-size: 1.3rem;
+      .desc {
+        font-size: 0.8rem;
+        color: $gray-font;
+      }
+    }
+  }
 }
 
-iframe {
+body>iframe {
   display: none;
 }

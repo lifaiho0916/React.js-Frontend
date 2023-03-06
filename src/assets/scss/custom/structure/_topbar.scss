@@ -106,17 +106,12 @@
 }
 
 .page-content {
-    padding: 64px 0 64px ;
+    padding: 64px 0 80px ;
     
     // padding: $header-height calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
 }
 
 @media screen and (max-width: 576px) {
-    .page-content {
-        padding: 10px !important;
-        padding-top: 64px !important;
-    }
-
     .timer-page-container {
         width: 100% !important;
     }
@@ -141,7 +136,6 @@
 .header-profile-user {
     height: 48px;
     width: 48px;
-    background-color: $gray-300;
 }
 
 .noti-icon {

@@ -235,7 +235,7 @@ const Header = props => {
               <ProfileMenu />
               <NotificationDropdown />
               <div className="email-icon-container ps-2" >
-                <i className="mdi mdi-email-outline"></i>
+                <i className="mdi mdi-email-outline" style={{color:'#525f80'}}></i>
               </div>
 
               <div className="dropdown d-inline-block" style={{ paddingLeft: 12, paddingRight: 20 }}>

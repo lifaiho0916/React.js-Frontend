@@ -32,6 +32,10 @@ const LineData = (props) => {
               </div>
             </div>
           </div>
+          <div>
+            {user.role == 'Sales' || user.role == 'HR' ?
+              <h4 className='mt-5'>Not authorized to see content</h4> : ""}
+          </div>
         </div>
       </div>
     </Container>

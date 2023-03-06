@@ -1,15 +1,17 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects"
 
 // Login Redux States
-import { LOGIN_USER, LOGOUT_USER } from "./actionTypes"
-import { apiError, loginSuccess, logoutUserSuccess } from "./actions"
+import { LOGIN_USER, LOGOUT_USER, UPDATE_PROFILE, USER_PROFILE } from "./actionTypes"
+import { apiError, getProfileSuccess, loginSuccess, logoutUserSuccess, updateProfileSuccess } from "./actions"
 
 //Include Both Helper File with needed methods
 import { getFirebaseBackend } from "../../../helpers/firebase_helper"
 import {
+  getProfile,
   postFakeLogin,
   postJwtLogin,
   postSocialLogin,
+  updateProfileRequest,
 } from "../../../helpers/fakebackend_helper"
 import jwt from 'jwt-decode'
 import { setAxiosConfig } from "helpers/axiosConfig"
@@ -65,9 +67,29 @@ function* logoutUser({ payload: { history } }) {
   }
 }
 
+function* setUserPorfile({ payload: { user } }) {
+  try {
+    const response = yield call(getProfile)
+    yield put(getProfileSuccess(response))
+  } catch (error) {
+    yield put(apiError(error))
+  }
+}
+
+function *updateProfile({ payload: { updates } }) {
+  try {
+    const response = yield call(updateProfileRequest, updates)
+    yield put(updateProfileSuccess( updates ))
+  } catch (err) {
+
+  }
+}
+
 function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser)
   yield takeEvery(LOGOUT_USER, logoutUser)
+  yield takeEvery(USER_PROFILE, setUserPorfile)
+  yield takeEvery(UPDATE_PROFILE, updateProfile)
 }
 
 export default authSaga

@@ -5,6 +5,7 @@ export async function get(url, config = {}) {
 }
 
 export async function post(url, data, config = {}) {
+  console.log(url, data)
   return axios
     .post(url, { ...data }, { ...config })
     .then(response => response)

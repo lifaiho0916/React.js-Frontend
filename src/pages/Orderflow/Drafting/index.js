@@ -30,6 +30,11 @@ const Drafting = (props) => {
                 <div className='line'></div>
               </div>
             </div>
+
+          </div>
+          <div>
+            {user.role == 'Personnel' ?
+              <h4 className='mt-5'>Not authorized to see content</h4> : ""}
           </div>
         </div>
       </div>

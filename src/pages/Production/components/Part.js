@@ -21,19 +21,22 @@ const Part = (props) => {
   const editPart = async () => {
     props.editPart(props.idx)
   }
+  const user = JSON.parse(localStorage.getItem("authUser"))
 
   return <div className="col-xl-4 col-lg-4 col-md-6 p-2 d-flex align-items-stretch">
     <div className="product">
       <div className="product-header justify-content-end">
-        <Dropdown isOpen={moreMenu} toggle={toggle}>
-          <DropdownToggle caret>
-            <span className="mdi mdi-dots-horizontal text-black-50"></span>
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem onClick={editPart}>Edit</DropdownItem>
-            <DropdownItem onClick={removePart}>Remove</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        {user.role == 'Personnel' || user.role == 'Accounting' ? "" :
+          <Dropdown isOpen={moreMenu} toggle={toggle}>
+            <DropdownToggle caret>
+              <span className="mdi mdi-dots-horizontal text-black-50"></span>
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={editPart}>Edit</DropdownItem>
+              <DropdownItem onClick={removePart}>Remove</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        }
       </div>
       <div className="product-preview">
         <img src={props.preview} className="w-100 h-100" />

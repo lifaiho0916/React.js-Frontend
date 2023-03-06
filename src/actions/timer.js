@@ -72,7 +72,18 @@ export const searchMacheinsAction = async (machineClass) => {
   return res.data.machines
 }
 
-export const getTimerLogsOfMachine = async (machine, part, from, to, page) => {
-  const res = await axios.get("/timer/timer-logs-of-machine", {params: { machine, part, from, to, page }})
+export const getTimerLogsOfMachine = async (machine, part, from, to, page, includeOperator, machineClass = 0, city = 0, items_per_page) => {
+  const res = await axios.get("/timer/timer-logs-of-machine", {params: { machine, part, from, to, page, includeOperator, machineClass, city, items_per_page }})
   return res.data
+}
+
+export const getLogsToPrintAction = async (machine, part, from, to, page, includeOperator, machineClass = 0, city = 0, items_per_page) => {
+  const res = await axios.get("/timer/timer-logs-to-print", {params: { machine, part, from, to, page, includeOperator, machineClass, city, items_per_page }})
+  return res.data
+}
+
+
+export const startProductionTimeAction = async (city) => {
+  const res = await axios.get("/timer/start-of-production-time", { params: { city } })
+  return res.data.log
 }

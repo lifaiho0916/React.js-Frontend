@@ -10,7 +10,7 @@ class RadarChart extends Component {
             datasets: [
                 {
                     label: "Desktops",
-                    backgroundColor: "rgba(2, 164, 153, 0.2)",
+                    backgroundColor: "rgba(5, 139, 99, 0.2)",
                     borderColor: "#02a499",
                     pointBackgroundColor: "#02a499",
                     pointBorderColor: "#fff",

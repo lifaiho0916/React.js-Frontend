@@ -12,7 +12,7 @@ import {
   Button,
   CardFooter,
 } from "reactstrap"
-import sampleAvatar from "../../assets/images/users/user-1.jpg"
+import sampleAvatar from "../../assets/images/person.svg"
 // availity-reactstrap-validation
 import './styles.scss'
 // Redux
@@ -23,16 +23,15 @@ import { withRouter } from "react-router-dom"
 
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions"
+import { updateProfile, updateAvatar } from "../../store/auth/login/actions"
 
 import "react-image-picker-editor/dist/index.css"
 import axios from "axios"
+import { BACKEND } from "helpers/axiosConfig"
 
 const UserProfile = props => {
   const authuser = JSON.parse(localStorage.getItem("authUser"))
-  const [user, setUser] = useState(authuser)
-  function handleValidSubmit(event, values) {
-    props.editProfile(values)
-  }
+  const [user, setUser] = useState(props.user)
 
   const config2 = {
     borderRadius: "50px",
@@ -42,36 +41,32 @@ const UserProfile = props => {
     objectFit: "contain",
     compressInitial: null,
   }
-  const [imageSrc, setImageSrc] = useState(null)
   const userAvatarRef = useRef()
-  const avatarChanged = async src => {
-    setImageSrc(src)
-    let formData = new FormData()
-    var arr = src.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n)
 
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n)
-    }
-
-    const file = new File([u8arr], "avatar.png", { type: mime })
-    formData.append("avatar", file)
-    const response = await axios.post("/auth/upload-avatar", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-  }
-
-
-  const avatarUrl = "https://apms.global/uploads/" + authuser.name + ".png"
   const brand = "BRAND"
   const updateUser = (e, field) => {
     const _user = { ...user, [field]: e.target ? e.target.value : e }
     setUser(_user)
   }
-  console.log(user)
+
+  const uploadAvatar = async () => {
+    const avatar = userAvatarRef.current.files[0]
+    let formData = new FormData()
+    formData.append("avatar", avatar)
+    const res = await axios.post("/auth/upload-avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    props.updateAvatar(res.data.avatar)
+  }
+
+  const updateName = async () => {
+    props.updateProfile(user)
+  }
+
+  useEffect(() => {
+    setUser(props.user)
+  }, [props.user])
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -156,7 +151,7 @@ const UserProfile = props => {
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
+                  <Button className="btn-primary float-right" onClick={updateName}>SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
 
@@ -173,10 +168,12 @@ const UserProfile = props => {
                         <div className="col-sm-9 media d-flex align-items-center">
                           <a href="" className="media-left mr-16pt">
                             <img
-                              src={sampleAvatar}
+                              src={props.user.avatar? BACKEND + props.user.avatar : sampleAvatar}
                               alt="people"
                               width="56"
+                              height="56"
                               className="rounded-circle"
+                              style={{ objectFit: 'cover' }}
                             />
                           </a>
                           <div className="media-body ps-3 flex-fill">
@@ -285,7 +282,7 @@ const UserProfile = props => {
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-primary float-right">SAVE CHANGES</Button>
+                  <Button className="btn-primary float-right" onClick={uploadAvatar}>SAVE CHANGES</Button>
                 </CardFooter>
               </Card>
 
@@ -470,9 +467,10 @@ UserProfile.propTypes = {
 
 const mapStatetoProps = state => {
   const { error, success } = state.Profile
-  return { error, success }
+  const user = state.Login.user
+  return { error, success, user }
 }
 
 export default withRouter(
-  connect(mapStatetoProps, { editProfile, resetProfileFlag })(UserProfile)
+  connect(mapStatetoProps, { editProfile, resetProfileFlag, updateProfile, updateAvatar })(UserProfile)
 )

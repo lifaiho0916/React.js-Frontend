@@ -45,6 +45,10 @@ const postJwtForgetPwd = data => post(url.POST_FAKE_JWT_PASSWORD_FORGET, data)
 // get Events
 export const getEvents = () => get(url.GET_EVENTS)
 
+export const getProfile = () => get("/auth/get-profile")
+
+export const updateProfileRequest = (updates) => post("/auth/update-profile", { updates })
+
 // add Events
 export const addNewEvent = event => post(url.ADD_NEW_EVENT, event)
 

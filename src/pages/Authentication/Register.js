@@ -1,11 +1,11 @@
-import PropTypes from "prop-types"
-import React, { useEffect, useState } from "react"
+import PropTypes, { object } from "prop-types"
+import React, { useEffect, useRef, useState } from "react"
 import MetaTags from 'react-meta-tags';
 import { Row, Col, CardBody, Card, Alert, Container, Label } from "reactstrap"
 
 // availity-reactstrap-validation
 import { AvForm, AvField } from "availity-reactstrap-validation"
-
+import Logo from "../../assets/images/logo-dark.png"
 // action
 import { registerUser, apiError, registerUserFailed } from "../../store/actions"
 
@@ -41,8 +41,9 @@ const Register = props => {
       ]
     }
   ]
-  const [role, setRole] = useState(roles[0].options[1])
 
+  const [role, setRole] = useState(roles[0].options[1])
+  const [formRef, setFormRef] = useState()
   const locationOptions = [
     {
       label: "Location",
@@ -62,7 +63,8 @@ const Register = props => {
       ]
     }
   ]
-  const [location, setLocation] = useState(locationOptions[0].options[0])
+
+  const [location, setLocation] = useState("")
 
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
@@ -78,55 +80,59 @@ const Register = props => {
   }, []);
 
   const [fields, setFields] = useState({
-    email: "", name: "", password: "", newPassword: ""
+    firstName: "", lastName: "", email: "", password: "", confirmPassword: ""
   })
+  console.log(location)
   const valueChanged = (e, field) => {
     const _fields = {
       ...fields,
-      [field]: e.target.value
+      [field]: e.target.value,
     }
     setFields(_fields)
-
-    const keys = Object.keys(_fields)
-    let empty = 0
-    for (const key of keys) {
-      if (_fields[key] == "") empty++
-    }
-
-    if (!empty) setAvailable(true)
-    else setAvailable(false)
+    validation(_fields)
   }
 
+  const validation = (_fields) => {
+    const keys = Object.keys(_fields)
+    let _isValid = 0
+    for (const key of keys) {
+      if (_fields[key] == '') _isValid = 1
+    }
+    if ((!_isValid) && (location !== "" || role.value == 'Admin')) setAvailable(true)
+    else setAvailable(false)
+  }
+  useEffect(() => {
+    validation(fields)
+  }, [location, role])
   const [available, setAvailable] = useState(false)
 
   return (
     <React.Fragment>
       <MetaTags>
-        <title>Register | Veltrix - Responsive Bootstrap 5 Admin Dashboard</title>
+        <title>Register | Ameritex Production Management System</title>
       </MetaTags>
       <div className="home-btn d-none d-sm-block">
         <Link to="/" className="text-dark">
           <i className="fas fa-home h2"></i>
         </Link>
       </div>
-      <div className="account-pages my-5 pt-sm-5">
+      <div className="account-pages my-5">
         <Container>
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={4}>
               <Card className="overflow-hidden">
-                <div className="bg-primary">
-                  <div className="text-primary text-center p-4">
-                    <h5 className="text-white font-size-20">Free Register</h5>
-                    <p className="text-white-50">Get your free Veltrix account now.</p>
-                    <a href="index.html" className="logo logo-admin">
-                      <img src={logoSm} height="24" alt="logo" />
-                    </a>
+                <div className="bg-white">
+                  <div className="d-flex justify-content-center align-items-center mt-5 flex-column logo-container">
+                    <img src={Logo} width={200} />
+                    <h5 className="mt-3">Welcome</h5>
+                    <h6>Sign up to APMS</h6>
                   </div>
                 </div>
-                <CardBody className="p-4">
-                  <div className="p-3" style={{overflowX: 'hidden', overflowY: 'auto'}}>
+                <CardBody className="p-4 pt-0">
+                  <div className="p-3" style={{ overflowX: 'hidden', overflowY: 'auto' }}>
                     <AvForm
-                      className="mt-4"
+                      className="mt-2"
+                      ref={e => setFormRef(e)}
                       onValidSubmit={(e, v) => {
                         handleValidSubmit(e, v)
                       }}
@@ -139,60 +145,42 @@ const Register = props => {
 
                       {props.registrationError &&
                         props.registrationError ? (
-                          <Alert color="danger">
-                            {props.registrationError}
-                          </Alert>
-                        ) : null}
+                        <Alert color="danger">
+                          {props.registrationError}
+                        </Alert>
+                      ) : null}
 
-                      <div className="mb-3">
-                        <AvField
-                          id="email"
-                          name="email"
-                          label="Email"
-                          className="form-control"
-                          placeholder="Enter email"
-                          type="email"
-                          required
-                          onChange={(e) => valueChanged(e, "email")}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <AvField
-                          name="username"
-                          label="Username"
-                          type="text"
-                          required
-                          placeholder="Enter username"
-                          onChange={(e) => valueChanged(e, "name")}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <AvField
-                          name="password"
-                          label="Password"
-                          type="password"
-                          required
-                          placeholder="Enter Password"
-                          onChange={(e) => valueChanged(e, "password")}
-                        />
+                      <div className="mb-3 d-flex" style={{ gap: 8 }}>
+                        <div className="w-50">
+                          <AvField
+                            name="firstName"
+                            label="First Name"
+                            type="text"
+                            required
+                            placeholder="First Name"
+                            onChange={(e) => valueChanged(e, "firstName")}
+                          />
+                        </div>
+                        <div className="w-50">
+                          <AvField
+                            name="lastName"
+                            label="Last Name"
+                            type="text"
+                            required
+                            placeholder="Last Name"
+                            onChange={(e) => valueChanged(e, "lastName")}
+                          />
+                        </div>
                       </div>
                       <div className="mb-3">
-                        <AvField
-                          name="confirmPassword"
-                          label="Confirm Password"
-                          type="password"
-                          required
-                          placeholder="Confirm Password"
-                          onChange={(e) => valueChanged(e, "newPassword")}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <Label>Role</Label>
+                        <Label>Department</Label>
                         <Select
                           value={role}
                           onChange={(v) => {
                             setRole(v)
+                            if(v.value==='Admin') {
+                              setLocation("")
+                            }
                           }}
                           options={roles}
                           classNamePrefix="select2-selection"
@@ -202,15 +190,64 @@ const Register = props => {
                         role.value != "Admin" ? <div className="mb-3">
                           <Label>Location</Label>
                           <Select
-                            value={location}
                             onChange={(v) => {
-                              role.value == "production" ? setFacotryLocation(v) : setLocation(v)
+                              setLocation(v)
                             }}
+                            placeholder="Select Location"
                             options={locationOptions}
                             classNamePrefix="select2-selection"
                           />
                         </div> : ""
                       }
+                      <div className="mb-3">
+                        <AvField
+                          id="email"
+                          name="email"
+                          label="Email"
+                          type="email"
+                          required
+                          placeholder="Enter email"
+                          onChange={(e) => valueChanged(e, "email")}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <AvField
+                          name="password"
+                          label="Password"
+                          type="password"
+                          id="password"
+                          placeholder="Enter Password"
+                          validate={{
+                            required: { value: true, errorMessage: 'Please enter a password' },
+                            pattern: {
+                              value: '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/',
+                              errorMessage: 'Your password must contain at least one special character, Uppercase Character, Lowercase Character and a Number '
+                            },
+                            minLength: { value: 8, errorMessage: 'Your password must be longer than 8 characters' },
+                          }}
+                          onChange={(e) => {
+                            valueChanged(e, "password")
+                          }}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <AvField
+                          name="confirmPassword"
+                          label="Confirm Password"
+                          type="password"
+                          id="password"
+                          validate={
+                            {
+                              required: { value: true, errorMessage: 'Please confirm your password' },
+                              match: { value: 'password', errorMessage: 'Password did not match' }
+                            }
+                          }
+                          placeholder="Confirm Password"
+                          onChange={(e) => valueChanged(e, "confirmPassword")}
+                        />
+                      </div>
 
                       <div className="mb-3 row">
                         <div className="col-12 text-end">
@@ -227,7 +264,7 @@ const Register = props => {
                       <div className="mt-2 mb-0 row">
                         <div className="col-12 mt-4">
                           <p className="mb-0">
-                            By registering you agree to the Veltrix{" "}
+                            By registering you agree to the Ameritex{" "}
                             <Link to="#" className="text-primary">
                               Terms of Use
                             </Link>
@@ -241,13 +278,13 @@ const Register = props => {
               <div className="mt-5 text-center">
                 <p>
                   Already have an account ?{" "}
-                  <Link to="/login" className="fw-medium text-primary">
+                  <Link to="/" className="fw-medium text-primary">
                     {" "}
                     Login
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Veltrix. Crafted with{" "}
+                  © {new Date().getFullYear()} Ameritex. Crafted with{" "}
                   <i className="mdi mdi-heart text-danger" /> by Ieoko Media
                 </p>
               </div>

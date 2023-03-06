@@ -12,16 +12,18 @@ import { withTranslation } from "react-i18next"
 // Redux
 import { connect } from "react-redux"
 import { withRouter, Link } from "react-router-dom"
-import sampleAvatar from "../../../assets/images/users/user-1.jpg"
+import sampleAvatar from "../../../assets/images/person.svg"
 
 // users
 import user1 from "../../../assets/images/users/user-4.jpg"
+import { BACKEND } from "helpers/axiosConfig"
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false)
 
-  const user = JSON.parse(localStorage.getItem("authUser"))
+  const user = props.user
+  console.log(user)
   const [username, setusername] = useState("Admin")
 
   useEffect(() => {
@@ -55,9 +57,10 @@ const ProfileMenu = props => {
           <div className="d-flex align-items-center">
             <img
               className="rounded-circle header-profile-user"
-              src={sampleAvatar}
+              src={user.avatar ? BACKEND+user.avatar : sampleAvatar}
               alt="Header Avatar"
-              style={{ width: 36, height: 36 }}
+              style={{ width: 36, height: 36, objectFit:'cover' }}
+              
             />
             <div className="ms-2">
               <div className="font-size-16" style={{ fontWeight: 500 }}>{user.firstName + ' ' + user.lastName}</div>
@@ -92,7 +95,8 @@ ProfileMenu.propTypes = {
 
 const mapStatetoProps = state => {
   const { error, success } = state.Profile
-  return { error, success }
+  const user = state.Login.user
+  return { error, success, user }
 }
 
 export default withRouter(

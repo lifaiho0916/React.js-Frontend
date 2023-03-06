@@ -30,8 +30,8 @@ const AutoCompleteSelect = (props) => {
           if (props.onChange)
             props.onChange(e.value)
         }}
-        value={option ? option : { label: props.placeholder, value: '' }}
-        options={optionsGroup}
+        options={optionsGroup} value={option ? option : { label: props.placeholder, value: '' }}
+
         placeholder={props.placeholder || ""}
         classNamePrefix="select2-selection w-100"
       />

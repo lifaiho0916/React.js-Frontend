@@ -3,7 +3,7 @@ import { MachineClassSelect } from 'components/Common/Select';
 import { machineClasses } from 'helpers/globals';
 import React, { useEffect, useState } from 'react';
 
-import { formatSeconds } from "../../../../helpers/functions"
+import { formatSeconds, lbsToTons } from "../../../../helpers/functions"
 
 const TimerLogs = (props) => {
 
@@ -22,24 +22,13 @@ const TimerLogs = (props) => {
   const [filters, setFilters] = useState({
     machineClass: machineClasses[0],
     productClass: "",
-    includeOperator: true,
+    includeOperator: false,
     from: null,
     to: null
   })
   const [parts, setParts] = useState([])
-
-  const searchMachines = async () => {
-    const idx = filteredParts.findIndex(p => p._id == filters.productClass)
-    setPart(filteredParts[idx])
-    const _machines = await searchMacheinsAction(filters.machineClass,
-      filters.productClass, filters.from, filters.to)
-    setMachines(_machines)
-    setColors(_machines.map(m => `rgb(${parseInt(Math.random() * 256)},
-      ${parseInt(Math.random() * 256)}, ${parseInt(Math.random() * 256)})`))
-    getTimers(_machines.length && _machines[0]._id)
-  }
-
   const updateFilter = (f, e) => {
+    console.log(e)
     if (f == "machineClass")
       setFilters({
         ...filters,
@@ -59,10 +48,10 @@ const TimerLogs = (props) => {
 
   const getTimers = async (id) => {
     if (!id) return
-    const res = await getTimerLogsOfMachine(id, filters.productClass, filters.from, filters.to, page)
+    const res = await getTimerLogsOfMachine(id, filters.productClass, filters.from, filters.to, page, filters.includeOperator)
     setLogs(res.logs)
     setResultCount(res.total)
-    setTotalTons(res.totalTons)
+    setTotalTons(lbsToTons(res.totalTons))
     setTotalGain(res.totalGain)
     setTotalLoss(res.totalLoss)
   }
@@ -95,45 +84,48 @@ const TimerLogs = (props) => {
     getTimers(_machines.length && _machines[0]._id)
   }, [props.timers])
 
+  const refreshLogs = () => {
+    if (machines[tab]) {
+      getTimers(machines[tab]._id, filters)
+    }
+  }
+
   return <React.Fragment>
-    {/* <div className="row m-0 mt-5">
+
+    <div className="row m-0 rounded">
       <div className="search-container mx-0">
         <div className="flex-1">
-          <div className="row m-0 mt-2">
-            <div className="col-xl-3">
-              <h5>MACHINE TYPE</h5>
+          <div className="row m-0" style={{ paddingTop: 12 }}>
+            <div className="d-flex align-items-center col-xl-3">
+              <h5>PRODUCTION REPORT</h5>
             </div>
-            <div className="col-xl-3">
-              <h5>PRODUCT TYPE</h5>
+            <div className="d-flex align-items-center col-xl-3">
             </div>
-            <div className="col-xl-2">
+            <div className="d-flex align-items-center col-xl-2">
               <h5>
                 <div>INCLUDE</div>
                 <div>OPERATOR</div>
               </h5>
             </div>
-            <div className="col-xl-4">
+            <div className="d-flex align-items-center col-xl-4">
               <h5>REVIEW RANGE</h5>
             </div>
           </div>
 
           <div className="m-0 search-box row mb-3">
             <div className="col-xl-3">
-              <MachineClassSelect name="log-filter" onChange={(e) => updateFilter("machineClass", e)} />
+              <MachineClassSelect name="log-filter" placeholder='Machine or Class' onChange={e => updateFilter("machineClass", e)} />
             </div>
 
             <div className="col-xl-3">
               <select
                 className="form-select"
-                onChange={(e) => {
-                  updateFilter("productClass", e)
-                }}
-                value={filters.productClass}
+                value={[]}
               >
-                <option value="" disabled />
+                <option value="" disabled selected>Product or Part</option>
                 {
                   parts.map(part => (
-                    <option value={part._id} key={"log-filter-" + part._id}>{part.name}</option>
+                    <option value={part._id} key={"log-filter1-" + part._id}>{part.name}</option>
                   ))
                 }
               </select>
@@ -141,24 +133,29 @@ const TimerLogs = (props) => {
 
             <div className="col-xl-2 d-flex align-items-center">
               <div className='d-flex align-items-stretch'>
-                <input type="checkbox" className="form-checkbox" onChange={(e) => updateFilter("includeOperator", e)} />
+                <input type="checkbox" className="form-checkbox" checked={filters.includeOperator} onClick={() => updateFilter("includeOperator", !filters.includeOperator)} />
                 <h6 className='ms-2 my-auto'>Yes</h6>
               </div>
             </div>
 
-            <div className="col-xl-4   d-flex">
-              <input type="date" className="form-control me-2" onChange={(e) => updateFilter("from", e)} />
+            <div className="col-xl-4 align-items-center  d-flex">
+              <input type="date" className="form-control" onChange={(e) => updateFilter("from", e)} />
+              <span className="mx-1">to</span>
               <input type="date" className="form-control" onChange={(e) => updateFilter("to", e)} />
             </div>
           </div>
         </div>
 
         <div className="search-action">
-          <span className="mdi mdi-refresh cursor-pointer" onClick={() => searchMachines()}></span>
+          <span className="mdi mdi-refresh cursor-pointer" onClick={refreshLogs}></span>
         </div>
       </div>
-    </div> */}
-    <h2 className='mb-3'>TIMER TRACKER - {props.classify} </h2>
+    </div>
+
+    <div className='d-flex justify-content-between align-items-center'>
+      <h2 className='mb-3 mt-3'>TIMER TRACKER - {props.classify} </h2>
+      <a className='btn btn-success' target="_blank" href={`/report/${props.city}/${props.classify}/${filters.from}/${filters.to}`}>View Report</a>
+    </div>
     <div className='bg-white time-tracker-table-container'>
 
       <div className='time-tracker-table-header d-flex' >
@@ -226,13 +223,13 @@ const TimerLogs = (props) => {
                 </td>
                 <td>
                   <div className='name' style={{ width: '288px' }}>
-                    <b>{trackTimer.timer.part.name}</b>
+                    <b>{trackTimer.part.name}</b>
                   </div>
                 </td>
                 <td className='name'>
                   <div><b>{trackTimer.operator}</b></div>
                 </td>
-                <td></td>
+                <td>{ trackTimer.id }</td>
                 <td>
                   <div>
                     <b className={`${trackTimer.time > trackTimer.productionTime ? 'text-danger' : 'text-success'}`}>
@@ -326,7 +323,7 @@ const TimerLogs = (props) => {
             <div className='d-inline-flex flex-column ms-3'>
               <div className='text-end text-success'><b>{formatSeconds(totalGain)}</b></div>
               <div className='text-end text-danger'><b>{formatSeconds(totalLoss)}</b></div>
-              <div className='text-end text-warning'><b>{formatSeconds(totalGain - totalLoss)}</b></div>
+              <div className='text-end text-warning'><b>{formatSeconds(Math.abs(totalGain - totalLoss))}</b></div>
             </div>
           </div>
         </div>

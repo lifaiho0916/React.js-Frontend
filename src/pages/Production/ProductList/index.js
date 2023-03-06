@@ -1,6 +1,6 @@
 import { CitySelect, FactoryList, MachineClassSelect } from "components/Common/Select"
 import { cities, factories } from "helpers/globals"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import MetaTags from "react-meta-tags"
 import {
   Container,
@@ -233,6 +233,7 @@ const ProductList = props => {
     if (filter != "All" && factoryFilter[index] == false) _filter[3] = false
     setFactoryFilter(_filter)
   }
+  const user = JSON.parse(localStorage.getItem("authUser"))
 
   return (
     <div
@@ -255,190 +256,196 @@ const ProductList = props => {
                   <span className='sub text-danger'>TEXAS</span>
                 </div>
               </div>
-
-              <div
-                className="d-flex align-items-center"
-                style={{ height: "60px" }}
-              >
+              {user.role == 'Sales' || user.role == 'HR' ? "" :
                 <div
-                  className="d-flex border-left-right px-2 align-self-stretch"
-                  style={{ height: "45px", marginTop: "8px" }}
+                  className="d-flex align-items-center"
+                  style={{ height: "60px" }}
                 >
-                  <div className="d-flex justify-content-center flex-column align-items-center ms-3">
-                    <h3 style={{ marginBottom: "-1px" }}>
-                      {totalCount}
-                    </h3>
-                    <div
-                      className="d-flex align-items-center text-uppercase text-black-50"
-                      style={{ fontSize: "11px" }}
-                    >
-                      {type}s
-                    </div>
-                  </div>
-                  <div className="ms-2 me-3 d-flex align-items-end h-100">
-                    <span
-                      className="mdi mdi-chevron-up"
-                      style={{ fontSize: 20, color: "rgb(2, 186, 197)" }}
-                    ></span>
-                  </div>
-                </div>
-                <button
-                  className="btn btn-primary btn-newtimer ms-3 text-uppercase"
-                  onClick={showCreateModal}
-                  
-                >
-                  NEW {type}
-                </button>
-              </div>
-            </div>
-
-            <div
-              className="mt-3 px-0"
-              style={{
-                borderBottom: "2px solid rgba(221, 222, 226, 0.5)",
-                paddingBottom: "1rem",
-              }}
-            >
-              <div className="type-selector-container row p-0 m-0">
-                {types.map(_type => (
                   <div
-                    key={_type}
-                    className="type text-uppercase cursor-pointer col-lg-4 col-md-6"
-                    style={{ marginLeft: "0px" }}
-                    onClick={() => {
-                      if (type != _type) {
-                        setType(_type)
-                        moveToPage(1)
-                      }
-                    }}
+                    className="d-flex border-left-right px-2 align-self-stretch"
+                    style={{ height: "45px", marginTop: "8px" }}
                   >
-                    <div
-                      className={`type-selector ${_type == type ? "active" : ""
-                        }`}
-                      style={{
-                        padding: '1rem 1.5rem',
-                      }}
-                    >
-                      <span>{_type}</span>
-                      <span>
-                        <i className="mdi mdi-poll"></i>
-                      </span>
+                    <div className="d-flex justify-content-center flex-column align-items-center ms-3">
+                      <h3 style={{ marginBottom: "-1px" }}>
+                        {totalCount}
+                      </h3>
+                      <div
+                        className="d-flex align-items-center text-uppercase text-black-50"
+                        style={{ fontSize: "11px" }}
+                      >
+                        {type}s
+                      </div>
                     </div>
-                    {/* <div
+                    <div className="ms-2 me-3 d-flex align-items-end h-100">
+                      <span
+                        className="mdi mdi-chevron-up"
+                        style={{ fontSize: 20, color: "rgb(2, 186, 197)" }}
+                      ></span>
+                    </div>
+                  </div>
+                  {user.role == 'Personnel' || user.role == 'Accounting' ? "" :
+                    <button
+                      className="btn btn-primary btn-newtimer ms-3 text-uppercase"
+                      onClick={showCreateModal}
+
+                    >
+                      NEW {type}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+            {user.role == 'Sales' || user.role == 'HR' ? <h4 className='mt-5'>Not authorized to see content</h4> :
+              <Fragment>
+                <div
+                  className="mt-3 px-0"
+                  style={{
+                    borderBottom: "2px solid rgba(221, 222, 226, 0.5)",
+                    paddingBottom: "1rem",
+                  }}
+                >
+                  <div className="type-selector-container row p-0 m-0">
+                    {types.map(_type => (
+                      <div
+                        key={_type}
+                        className="type text-uppercase cursor-pointer col-lg-4 col-md-6"
+                        style={{ marginLeft: "0px" }}
+                        onClick={() => {
+                          if (type != _type) {
+                            setType(_type)
+                            moveToPage(1)
+                          }
+                        }}
+                      >
+                        <div
+                          className={`type-selector ${_type == type ? "active" : ""
+                            }`}
+                          style={{
+                            padding: '1rem 1.5rem',
+                          }}
+                        >
+                          <span>{_type}</span>
+                          <span>
+                            <i className="mdi mdi-poll"></i>
+                          </span>
+                        </div>
+                        {/* <div
                       className="mt-1 d-flex justify-content-end"
                       style={{ marginRight: "45px" }}
                     >
                       COMPARE{" "}
                       <input type="checkbox" className="form-checkbox ms-2" />
                     </div> */}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div className="d-flex city-selector-container row p-0 m-0 mt-3">
-                {cities.map((_city, index) => (
-                  <div
-                    key={'city' + index}
-                    className="city text-uppercase col-lg-4 col-md-6 "
-                  >
-                    <div
-                      className={`city-selector ${_city == city ? "active" : ""
-                        }`}
-                      onClick={() => setCity(_city)}
-                    >
-                      <span className="pt-2">{_city}</span>
-                      <span>
-                        <i className="mdi mdi-poll"></i>
-                      </span>
+                  <div className="d-flex city-selector-container row p-0 m-0 mt-3">
+                    {cities.map((_city, index) => (
+                      <div
+                        key={'city' + index}
+                        className="city text-uppercase col-lg-4 col-md-6 "
+                      >
+                        <div
+                          className={`city-selector ${_city == city ? "active" : ""
+                            }`}
+                          onClick={() => setCity(_city)}
+                        >
+                          <span className="pt-2">{_city}</span>
+                          <span>
+                            <i className="mdi mdi-poll"></i>
+                          </span>
+                        </div>
+                        <div
+                          className="mt-1 d-flex justify-content-end compare"
+                          style={{ marginRight: "20px" }}
+                        >
+                          <span>COMPARE{" "}</span>
+                          <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="sort-container" style={{ borderBottom: 'none' }}>
+                    <div className="sort-text">
+                      SHOW ONLY
                     </div>
-                    <div
-                      className="mt-1 d-flex justify-content-end compare"
-                      style={{ marginRight: "20px" }}
-                    >
-                      <span>COMPARE{" "}</span>
-                      <input type="checkbox" className="form-checkbox ms-2" onClick={() => toggleCompare(index)} />
+                    <div className="d-flex">
+                      {
+                        factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
+                          {factory}
+                          <input type="checkbox" className="form-checkbox"
+                            onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
+                            onChange={() => { }}
+                            checked={factoryFilter[index]} />
+                        </label>)
+                      }
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
 
-              <div className="sort-container" style={{borderBottom: 'none'}}>
-                <div className="sort-text">
-                  SHOW ONLY
-                </div>
-                <div className="d-flex">
-                  {
-                    factoryFilters.map((factory, index) => <label key={`factory1-${index}`} className="sort-factory-category mb-0">
-                      {factory}
-                      <input type="checkbox" className="form-checkbox"
-                        onClick={(e) => toggleFilter(e, factory)} id={`factory-filter-${factory}`}
-                        onChange={() => { }}
-                        checked={factoryFilter[index]} />
-                    </label>)
-                  }
-                </div>
-              </div>
-            </div>
-
-            <div className="search-container mt-3">
-              <div className="search-box row" style={{ padding: "1rem 0 1rem 1.5rem" }}>
-                <div className="col-6" >
-                  <div>
-                    <h5>General Search</h5>
-                  </div>
-                  <div className="mt-2">
-                    <select
-                      className="form-select"
-                    >
-                      <option>RP2225-1</option>
-                    </select>
-                  </div>
-                </div>
-                {/* <div className="col-6 d-flex align-items-end">
+                <div className="search-container mt-3">
+                  <div className="search-box row" style={{ padding: "1rem 0 1rem 1.5rem" }}>
+                    <div className="col-6" >
+                      <div>
+                        <h5>General Search</h5>
+                      </div>
+                      <div className="mt-2">
+                        <select
+                          className="form-select"
+                        >
+                          <option>RP2225-1</option>
+                        </select>
+                      </div>
+                    </div>
+                    {/* <div className="col-6 d-flex align-items-end">
                     <CitySelect />
                   </div> */}
-              </div>
-              <div className="search-action">
-                <span className="mdi mdi-refresh"></span>
-              </div>
-            </div>
+                  </div>
+                  <div className="search-action">
+                    <span className="mdi mdi-refresh"></span>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-end mt-5">
+                  <Pagination
+                    {...pagination}
+                    movePage={moveToPage} />
+                </div>
+                <div className="row mt-5 p-0">
+                  {type == "Part"
+                    ? parts.map((product, idx) => (
+                      <Part
+                        {...product}
+                        key={`part-${product._id}`}
+                        deleteProduct={deleteProduct}
+                        editPart={editPart}
+                        idx={idx}
+                      />
+                    ))
+                    : machines.map((product, idx) => (
+                      <Machine
+                        key={`machine-${product._id}`}
+                        {...product}
+                        deleteProduct={deleteProduct}
+                        editMachine={editMachine}
+                        idx={idx}
+                      />
+                    ))}
+                </div>
+
+                <div className="d-flex justify-content-end mt-5">
+                  <Pagination
+                    {...pagination}
+                    movePage={moveToPage} />
+                </div>
+              </Fragment>
+            }
             {/* </div> */}
           </div>
 
           {/* <div className="products-container row m-0 p-0 mt-5"> */}
-          <div className="d-flex justify-content-end mt-5">
-            <Pagination
-              {...pagination}
-              movePage={moveToPage} />
-          </div>
-          <div className="row mt-5 p-0">
-            {type == "Part"
-              ? parts.map((product, idx) => (
-                <Part
-                  {...product}
-                  key={`part-${product._id}`}
-                  deleteProduct={deleteProduct}
-                  editPart={editPart}
-                  idx={idx}
-                />
-              ))
-              : machines.map((product, idx) => (
-                <Machine
-                  key={`machine-${product._id}`}
-                  {...product}
-                  deleteProduct={deleteProduct}
-                  editMachine={editMachine}
-                  idx={idx}
-                />
-              ))}
-          </div>
 
-          <div className="d-flex justify-content-end mt-5">
-            <Pagination
-              {...pagination}
-              movePage={moveToPage} />
-          </div>
-          {/* </div> */}
         </div>
       </Container>
 

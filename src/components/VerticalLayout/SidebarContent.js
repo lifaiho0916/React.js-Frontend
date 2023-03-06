@@ -9,10 +9,12 @@ import MetisMenu from "metismenujs"
 import { withRouter } from "react-router-dom"
 import { Link } from "react-router-dom"
 
-import sampleAvatar from "../../assets/images/users/user-1.jpg"
+import sampleAvatar from "../../assets/images/person.svg"
 //i18n
 import { withTranslation } from "react-i18next"
 import "./scss/sidebar.scss"
+import { BACKEND } from "helpers/axiosConfig"
+import { connect } from "react-redux"
 
 const SidebarContent = props => {
   const ref = useRef()
@@ -85,7 +87,7 @@ const SidebarContent = props => {
     return false
   }
 
-  const user = JSON.parse(localStorage.getItem("authUser"))
+  const user = props.user
 
   return (
     <React.Fragment>
@@ -96,7 +98,7 @@ const SidebarContent = props => {
               <div className="sidebar-avatar d-flex align-items-center justify-content-between px-3 py-2">
                 <div className=" d-flex align-items-center">
                   <div >
-                    <img src={sampleAvatar} className="h-100 rounded-circle" />
+                    <img src={user.avatar ? BACKEND+user.avatar : sampleAvatar } className="rounded-circle" />
                   </div>
                   <div className="text-dark mx-auto ps-2">
                     <h4 className="mb-0 font-size-16">{user.firstName + ' ' + user.lastName}</h4>
@@ -233,7 +235,14 @@ const SidebarContent = props => {
                   </li>
                 </ul>
               </li>
-
+              {user.role !== 'HR' && user.role !== 'Admin' && user.role !== 'Production' ?
+                "" :
+                <li className="profile-menu" style={{}}>
+                  <Link to="/users/Pending" className="waves-effect text-capitalize" >
+                    <span>{props.t("Team Members")}</span>
+                  </Link>
+                </li>
+              }
               <li>
                 <Link to="/#" className="has-arrow waves-effect text-capitalize">
                   <span>{props.t("Accounting")}</span>
@@ -268,4 +277,12 @@ SidebarContent.propTypes = {
   t: PropTypes.any,
 }
 
-export default withRouter(withTranslation()(SidebarContent))
+const mapStatetoProps = state => {
+  const { error, success } = state.Profile
+  const user = state.Login.user
+  return { error, success, user }
+}
+
+export default withRouter(
+  connect(mapStatetoProps, {})(withTranslation()(SidebarContent))
+)

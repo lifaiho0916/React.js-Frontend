@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {useEffect} from "react"
 
-import { Switch, BrowserRouter as Router } from "react-router-dom"
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom"
 import { connect } from "react-redux"
 
 // Import Routes all
@@ -15,9 +15,11 @@ import { setAxiosConfig } from 'helpers/axiosConfig'
 import VerticalLayout from "./components/VerticalLayout/"
 import HorizontalLayout from "./components/HorizontalLayout/"
 import NonAuthLayout from "./components/NonAuthLayout"
+import { setUserProfile } from 'store/actions'
 
 // Import scss
 import "./assets/scss/theme.scss"
+import ReportPage from 'pages/Report'
 
 setAxiosConfig()
 
@@ -35,11 +37,24 @@ const App = props => {
     return layoutCls
   }
 
+  const getProfile = async() => {
+    props.setUserProfile()
+  }
+
+  useEffect(() => {
+    getProfile()
+  }, [])
+
   const Layout = getLayout()
   return (
     <React.Fragment>
       <Router>
         <Switch>
+          <Route 
+            path="/report/:city/:classify/:from/:to"
+            render={props => <ReportPage {...props} />}
+            />
+
           {authRoutes.map((route, idx) => (
             <Authmiddleware
               path={route.path}
@@ -79,4 +94,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(App)
+export default connect(mapStateToProps, { setUserProfile })(App)
